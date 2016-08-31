@@ -1,0 +1,37 @@
+--------------
+Header page (Heder menu,account section)
+D:\\xampp\htdocs\tarzango\themes\tarzango\header.php
+
+--------------
+Home page 
+up to search section 
+D:\\xampp\RAVI\htdocs\tarzango\themes\tarzango\views\home\slider.php
+
+location n check in this form start in slider.php line no 63 to 161
+
+then after (3 icon )
+D:\\xampp\htdocs\tarzango\themes\tarzango\views\home\index.php
+
+
+slider section line no 83 in index.php file
+
+--------------
+footer page
+	
+D:\\xampp\htdocs\tarzango\themes\tarzango\footer.php
+
+
+
+css folder 
+D:\\xampp\htdocs\tarzango\themes\tarzango\assets\css\
+
+
+js folder 
+D:\\xampp\htdocs\tarzango\themes\tarzango\assets\js\
+
+
+fonts
+D:\\xampp\htdocs\tarzango\themes\tarzango\assets\fonts\
+
+
+dont remove any fild just change class 

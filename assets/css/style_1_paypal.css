@@ -1,0 +1,686 @@
+
+
+body {
+	background-color: #FFF;
+}
+
+.navbar-nav {
+   float: right;
+   margin-top: 6px;
+}
+
+.navbar-inverse {
+	background-color: #005072;
+	background-image: none;
+
+}
+
+.navbar-inverse .navbar-nav>.active>a, 
+.navbar-inverse .navbar-nav>.open>a {
+    background: none;
+    box-shadow: none;
+    color: #FFF! important;
+}
+
+/*.topbanner img {
+	width: 100%;
+    height: 481px;
+    opacity: 0.5;
+
+}*/
+
+.topwrapper {
+	margin: 0 auto;
+  position: relative;
+  top: 21vh;
+  z-index: 10;
+  left: -11%;
+}
+
+.rateForm {
+	background-color: #016482;
+  padding: 12px 5px 12px 14px;
+  margin: 0 auto;
+  width: 56%;
+}
+
+ .Ros-form {
+    display: block;
+    width: 100%;
+    height: 46px;
+    padding: 6px 14px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.btn-ros {
+    text-transform: uppercase;
+    font-weight: 200;
+    font-family: 'Helvetica Neue';
+    letter-spacing: .5px;
+    height: 58px;
+    padding: 0 18px;
+    background: #10D67D;
+    border: none;
+    color: #FFF;
+    position: relative;
+    left: -2px;
+    top: 1px;
+    width: 631px;
+  }
+
+ .btn-default-Ros {
+    color: #333;
+    background-color: #fff;
+    border: none;
+    height: 46px;
+    position: relative;
+    left: -2px;
+    width: 109px;
+}
+
+.topwrapper .form-group {
+	width: 400px;
+}
+
+.ProductContent {
+  margin-top: 10px;
+}
+
+.Product-Des h1 {
+	text-align: center;
+    margin: 0 auto;
+    color: #029452;
+    margin-bottom: 46px;
+}
+
+.content-right {
+  width: 44%;
+  float: right;
+}
+
+.content-left {
+	float: left;
+  width: 44%;
+}
+
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 25px;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translate(0, 0);
+    position: absolute;
+    left: 31px;
+    color: #CCC;
+}
+
+.ProContent-Text p {
+  margin-bottom: 52px;
+  text-align: justify;
+  padding: 0 18px;
+}
+
+.Product-Promo {
+	background-color: #16437B;
+  height: 313px;
+}
+
+.Product-Promo h1{
+  text-align: center;
+  color: #FFF;
+  position: relative;
+  top: 59px;
+  margin: 0 auto;
+  left: 77px;
+}
+
+.Product-Promo img {
+  height: 316px;
+  position: relative;
+  top: -158px;
+  left: -44px;
+}
+
+.Product-Promo p {
+  text-align: center;
+  font-size: 26px;
+  color: #fFF;
+  top: 59px;
+  position: relative;
+  left: 61px;
+}
+
+.promoDetails p {
+	color: #000;
+    font-size: 12px;
+    position: relative;
+    padding: 0 41px;
+    text-align: center;
+    top: 45px;
+}
+
+.promoDetails img {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  right: 151px;
+  top: -50px
+}
+
+.promoDetails .fa {
+  position: absolute;
+  left: 167px;
+  top: -15px;
+  z-index: 100;
+}
+
+.testimonal {
+    margin-top: 154px;
+    text-align: center;
+    color: #666;
+    margin-bottom: 49px;
+}
+
+.tab-1 p {
+    text-align: justify;
+    border: solid 1px #CCC;
+    padding: 10px 73px;
+}
+
+.tab-2 p {
+    text-align: justify;
+    border: solid 1px #CCC;
+    padding: 10px 73px;
+}
+
+.testimonal img {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  left: -8px;
+  top: -46px;
+}
+
+.footer {
+  margin-top: 80px;
+}
+
+.main-footer {
+   border-top: solid 1px #bdc3d1;
+   margin-bottom: 30px;
+}
+
+.copyright {
+   background-color: #bdc3d1;
+   padding: 5px 30px;
+   text-transform: CAPITALIZE;
+}
+
+.main-footer strong {
+  position: relative;
+  top: -12px;
+  font-size: 17px;
+  font-weight: 400
+}
+
+.navbar img {
+   width: 57px;
+   position: relative;
+   left: -52px;
+}
+
+.navbar-brand {
+   color: #FFF!important;
+    position: absolute;
+    top: 9px;
+    font-size: 22px;
+}
+
+.tvert h1 {
+    color: rgb(25, 32, 52);
+    margin-bottom: 23px;
+    position: relative;
+    left: 13px;
+}
+
+.topbanner {
+    background-image: url(../../images/admin/homebg.jpg);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    height: 600px;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.apple-left {
+    width: 0;
+
+}
+
+.android-right {
+    width: 0;
+    left: 185px;   
+}
+
+/*Get Credit Page*/
+
+.getCredit {
+    margin-top: 60px;
+    margin-bottom: 176px;
+}
+
+.selectAmt li {
+    padding: 18px;
+    width: 121px;
+    text-align: center;
+    font-size: 17px;
+    color: #666;
+    border: solid 1px #666;
+}
+
+.selectPay-right {
+     background: #F5F5F5;
+    width: 80%;
+    padding: 62px 10px;
+    padding-left: 59px;
+    border: solid 1px #CCC;
+    margin-bottom: 30px;
+}
+
+.tabs-left {
+    width: 100%;
+    position: relative;
+    left: 50px;
+    top: 59px;
+}
+
+.selected {
+   background-color: #2574ab;
+  border: none! important;
+  color: #fff! important;
+  border: 2px solid #2574ab! important;
+}
+
+.tab-content .selected:before {
+    position: absolute;
+    content: "";
+    /*left: 137px;*/
+	  margin-left:1%;
+    top: 27%;
+    width: 0;
+    height: 0;
+    border-top: 15px solid #3470A6;
+    border-right: 8px solid transparent;
+    border-bottom: 0 solid transparent;
+    border-left: 10px solid transparent;
+    z-index: 1000;
+}
+
+.pdl {
+   margin-left: -15px;
+}
+
+.pdr{
+  margin-left: -23px;
+}
+
+.payForm {
+
+}
+
+.currrency-converter {
+  margin: 25px 0;
+}
+
+.fullForm {
+  width: 504px;
+}
+
+.tabs-left li {
+  height: 80px;
+  text-align: center;
+  padding: 22px;
+  font-size: 18px;
+  margin-bottom: 8px! important;
+}
+
+.tabs-left>li>a {
+    border-radius: 0;
+    display: block;
+    background: #BDC3D1;
+    margin-right: -24px;
+    padding: 26px;
+}
+
+.tabs-left>li.active>a, .tabs-left>li.active>a:hover, .tabs-left>li.active>a:focus {
+    background: #FFF;
+}
+
+.payForm .fa {
+  position: absolute;
+  left:10px;
+}
+
+.fa-envelope-o:before {
+  content: "\f003";
+  position: absolute;
+  font-size: 20px;
+  left: 111px;
+  top: -33px;
+}
+
+.usepaypal span {
+    position: relative;
+    top: 27px;
+    left: -26px;
+}
+
+/*.paymentDetails .form-control {
+    display: block;
+    width: 100%;
+    height: 48px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}*/
+
+  input.form-control.Ros-form_payment {
+      width: 634px;
+  }
+
+.cardImg img {
+  width: 165px;
+}
+.PayNowBTN {
+  margin-top: 20px;
+}
+
+#creditcard.disable{
+   display: none;
+ }
+
+ .disable {
+   display: none! important;
+ }
+
+ .getCredit label {
+    display: inline-block;
+    max-width: 100%;
+    margin-top: 20px;
+    font-weight: 200;
+}
+
+.cardinfo p {
+  margin-top: 13px;
+}
+
+.paymentDetails .currrency-converter {
+    margin: 2px 0;
+}
+
+
+.topbanner .content {
+   margin-top: 0;
+   position: absolute;
+}
+
+
+.content img {
+    width: 165px;
+    height: 70px;
+}
+
+
+.ProContent-Text h4 {
+  display: block;
+  font-size: 22px;
+  color: #005072;
+  margin-left: 51px;
+}
+
+.iphoneAds {
+ display: flex;
+    position: relative;
+    left: 23%;
+    top: 110px;
+}
+
+.iphoneAds img {
+  width: 291px;
+  height: 362px;
+
+}
+
+
+ img.userP {
+    width: 72px! important;
+    height: 64px! important;
+    margin-left: 17px;
+    margin-top: 19px;
+    border-radius: 50%;
+}
+
+.payment_tab_05 {
+   margin-top: 93px;
+}
+
+ul.tablist {
+    display: flex;
+    margin: 0 auto;
+}
+
+.main_tab {
+  margin-top: 160px;
+}
+
+.payment_tab_05 ul>li {
+  
+}
+
+.payment_tab_05 .nav-tabs {
+    background: #FFF;
+    display: flex;
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+.tab_payment.container {
+    width: 32%;
+}
+
+.payment_tab_05 .nav-tabs > li > a {
+  padding: 20px 56px 14px 60px;
+  position: relative;
+  left: -16px;
+  top: 1px;
+  color: #666;
+}
+
+.container.getCredit.wrapper {
+  width: 64%;
+  position: relative;
+  left: 13%;
+  margin: 0 auto;
+}
+
+input#mobile_number {
+    width: 628px;
+    height: 60px;
+}
+
+input.form-control.Ros-form {
+    height: 60px;
+}
+
+.row.form_profile {
+    margin-left: -24px;
+    position: relative;
+    top: -18px;
+}
+
+input.form-control.Ros-form.Ros-form_email {
+    width: 628px;
+}
+
+#paypal .selected:before {
+    position: absolute;
+    content: "";
+    margin-left: 1%;
+    top: 37%;
+    width: 0;
+    height: 0;
+    border-top: 15px solid #3470A6;
+    border-right: 8px solid transparent;
+    border-bottom: 0 solid transparent;
+    border-left: 10px solid transparent;
+    z-index: 1000;
+}
+
+
+.paymentDetails_05 .pdr {
+    margin-left: -10px;
+}
+
+
+.paymentDetails_05 .pdl {
+    margin-left: 1px;
+    width: 318px;
+}
+
+.btn-ros_home {
+    text-transform: uppercase;
+    font-weight: 200;
+    font-family: 'Helvetica Neue';
+    letter-spacing: .5px;
+    height: 58px;
+    padding: 0 18px;
+    background: #10D67D;
+    border: none;
+    color: #FFF;
+    position: relative;
+    left: -2px;
+    top: 1px;
+    width: 101px;
+}
+
+section.getCredit.wrapper {
+    margin: 0 auto;
+    padding: 6px 56px;
+}
+
+ .paymentdl, .paymentdr {
+  width: 340px;
+}
+
+.add_paymentCard {
+    background: #F5F5F5;
+    width: 80%;
+    padding: 62px 10px;
+    padding-left: 104px;
+    border: solid 1px #CCC;
+    margin: 0 auto;
+    display: flex;
+}
+
+ .add_paymentCard .pdr_form {
+    width: 295px;
+    margin-left: -51px;
+ }
+
+ .add_paymentCard .pdl_form {
+    width: 295px;
+    margin-left: 13px;
+}
+
+/*Displaying rate*/
+
+  div#update {
+      width: 56%;
+      margin: 0 auto;
+      z-index: 100;
+  }
+
+ Div.searchresults {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+ }
+
+ Div.searchresults .testApp {
+    display: inherit;
+    background-color: #FFFFFF;
+    padding: 11px;
+    border-bottom: solid 1px #ccc;
+    cursor: pointer;
+    z-index: 100;
+ }
+
+ Div.searchresults p {
+   margin-top: 7px;
+   padding-left: 19px;
+   font-size: 18px;
+   position: absolute;
+
+  }
+
+  Div.searchresults img {
+    width: 40px;
+    height: 40px;
+}
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

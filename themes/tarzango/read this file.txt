@@ -1,0 +1,30 @@
+THEME DEMO SITE : http://phptravels.net/
+
+Email user@phptravels.com
+Password demouser
+========================================================
+
+REFRENCE SITE : http://www.tarzango.com/
+========================================================
+
+check this site
+
+create page like in "tarzango folder" in your D drive theme folder
+
+javascript ma class use karya e remove na kare
+
+go to tarzango folder -> view folder -> login.php
+
+in line no 95 java script use "loginbtn" class it releted to line no 40 in button so dont remove "loginbtn" class
+
+
+also save this work in D drive in with date and place html file in this folder 
+
+==========================================
+TASK - 02-06-2016
+==========================================
+
+create home page
+create login,forget password, register page
+create Contact Us page
+after that hotel list page 

@@ -1,0 +1,314 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Off-canvas Push Menu For Bootstrap 3</title>
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<style>
+/*-------------------------------*/
+/*           VARIABLES           */
+/*-------------------------------*/
+
+
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+body, html {
+  height: 100%;
+}
+
+.nav .open > a { background-color: transparent; }
+
+.nav .open > a:hover { background-color: transparent; }
+
+.nav .open > a:focus { background-color: transparent; }
+
+/*-------------------------------*/
+/*           Wrappers            */
+/*-------------------------------*/
+
+#wrapper {
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  padding-left: 0;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+#wrapper.toggled { padding-left: 178px; }
+
+#wrapper.toggled #sidebar-wrapper { width: 178px; }
+
+#wrapper.toggled #page-content-wrapper {
+  margin-right: -178px;
+  position: absolute;
+}
+
+#sidebar-wrapper {
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  background: #091220;
+  height: 100%;
+  left: 178px;
+  margin-left: -178px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  width: 0;
+  z-index: 1000;
+}
+#sidebar-wrapper::-webkit-scrollbar {
+ display: none;
+}
+
+#page-content-wrapper {
+  padding-top: 70px;
+  width: 100%;
+}
+
+/*-------------------------------*/
+/*     Sidebar nav styles        */
+/*-------------------------------*/
+
+.sidebar-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 178px;
+}
+
+.sidebar-nav li {
+  display: inline-block;
+  line-height: 20px;
+  position: relative;
+  width: 100%;
+}
+
+.sidebar-nav li a {
+  color: #fff;
+  display: table-cell;
+  vertical-align:middle;
+  text-align:center;
+  text-decoration: none;
+  font-size:20px;
+  width:178px;
+  height:178px;
+  border-bottom:solid 1px #2f3541;
+  
+}
+
+.sidebar-nav li.open:hover before {
+  -webkit-transition: width 0.2s ease-in;
+  transition: width 0.2s ease-in;
+  width: 100%;
+}
+
+
+.sidebar-nav li a:hover, .sidebar-nav li a:active, .sidebar-nav li a:focus, .sidebar-nav li.open a:hover, .sidebar-nav li.open a:active, .sidebar-nav li.open a:focus {
+  background-color: transparent;
+  color: #ffc100;
+  text-decoration: none;
+}
+.sidebar-nav li a i.entire-trip{ background:url(images/entire-trip.png) center top no-repeat; width:100%; text-align:center; display:block; height:70px;}
+.sidebar-nav li a:hover i.entire-trip{ background:url(images/entire-trip-h.png) center top no-repeat;}
+
+.sidebar-nav li a i.flight{ background:url(images/flight.png) center top no-repeat; width:100%; text-align:center; display:block; height:70px;}
+.sidebar-nav li a:hover i.flight{ background:url(images/flight-h.png) center top no-repeat;}
+
+.sidebar-nav li a i.hotel{ background:url(images/hotel.png) center top no-repeat; width:100%; text-align:center; display:block; height:70px;}
+.sidebar-nav li a:hover i.hotel{ background:url(images/hotel-h.png) center top no-repeat;}
+.sidebar-nav li a.active i.hotel{ background:url(images/hotel-h.png) center top no-repeat; color:#ffc100;}
+.sidebar-nav li a.active{  color:#ffc100;}
+
+
+.sidebar-nav li a i.car{ background:url(images/car.png) center top no-repeat; width:100%; text-align:center; display:block; height:70px;}
+.sidebar-nav li a:hover i.car{ background:url(images/car-h.png) center top no-repeat;}
+
+.sidebar-nav li a i.event{ background:url(images/event.png) center top no-repeat; width:100%; text-align:center; display:block; height:70px;}
+.sidebar-nav li a:hover i.event{ background:url(images/event-h.png) center top no-repeat;}
+
+.sidebar-nav li a i.expo{ background:url(images/expo.png) center top no-repeat; width:100%; text-align:center; display:block; height:70px;}
+.sidebar-nav li a:hover i.expo{ background:url(images/expo-h.png) center top no-repeat;}
+
+.sidebar-nav li a span{ display:none; font-size:14px; top:0; background:#333; position:absolute; padding:10px;}
+.sidebar-nav li a:hover span{ display:block;}
+
+/*-------------------------------*/
+/*       Hamburger-Cross         */
+/*-------------------------------*/
+
+.hamburger {
+  background: #ffc100;
+  border: none;
+  display: block;
+  height: 50px;
+  margin-left: 15px;
+  position: fixed;
+  top: 20px;
+  width: 50px;
+  z-index: 999;
+  border-radius:5px;
+}
+
+
+
+
+
+.hamburger.is-closed .hamb-top {
+  -webkit-transition: all 0.35s ease-in-out;
+  background-color: #332700;
+  top: 15px;
+}
+
+.hamburger.is-closed .hamb-middle {
+  background-color: #332700;
+  margin-top: -2px;
+  top: 50%;
+}
+
+.hamburger.is-closed .hamb-bottom {
+  -webkit-transition: all 0.35s ease-in-out;
+  background-color: #332700;
+  bottom: 15px;
+}
+
+.hamburger.is-closed .hamb-top, .hamburger.is-closed .hamb-middle, .hamburger.is-closed .hamb-bottom, .hamburger.is-open .hamb-top, .hamburger.is-open .hamb-middle, .hamburger.is-open .hamb-bottom {
+  height: 2px;
+  left: 25%;
+  position: absolute;
+  width: 50%;
+}
+
+.hamburger.is-open .hamb-top {
+  -webkit-transform: rotate(45deg);
+  -webkit-transition: -webkit-transform 0.2s cubic-bezier(0.73, 1, 0.28, 0.08);
+  background-color: #332700;
+  margin-top: -2px;
+  top: 50%;
+  transform:rotate(240deg);
+}
+
+.hamburger.is-open .hamb-middle {
+  background-color: #332700;
+  display: none;
+}
+
+.hamburger.is-open .hamb-bottom {
+  -webkit-transform: rotate(-45deg);
+  -webkit-transition: -webkit-transform 0.2s cubic-bezier(0.73, 1, 0.28, 0.08);
+  background-color: #332700;
+  margin-top: -2px;
+  top: 50%;
+   transform:rotate(120deg);
+}
+
+.hamburger.is-open:before {
+  -webkit-transform: translate3d(0, 0, 0);
+  -webkit-transition: all 0.35s ease-in-out;
+  color: #ffffff;
+  content: '';
+  display: block;
+  font-size: 14px;
+  line-height: 32px;
+  opacity: 0;
+  text-align: center;
+  width: 100px;
+}
+
+.hamburger.is-open:hover before {
+  -webkit-transform: translate3d(-100px, 0, 0);
+  -webkit-transition: all 0.35s ease-in-out;
+  display: block;
+  opacity: 1;
+}
+
+/*-------------------------------*/
+/*          Dark Overlay         */
+/*-------------------------------*/
+
+.overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+
+
+
+</style>
+</head>
+
+<body>
+<div id="wrapper">
+  <!-- Sidebar -->
+  <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+    <ul class="nav sidebar-nav">
+      <li> <a href="#"><span>Comming Soon</span><i class="entire-trip"></i>Entire Trip</a> </li>
+      <li> <a href="#"><i class="flight"></i>Flight</a> </li>
+      <li> <a href="#" class="active"><i class="hotel"></i>Hotel</a> </li>
+      <li> <a href="#"><i class="car"></i>Car</a> </li>
+      <li> <a href="#"><i class="event"></i>Events</a> </li>
+      <li> <a href="#"><i class="expo"></i>Explore</a> </li>
+    </ul>
+  </nav>
+  <!-- /#sidebar-wrapper --> 
+  
+  <!-- Page Content -->
+  <div id="page-content-wrapper">
+    <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas"> <span class="hamb-top"></span> <span class="hamb-middle"></span> <span class="hamb-bottom"></span> </button>
+    
+  </div>
+  <!-- /#page-content-wrapper --> 
+  
+</div>
+<!-- /#wrapper --> 
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script> 
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> 
+<script>
+$(document).ready(function () {
+  var trigger = $('.hamburger'),
+      overlay = $('.overlay'),
+     isClosed = false;
+
+    trigger.click(function () {
+      hamburger_cross();      
+    });
+
+    function hamburger_cross() {
+
+      if (isClosed == true) {          
+        overlay.hide();
+        trigger.removeClass('is-open');
+        trigger.addClass('is-closed');
+        isClosed = false;
+      } else {   
+        overlay.show();
+        trigger.removeClass('is-closed');
+        trigger.addClass('is-open');
+        isClosed = true;
+      }
+  }
+  
+  $('[data-toggle="offcanvas"]').click(function () {
+        $('#wrapper').toggleClass('toggled');
+  });  
+});
+</script>
+</body>
+</html>
