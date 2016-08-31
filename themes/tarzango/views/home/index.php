@@ -462,7 +462,9 @@ and delivers you to safety with the right way to travel.</p>
 <?php
 $CI = &get_instance(); 
 $is_gb_done = $CI->session->userdata('is_gb_done');
+
 if($is_gb_done == 'true'){
+  $CI->session->set_userdata('is_gb_done','false');
 ?>
 <script>
 $(document).ready(function(){

@@ -201,7 +201,7 @@ label.agreement input {
 @font-face {
 	font-family: 'gotham_light_test';
 	src: url('../fonts/gotham_light_test.eot');
-	src: local('☺'), url('../fonts/gotham_light_test.woff') format('woff'), url('../fonts/gotham_light_test.ttf') format('truetype'), url('../fonts/gotham_light.svg') format('svg');
+	src: local('☺'),  url('../fonts/gotham_light.svg') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -757,7 +757,7 @@ h5.price-text-color {
 footer {
 	float: left;
 	width: 100%;
-    background: url(../img/home_footer_bg.png);
+    background: url(../img/footer-bg.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
@@ -3558,7 +3558,9 @@ padding-bottom: 30px;}
     margin: 30px 0;
     letter-spacing: 0.5px;
     width: 100%;
-    text-align: center;}	
+    text-align: center;
+    border: 0;
+}	
 	
 .detail-btn:hover{ text-decoration:none;}
 
@@ -5336,7 +5338,7 @@ transition: all 0.1s ease;
     color: #ff73b3;
     font-size: 44px;
     font-family: Gotham_Light;
-    margin: 0px 20px 0px 0px;
+    margin: 0px 0px 0px 0px;
     text-align: center;	
 }
 .signup_body .col-sm-10 .right-section .address .total h3.divider {
@@ -5742,13 +5744,6 @@ transition: all 0.1s ease;
     background-size: 100% 100%;
 	padding: 25px 0px;
 	background-color: #f3f5fa;
-}
-.group_booking_body .section5 h1 {
-    font-family: apercu_light;
-    font-size: 34px;
-    color: #2c3748;
-    text-align: center;
-    margin: 50px 0px 70px 0px;	
 }
 .group_booking_body .section5 ul li .col-sm-4 {
 	width: 100%;

@@ -90,6 +90,7 @@
                </div>
             </div>
             <div class="row">
+              <?php if($invoice->status == "unpaid"){ if(time() < $invoice->expiryUnixtime){  ?>
                <div class="pay-block">
                   <img src="images/watch-icon.png"> 
                   <h1 class="wow fadeInLeft animated" id="countdown"></h1>
@@ -100,10 +101,37 @@
                       <?php } if($singleGateway != "payonarrival"){ ?>
                       <button data-toggle="modal" style="display:none;"  data-target="#paynow" type="submit" class="btn btn-primary"><?php echo trans('0117');?></button>
                       <button data-toggle="modal" style="display:none;"  data-target="#paynow" type="button" id="gateway_pro" class="btn btn-primary"><?php echo trans('0117');?></button>
-                      <button  id="element_id_1470283648"></button>
+                      <div style="text-align:center;">
+                        <div class="col-sm-5" style="color:transparent">
+                          aasdsada
+                        </div>
+                        <div class="col-sm-2">
+                          <button  id="element_id_1470283648"></button>
+                        </div>
+                        <div class="col-sm-5" style="color:transparent">
+                          aasdsada
+                        </div>
+                      </div>
                       <?php } ?>
                   </div>
                </div>
+               <?php }else{ ?>
+                <div class="pay-block">
+                  <p class=""><?php echo trans('0409');?> <b class="text-warning wow flash animted" style="color: #fe5050;"><?php echo trans('0519');?></b></p>
+                </div>
+                <?php } }elseif($invoice->status == "reserved"){ ?>
+                  <div class="pay-block">
+                  <p class=""><?php echo trans('0409');?> <b class="text-warning wow flash animted" style="color: #fe5050;"><?php echo trans('0445');?></b></p>
+                  </div>
+                <?php }elseif($invoice->status == "cancelled"){ ?>
+                  <div class="pay-block">
+                  <p class=""><?php echo trans('0409');?> <b class="text-warning wow flash animted" style="color: #fe5050;"><?php echo trans('0347');?></b></p>
+                  </div>
+                <?php  }else{ ?>
+                  <div class="pay-block">
+                  <p class=""><?php echo trans('0409');?> <b class="text-warning wow flash animted" style="color: #fe5050;"><?php echo trans('081');?></b></p>
+                  </div>
+                <?php } ?>
             </div>
          </div>
       </header>
@@ -251,7 +279,7 @@
             </div>
           </div>
           <div class="col-sm-1">
-          <?php if($extra_details){ ?>
+          <?php if($extra_details->location != ''){ ?>
                     <div class="pay-type-block ">
                       <span class="single-type pay-col" >
                         <h2> Pickup Details </h2>
@@ -539,18 +567,7 @@ $repl_arry = array(".",",");
 
 <script type="text/javascript">
  /*function initMap() {*/
-        var myLatLng = {lat: <?php echo $invoice->hotel_details_extra['hotel_latitude']; ?>, lng:<?php echo $invoice->hotel_details_extra['hotel_longitude']; ?>};
-
-        var map = new google.maps.Map(document.getElementById('mapDiv'), {
-          zoom: 12,
-          center: myLatLng
-        });
-
-        var marker = new google.maps.Marker({
-          position: myLatLng,
-          map: map,
-          title: 'Hello World!'
-        });
+        
      /* }*/
   // set the date we're counting down to
   // var target_date = new Date('<?php echo $invoice->expiryFullDate; ?>').getTime();
@@ -722,7 +739,7 @@ $(function(){
         $("#response").html("");
        }if(response.gateway == "paystand"){
           $(".creditcardform").hide();
-          var paystand = '<a class="paystand_lick"  href="https://tarzango.paystand.com/" target="_blank" ><img src="<?php echo base_url()."assets/img/paystand_logo.png"; ?>"></a><script>$(".paystand_lick").click(function(){$(this).remove();$("body").removeClass("modal-open");$("#paynow").css("display","none");$(".modal-backdrop").css("display","none"); });<\/script>';
+          var paystand = '';
           $("#response").html(paystand);
        }else{
        $(".creditcardform").hide();

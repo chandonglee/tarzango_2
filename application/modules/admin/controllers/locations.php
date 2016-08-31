@@ -66,9 +66,10 @@ class Locations extends MX_Controller {
 		$xcrud->order_by('id','desc');
 		$xcrud->columns('location,country,latitude, longitude, status');
 		$xcrud->label('location','City')->label('country','Country')->label('latitude','Latitude')->label('longitude','Longitude')->label('status','Status');
+		//$xcrud->label('id', 'Gallery');
 		$xcrud->column_callback('status', 'create_status_icon');
 		//$xcrud->label('status', 'Availability');
-		$xcrud->column_callback('status', 'roomGallery');
+		//$xcrud->column_callback('id', 'locationGallery');
 		if($this->editpermission){
 		$xcrud->button(base_url() .$this->segmentUrl.'/locations/edit/{id}', 'Edit', 'fa fa-edit', 'btn btn-warning', array('target' => '_self'));
 		}
@@ -93,6 +94,8 @@ class Locations extends MX_Controller {
 
 
 	}
+
+
 
 	public function add(){
 		$this->data['locationsModel'] = $this->locations_model;
@@ -146,6 +149,7 @@ class Locations extends MX_Controller {
 		$this->data['submittype'] = "edit";
 		$this->data['headingText'] = "Edit";
 		$this->data['countries'] = $this->countries_model->get_all_countries();	
+		$this->data['location_images'] = $this->locations_model->get_location_img($id);	
        	$this->data['languages'] = pt_get_languages();
 
 		$this->data['main_content'] = 'settings/locations';

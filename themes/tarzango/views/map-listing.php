@@ -463,7 +463,7 @@
       <div class="row">
         <div class="col-sm-12">
           <div class="col-sm-6 left_part">
-            <p class="title">Showing 169 Hotels in Las Vegas, NV</p>
+            <p class="title">Showing <span><?php echo count($module); ?></span> Hotels in <?php if(!empty($_GET['city'])){ echo $_GET['city']; }else{ echo $selectedCity; } ?></p>
             <div class="col-sm-12 hotel-list">
 
                <?php

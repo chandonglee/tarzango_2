@@ -20,6 +20,12 @@ class Locations_model extends CI_Model {
 
 		}
 
+		// get number of photos of location
+		function photos_count($locationsid) {
+				$this->db->where('limg_locations_id', $locationsid);
+				return $this->db->get('pt_locations_images')->num_rows();
+		}
+
 		//get details of location
 		function getLocationDetails($id, $lang = null){
 			$this->db->where('id',$id);
@@ -94,12 +100,80 @@ class Locations_model extends CI_Model {
 					);
 				$this->db->insert('pt_locations', $data);
                 $locid = $this->db->insert_id();
+                $this->upload_location_img($locid,$this->input->post('city'));
                 $this->updateLocationsTranslation($this->input->post('translated'),$locid);
+		}
+
+		function get_location_img($locid){
+			/*echo $locid;*/
+			$this->db->where('limg_locations_id',$locid);
+        	$result = $this->db->get('pt_locations_images')->result();
+
+        	return $result[0]->limg_image;
+        	
+		}
+
+		function get_location_img_by_city($city){
+			/*echo $locid;*/
+			$this->db->where('limg_location',$city);
+        	$result = $this->db->get('pt_locations_images')->result();
+
+        	return $result[0]->limg_image;
+        	
+		}
+
+		function upload_location_img($locid,$limg_location){
+			/*error_reporting(E_ALL);*/
+
+			$config['upload_path'] = 'uploads/images/location_img/';
+            $config['allowed_types'] = 'gif|jpg|png';
+            $config['encrypt_name'] = TRUE;
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+            $this->upload->set_allowed_types('*');
+            $data['upload_data'] = '';
+            if (!$this->upload->do_upload('location_image')) {
+                $image_upload_data = array('is_upload' => false);
+            } else { 
+                $image_upload_data['is_upload'] = true;
+                $image_upload_data['upload_data'] = $this->upload->data();
+            }
+
+			$this->db->where('limg_locations_id',$locid);
+        	$nums = $this->db->get('pt_locations_images')->num_rows();
+
+        	if($nums == 0){
+				
+                if($image_upload_data['is_upload'] == 1){
+                	$img_data = array(
+                						'limg_locations_id' => $locid,
+                						'limg_location' => $limg_location,
+                						'limg_image' => $image_upload_data['upload_data']['file_name']
+                						);
+
+                	$this->db->insert('pt_locations_images', $img_data);
+                }
+            }else{
+            	
+            	if($image_upload_data['is_upload'] == 1){
+                	
+                	$img_data = array(
+                						'limg_location' => $limg_location,
+                						'limg_image' => $image_upload_data['upload_data']['file_name']
+                						);
+
+                	$this->db->where('limg_locations_id', $locid);
+					$this->db->update('pt_locations_images', $img_data);
+                }
+
+            }
 		}
 
 		// update location
 		function updateLocation($locid) {
-
+				
+				$this->upload_location_img($locid,$this->input->post('city'));
+				/*exit();*/
 				$data = array(
 					'location' => $this->input->post('city'), 
 					'country' => $this->input->post('country'), 

@@ -155,17 +155,6 @@ function hotelGallery($value, $fieldname, $primary_key, $row, $xcrud){
   return "<a href=".base_url().$role."/hotels/gallery/".$value.">Upload (".$photocounts.")</a>";
 }
 
-function locationGallery($value, $fieldname, $primary_key, $row, $xcrud){
-  $CI = get_instance();
-  $role = $CI->session->userdata('pt_role');
-  if($role != "supplier"){
-    $role = "admin";
-  }
-
-  $photocounts =  pt_LocationPhotosCount($primary_key);
-  return "<a href=".base_url().$role."/hotels/gallery/".$value.">Upload (".$photocounts.")</a>";
-}
-
 function roomGallery($value, $fieldname, $primary_key, $row, $xcrud){
   $photocounts =  pt_RoomPhotosCount($primary_key);
   $CI = get_instance();

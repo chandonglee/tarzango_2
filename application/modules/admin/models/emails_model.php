@@ -486,7 +486,23 @@ class Emails_model extends CI_Model {
 			//to customer
 				$message = $this->mailHeader;
 				$message .= "Dear Customer,<br>";
-				$message .= "Your booking has been cancelled.<br>";
+				$message .= "Your  booking has been cancelled.<br>";
+				$message .= "Thanks For using our service.";
+				$message .= $this->mailFooter;
+
+				$this->email->set_newline("\r\n");
+				$this->email->from($this->sendfrom);
+				$this->email->to($useremail);
+				$this->email->subject('Your Booking Cancellation has been Processed.');
+				$this->email->message($message);
+				$this->email->send();
+		}
+
+		function booking_cancellation_email_cust($useremail, $bookingid) {
+			//to customer
+				$message = $this->mailHeader;
+				$message .= "Dear Customer,<br>";
+				$message .= "Your Booking ID: $bookingid booking has been cancelled.<br>";
 				$message .= "Thanks For using our service.";
 				$message .= $this->mailFooter;
 

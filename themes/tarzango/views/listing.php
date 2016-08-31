@@ -489,7 +489,7 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="total-total-block">
-              <h2> Showing <span><?php echo count($module); ?></span> Hotels in Las Vegas, NV</h2>
+              <h2> Showing <span><?php echo count($module); ?></span> Hotels in <?php if(!empty($_GET['city'])){ echo $_GET['city']; }else{ echo $selectedCity; } ?></h2>
             </div>
           </div>
         </div>

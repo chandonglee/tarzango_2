@@ -243,3 +243,4 @@ background: url(<?php echo $theme_url;
 
 
 <script src='<?php echo $theme_url ?>js/bootstrap.min.js'></script>
+<script src='<?php echo $theme_url ?>js/custom.js'></script>

@@ -1135,14 +1135,6 @@ if (!function_exists('pt_show_map')) {
 				$res = $CI->hotels_model->photos_count($hotelid);
 				return $res;
 		}
-}if (!function_exists('pt_LocationPhotosCount')) {
-
-		function pt_LocationPhotosCount($locationid) {
-				$CI = get_instance();
-				$CI->load->model('admin/locations_model');
-				$res = $CI->locations_model->photos_count($locationid);
-				return $res;
-		}
 
 }if (!function_exists('pt_RoomPhotosCount')) {
 

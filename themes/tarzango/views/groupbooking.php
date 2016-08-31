@@ -457,13 +457,18 @@ var clicks = 1;
         },
         success: function(data)
         {
+          //console.log(data);
           response = $.parseJSON(data);
           
           var HTML_DATA = '';
-            HTML_DATA += '<div class="section5"><div class="container"> <div class="row">  <div class="col-sm-12">            <h1>These are the top 10 results we found near Las Vegas</h1> <div class="col-sm-4"><div id="slider" style="width: 500px; height: 600px;">    <ul>';
+            if(response.location_img != '' && response.location_img != null){
+              HTML_DATA += '<style>.group_booking_body .section5{background-image:url('+url+'uploads/images/location_img/'+response.location_img+')}</style>';
+            }
 
-          for (var i = 0;  i < response.length; i++) {
-            var base_date = response[i];
+            HTML_DATA += '<div class="section5"><div class="container"> <div class="row">  <div class="col-sm-12">            <h1>These are the top '+response.hotel.length+' results we found near '+city+'</h1> <div class="col-sm-4"><div id="slider" style="width: 500px; height: 600px;">    <ul>';
+
+          for (var i = 0;  i < response.hotel.length; i++) {
+            var base_date = response.hotel[i];
            var hotel_name = base_date.title;
             HTML_DATA += '<li><div class="col-sm-4">';  
             HTML_DATA += '<img  class="img-responsive" src="'+base_date.thumbnail.replace('http://demo.tarzango.com/','http://tarzango.com/')+'"><div class="box">';

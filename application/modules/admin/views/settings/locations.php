@@ -1,6 +1,6 @@
 <h3 class="margin-top-0"><?php echo $headingText;?> Location</h3>
 <div class="output"><?php echo @$msg; ?></div>
-<form action="" method="POST" >
+<form action="" method="POST" enctype="multipart/form-data" >
   <div class="panel panel-default">
     <div class="panel-body">
       <br>
@@ -31,7 +31,7 @@
             </div>
           </div>
 
-         <div class="row form-group">
+          <div class="row form-group">
             <label class="col-md-2 control-label text-left">Status</label>
             <div class="col-md-4">
               <select name="status" class="form-control">
@@ -41,6 +41,22 @@
             </div>
           </div>
 
+
+          <div class="row form-group">
+            <label class="col-md-2 control-label text-left">Image</label>
+            <div class="col-md-4">
+            <input type="file" name="location_image">
+            </div>
+          </div>
+
+          <?php if($location_images != ""){ ?>
+          <div class="row form-group">
+            <label class="col-md-2 control-label text-left">Current Image</label>
+            <div class="col-md-4">
+            <img src="<?php echo base_url().'uploads/images/location_img/'.$location_images; ?>" height="300px">
+            </div>
+          </div>
+          <?php } ?>
           <hr>
           <?php foreach($languages as $lang => $val){ if($lang != DEFLANG){ @$trans = $locationsModel->getLocationsTranslation($lang,$id);  ?>
           <div class="row form-group">
@@ -55,6 +71,7 @@
         </div>
       </div>
     </div>
+
     <div class="panel-footer">
     <input type="hidden" name="submittype" value="<?php echo $submittype; ?>">
     <input type="hidden" name="locationid" value="<?php echo $id; ?>">

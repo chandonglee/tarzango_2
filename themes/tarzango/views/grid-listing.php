@@ -444,7 +444,7 @@ header.header-section .sorting .col-sm-1.view-option a img
       <div class="row">
         <div class="col-lg-12">
           <div class="total-total-block">
-            <h2> Showing <span><?php echo count($module); ?></span> Hotels in Las Vegas, NV</h2>
+            <h2> Showing <span><?php echo count($module); ?></span> Hotels in <?php if(!empty($_GET['city'])){ echo $_GET['city']; }else{ echo $selectedCity; } ?></h2>
           </div>
         </div>
       </div>
@@ -458,8 +458,8 @@ header.header-section .sorting .col-sm-1.view-option a img
         </div> -->
     <div class="container">
       <?php
-         /*echo json_encode($module);*/
-         
+         /*echo json_encode($module);
+         exit();*/
            if(!empty($module)){ 
             $h_data_pass = $module;
             $i = 0;
@@ -502,7 +502,7 @@ header.header-section .sorting .col-sm-1.view-option a img
                 <div class="hotel-name-address-block">
                   <h1> <?php echo character_limiter($item->title,12);?> </h1>
                   <address>
-                  <img src="images/icon/map-address.png"> Las Vegas, Downtown, Fremont Street
+                  <img src="images/icon/map-address.png"> <?php echo $item->location; ?>
                   </address>
                 </div>
                 <div class="hotel-prize-block">

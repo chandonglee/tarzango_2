@@ -1,16 +1,12 @@
 </div>
 </div>
 <?php include 'header_search.php'; ?>
-
-
-
 <link href="<?php echo $theme_url; ?>assets/include/slider/slider.min.css" rel="stylesheet" />
 <link href="<?php echo $theme_url; ?>assets/include/slider/owl.carousel.css" rel="stylesheet" />
 <link href="<?php echo $theme_url; ?>assets/include/slider/owl.theme.css" rel="stylesheet" />
 <link href="<?php echo $theme_url; ?>assets/include/slider/bootstrap-theme.css" rel="stylesheet" />
 <link href="<?php echo $theme_url; ?>assets/include/slider/bootstrap-select.css" rel="stylesheet" />
 <link href="<?php echo $theme_url; ?>assets/include/slider/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-
 <script src="<?php echo $theme_url; ?>assets/js/single.js"></script>
 <script src="<?php echo $theme_url; ?>/assets/js/jquery.nicescroll.min.js"></script>
 <script src="<?php echo $theme_url; ?>assets/include/slider/slider.js"></script>
@@ -81,19 +77,15 @@ $overall_rating = $tripadvisor->rating;
 $ranking_out_of = $tripadvisor->num_reviews;
 ?>
 <body class="detail-view" >
-<section class="hotel-detail-header" style="width: 100%;"> 
- 
-    <div class="hotel-detail-header-info">
+<section class="hotel-detail-header" style="width: 100%;">
+  <div class="hotel-detail-header-info">
     <div class="hd-info">
       <div class="container">
-
         <h2><?php echo $module->title; ?> </h2>
-       
-        <div class="rating-detail"> 
-           <div class="st_rating" style="float:left;"> <?php echo $module->stars;?> </div>
-
-         <span style=" color: #f1f1f8; font-weight: normal; font-family: 'Apercu-Light'; font-size: 14px;padding-left: 5px;padding-top: 2px; float: left;"> Great Overall Rating (<?php echo $overall_rating; ?> Based on <?php echo $ranking_out_of; ?> Ratings) </span> </div>
-        <div class="listing-back"> <a href="#"> <i class="fa fa-angle-left" aria-hidden="true"></i> Back to Listings  </a> </div>
+        <div class="rating-detail">
+          <div class="st_rating" style="float:left;"> <?php echo $module->stars;?> </div>
+          <span style=" color: #f1f1f8; font-weight: normal; font-family: 'Apercu-Light'; font-size: 14px;padding-left: 5px;padding-top: 2px; float: left;"> Great Overall Rating (<?php echo $overall_rating; ?> Based on <?php echo $ranking_out_of; ?> Ratings) </span> </div>
+        <div class="listing-back"> <a href="#"> <i class="fa fa-angle-left" aria-hidden="true"></i> Back to Listings </a> </div>
       </div>
     </div>
   </div>
@@ -113,57 +105,52 @@ $ranking_out_of = $tripadvisor->num_reviews;
                     $image_url = str_replace("bigger/", '', $image_url);
                 }*/
             ?>
-            <?php 
+  <?php 
                 for ($h_img=0; $h_img < 1; $h_img++) { 
                     
                       $image_url = $img_list[$h_img]['fullImage'];
                 ?>
-  <img style="width: 100%;" src="<?php echo str_replace("demo.", "", $image_url); ?>"> 
-   <?php  } ?>
+  <img style="width: 100%;" src="<?php echo str_replace("demo.", "", $image_url); ?>">
+  <?php  } ?>
 </section>
-
 <section id="detail-block" style="background:url(<?php echo $theme_url; ?>images/details-final.png)">
-
-  <div class="container"> 
-
-    <div class="col-lg-8 col-md-8 col-sm-8 "> 
-
+  <div class="container">
+    <div class="col-lg-8 col-md-8 col-sm-8 ">
       <div id="detail-slider" class="owl-carousel">
         <?php 
                 for ($h_img=0; $h_img < count($img_list); $h_img++) { 
                    
                       $image_url = $img_list[$h_img]['fullImage'];
                 ?>
-             <div class="item"><img src="<?php echo str_replace("demo.", "", $image_url); ?>" alt="The Last of us" style="width:100%;height:535px;"></div>
-            
-            <?php  } ?>
-       
-
+        <div class="item"><img src="<?php echo str_replace("demo.", "", $image_url); ?>" alt="The Last of us" style="width:100%;height:535px;"></div>
+        <?php  } ?>
       </div>
-
-
-        <div class="detail-pagr-facilitate">
-
-          <div class="row">  
-
-             <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-1.png"> </span>  <h2> Air Conditioner </h2> </div>
-             <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-2.png"> </span>  <h2> Free Wi-Fi</h2> </div>
-             <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-3.png"> </span>  <h2> Cable TV </h2> </div>
-             <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-4.png"> </span>  <h2> Shower </h2></div>
-             <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-5.png"> </span>  <h2> King Bed </h2> </div>
-             <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-6.png"> </span>  <h2> Bathtub </h2> </div>
-
+      <div class="detail-pagr-facilitate">
+        <div class="row">
+          <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-1.png"> </span>
+            <h2> Air Conditioner </h2>
+          </div>
+          <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-2.png"> </span>
+            <h2> Free Wi-Fi</h2>
+          </div>
+          <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-3.png"> </span>
+            <h2> Cable TV </h2>
+          </div>
+          <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-4.png"> </span>
+            <h2> Shower </h2>
+          </div>
+          <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-5.png"> </span>
+            <h2> King Bed </h2>
+          </div>
+          <div class="col-lg-2 col-sm-2 col-md-2" > <span> <img src="images/icon/detail-icon-6.png"> </span>
+            <h2> Bathtub </h2>
           </div>
         </div>
-        <div class="detail-decription"> 
-
-           <p><?php echo $module->desc; ?></p>
-         
-        </div>  
-         
-          <?php 
-
-if($hasRooms > 0){ 
+      </div>
+      <div class="detail-decription">
+        <p><?php echo $module->desc; ?></p>
+      </div>
+      <?php if($hasRooms > 0){ 
           if($appModule == "hotels"){ 
               include 'includes/rooms.php'; 
           }else if($is_hotel_bed == "1"){ 
@@ -172,79 +159,58 @@ if($hasRooms > 0){
               include 'includes/expedia_rooms.php'; 
           } 
       }  ?>
-           <div class="map-block">
-            <h2> Location  </h2>
-
-             <div id="map" class="map "  style="height:300px;"></div>
-         
-          </div>
-         <?php include 'includes/reviews.php';?>
+      <div class="map-block">
+        <h2> Location </h2>
+        <div id="map" class="map "  style="height:300px;"></div>
       </div>
-      <div class="col-lg-4 col-md-4 col-sm-4 ">
-
-<div class="check-out-form"> 
-
-<div class="amount-detail-page">  <span class="price-detail set_avg_rate"> $ 100 </span>  <span class="slas-detail">/ </span> <span class="night-detail"> <?php echo $diff; ?> nights </span> </div>
-
-<div class=""> 
-<label> check in </label>
-<div class="control-group">
-               
-                <div class=" input-append date dpean1 form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                    <input size="16" class="date-block" type="text" value="" >
-                    <span class="add-on"><i class="icon-remove"></i></span>
-          <span class="add-on"><i class="icon-th"></i></span>
-                </div>
-        <input type="hidden" id="dtp_input2" class="date-block" value="" /><br/>
+      <?php include 'includes/reviews.php';?>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 ">
+    <form method="get">
+      <div class="check-out-form">
+        <div class="amount-detail-page"> <span class="price-detail set_avg_rate"> $ 100 </span> <span class="slas-detail">/ </span> <span class="night-detail"> <?php echo $diff; ?> nights </span> </div>
+        <div class="">
+          <label> check in </label>
+          <div class="control-group">
+            <div class=" input-append date  form_date" >
+              <input name="checkin" size="16" class="date-block dpean3" type="text" value="<?php echo $checkin; ?>" >
+              <span class="add-on"><i class="icon-remove"></i></span> <span class="add-on"><i class="icon-th"></i></span> </div>
+            <br/>
+          </div>
+        </div>
+        <div class="">
+          <label> Check Out </label>
+          <div class="control-group">
+            <div class=" input-append date  form_date" >
+              <input name="checkOut" size="16" class="date-block dpean4" type="text" value="<?php echo $checkOut; ?>" >
+              <span class="add-on"><i class="icon-remove"></i></span> <span class="add-on"><i class="icon-th"></i></span> </div>
+            <br/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6 ">
+            <div class="form-group">
+              <label> Rooms </label>
+              <div class="input-next-previce"> <i class="fa fa-chevron-left"> </i>
+                <input type="number" name="room" value="<?php echo $room; ?>" >
+                <i class="fa fa-chevron-right"> </i> </div>
             </div>
-
-</div>
-
-<div class=""> 
-<label> Check Out </label>
-
-            
-      <div class="control-group">
-               
-                <div class=" input-append date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                    <input size="16" class="date-block" type="text" value="" >
-                    <span class="add-on"><i class="icon-remove"></i></span>
-          <span class="add-on"><i class="icon-th"></i></span>
-                </div>
-        <input type="hidden" id="dtp_input2" class="date-block" value="" /><br/>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 ">
+            <div class="form-group">
+              <label> Guests </label>
+              <div class="input-next-previce"> <i class="fa fa-chevron-left"> </i>
+                <input type="number" name="adults"  value="<?php echo $adults; ?>" >
+                <i class="fa fa-chevron-right"> </i> </div>
             </div>
-      
-       
-</div>
-
-<div class="row"> 
-<div class="col-lg-6 col-md-6 col-sm-6 ">
-<div class="form-group"> 
-<label> Rooms  </label>
-<div class="input-next-previce"> 
-<i class="fa fa-chevron-left"> </i> <input type="text">  <i class="fa fa-chevron-right"> </i>
-</div>
-
-</div>
- </div>
-<div class="col-lg-6 col-md-6 col-sm-6 "><div class="form-group"> 
-<label> Guests  </label>
-<div class="input-next-previce"> 
-<i class="fa fa-chevron-left"> </i> <input type="text">  <i class="fa fa-chevron-right"> </i>
-</div> 
-
-</div> </div>
-</div>
-
-
-<a  href="#ROOMS" class="detail-btn"> Modify </a>
-
-
- </div>
-
-</div>
+          </div>
+        </div>
+        <input type="hidden" name="child" value="0">
+        <button type="submit" class="detail-btn" style="">Modify</button>
+        </div>
+    </form>
+    </div>
   </div>
-
 </section>
 
 <!-- <div class="detail-banner-section">
@@ -263,18 +229,11 @@ if($hasRooms > 0){
         </div>    
 </div> -->
 
-
-
-
-
-    </div>
-  </div>
+</div>
+</div>
 </div>
 <!-- map -->
-<div class="collapse" id="collapseMap">
-  
-  <br>
-
+<div class="collapse" id="collapseMap"> <br>
   <script>
     $(document).ready(function() {
       $("#detail-slider").owlCarousel({
@@ -297,7 +256,7 @@ if($hasRooms > 0){
     });
   
   
-    $('.form_datetime').datetimepicker({
+  /*  $('.form_datetime').datetimepicker({
         //language:  'fr',
         weekStart: 1,
         todayBtn:  1,
@@ -332,9 +291,8 @@ if($hasRooms > 0){
   $('.datepicker').datepicker({
     format: 'mm/dd/yyyy',
     startDate: '-3d'
-});
-    </script>
-    
+});*/
+    </script> 
   <script>$(document).ready(function(e) {
     (function(A) {
         if (!Array.prototype.forEach)
@@ -462,22 +420,21 @@ if($hasRooms > 0){
         })
     }
 });
-  </script>
+  </script> 
   <script type="text/javascript">
     $(".social-share").click(function(){
       $("#share_link").toggle();
     });
 
-  </script>
+  </script> 
 </div>
-<!-- map -->
-
-
-<!-- head -->
-<div class="bg_black">
+<!-- map --> 
 
 <!-- head -->
-
+<div class="bg_black"> 
+  
+  <!-- head -->
+  
   <?php //include 'includes/review.php'; ?>
   <?php if($appModule != "cars" && $appModule != "ean"){ } //include 'includes/review.php'; } ?>
 </div>
@@ -489,8 +446,7 @@ if($hasRooms > 0){
       <div class="panel-body">
         <h2 class="main-title go-right"><?php echo trans('046');?></h2>
         <div class="clearfix"></div>
-        <i class="tiltle-line go-right"></i>
-        <span class="go-right RTL"><?php echo $module->desc; ?></span>
+        <i class="tiltle-line go-right"></i> <span class="go-right RTL"><?php echo $module->desc; ?></span>
         <div class="clearfix"></div>
         <div class="row">
           <div class="col-md-12">
@@ -503,7 +459,7 @@ if($hasRooms > 0){
         <i class="tiltle-line  go-right"></i>
         <div class="clearfix"></div>
         <span class="RTL">
-          <p><?php echo $module->policy; ?></p>
+        <p><?php echo $module->policy; ?></p>
         </span>
         <?php } ?>
         <br>
@@ -516,19 +472,20 @@ if($hasRooms > 0){
         <?php foreach($module->paymentOptions as $pay){ if(!empty($pay->name)){ ?>
         <?php echo $pay->name;?> -
         <?php } } ?>
-        </span>
-        <br><br><br>
+        </span> <br>
+        <br>
+        <br>
         <?php } ?>
         <?php if($appModule == "hotels"){ ?>
         <h4 class="main-title  go-right"><?php echo trans('07');?></h4>
         <div class="clearfix"></div>
         <i class="tiltle-line  go-right"></i>
         <div class="clearfix"></div>
-        <p class="RTL"><i class="fa fa-clock-o text-success"></i> <strong> <?php echo trans('07');?> </strong> :   <?php echo $module->defcheckin;?> - <i class="fa fa-clock-o text-warning"></i>   <strong> <?php echo trans('09');?> </strong> :  <?php echo $module->defcheckout;?> </p>
+        <p class="RTL"><i class="fa fa-clock-o text-success"></i> <strong> <?php echo trans('07');?> </strong> : <?php echo $module->defcheckin;?> - <i class="fa fa-clock-o text-warning"></i> <strong> <?php echo trans('09');?> </strong> : <?php echo $module->defcheckout;?> </p>
         <?php } ?>
         <!-- Start Tours Inclusions / Exclusions -->
         <?php if($appModule == "tours"){ ?>
-        <p class="go-text-left"><i class="fa fa-sun-o text-success"></i> <strong> <?php echo trans('0275');?> </strong> :   <?php echo $module->tourDays;?> | <i class="fa fa-moon-o text-warning"></i>   <strong> <?php echo trans('0276');?> </strong> :  <?php echo $module->tourNights;?> </p>
+        <p class="go-text-left"><i class="fa fa-sun-o text-success"></i> <strong> <?php echo trans('0275');?> </strong> : <?php echo $module->tourDays;?> | <i class="fa fa-moon-o text-warning"></i> <strong> <?php echo trans('0276');?> </strong> : <?php echo $module->tourNights;?> </p>
         <div class="row">
           <div class="clearfix"></div>
           <hr>
@@ -562,56 +519,50 @@ if($hasRooms > 0){
           </div>
         </div>
         <?php } ?>
-        <!-- End Tours Inclusions / Exclusions -->
+        <!-- End Tours Inclusions / Exclusions --> 
       </div>
     </div>
   </div>
 </section>
-<!-- overview -->
+<!-- overview --> 
 
 <!-- ----------------------  Related Listings   ---------------------------- -->
 <?php $module->relatedItems = array(); if(!empty($module->relatedItems)){ ?>
 <div id="RELATED" class="lastminute4">
   <div class="container">
     <div class="form-group">
-      <h2 class="main-title"><?php if($appModule == "hotels" || $appModule == "ean"){ echo trans('0290'); }else if($appModule == "tours"){ echo trans('0453'); }else if($appModule == "cars"){ echo trans('0493'); } ?></h2>
+      <h2 class="main-title">
+        <?php if($appModule == "hotels" || $appModule == "ean"){ echo trans('0290'); }else if($appModule == "tours"){ echo trans('0453'); }else if($appModule == "cars"){ echo trans('0493'); } ?>
+      </h2>
       <div class="clearfix"></div>
-      <i class="tiltle-line"></i>
-    </div>
+      <i class="tiltle-line"></i> </div>
     <div class="row">
       <div class="col-md-12 col-sm-12 go-left">
         <div class="wrapper">
           <div class="list_carousel">
             <ul id="foo2">
               <?php foreach($module->relatedItems as $item){ ?>
-              <li>
-                <a href="<?php echo $item->slug;?>"><img style="max-height: 180px;width:100%" class="offers-hover img-responsive" src="<?php echo $item->thumbnail;?>" alt="<?php echo character_limiter($item->title,15);?>"/></a>
+              <li> <a href="<?php echo $item->slug;?>"><img style="max-height: 180px;width:100%" class="offers-hover img-responsive" src="<?php echo $item->thumbnail;?>" alt="<?php echo character_limiter($item->title,15);?>"/></a>
                 <div class="m1">
-                  <h6 class="lh1 dark go-right">
-                    <b>
-                      <?php echo character_limiter($item->title,15);?>
-                      <span class="pull-right">
-                        <?php  if($item->price > 0){ ?>
-                        <?php echo $item->currCode;?> <?php echo $item->currSymbol; ?><?php echo $item->price;?>
-                        <?php } ?>&nbsp;&nbsp;
-                        <h6 class="lh1 green go-right">
-                          <?php if($item->avgReviews->overall > 0){ ?>
-                          <div id="score"><span><i class="icon_set_1_icon-18"></i> <?php echo $item->avgReviews->overall;?></span></div>
-                          <?php } ?>
-                        </h6>
-                      </span>
-                      <br><br>
-                      <?php echo $item->location;?> <?php echo $item->stars;?>&nbsp;&nbsp;
-                    </b>
-                  </h6>
+                  <h6 class="lh1 dark go-right"> <b> <?php echo character_limiter($item->title,15);?> <span class="pull-right">
+                    <?php  if($item->price > 0){ ?>
+                    <?php echo $item->currCode;?> <?php echo $item->currSymbol; ?><?php echo $item->price;?>
+                    <?php } ?>
+                    &nbsp;&nbsp;
+                    <h6 class="lh1 green go-right">
+                      <?php if($item->avgReviews->overall > 0){ ?>
+                      <div id="score"><span><i class="icon_set_1_icon-18"></i> <?php echo $item->avgReviews->overall;?></span></div>
+                      <?php } ?>
+                    </h6>
+                    </span> <br>
+                    <br>
+                    <?php echo $item->location;?> <?php echo $item->stars;?>&nbsp;&nbsp; </b> </h6>
                 </div>
               </li>
               <?php }  ?>
             </ul>
             <div class="clearfix"></div>
-            <a id="prev_btn2" class="prev offers" href="#"><img src="<?php echo $theme_url; ?>images/spacer.png" alt=""/></a>
-            <a id="next_btn2" class="next offers" href="#"><img src="<?php echo $theme_url; ?>images/spacer.png" alt=""/></a>
-          </div>
+            <a id="prev_btn2" class="prev offers" href="#"><img src="<?php echo $theme_url; ?>images/spacer.png" alt=""/></a> <a id="next_btn2" class="next offers" href="#"><img src="<?php echo $theme_url; ?>images/spacer.png" alt=""/></a> </div>
         </div>
       </div>
     </div>
@@ -620,10 +571,10 @@ if($hasRooms > 0){
 <?php } ?>
 </div>
 </div>
-<!------------------------  Related Listings   ------------------------------>
+<!------------------------  Related Listings   ------------------------------> 
 
-<script type="text/javascript" src="<?php echo $theme_url; ?>assets/include/slider/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-<script type="text/javascript" src="<?php echo $theme_url; ?>assets/include/slider/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="<?php echo $theme_url; ?>assets/include/slider/bootstrap-datetimepicker.js" charset="UTF-8"></script> 
+<script type="text/javascript" src="<?php echo $theme_url; ?>assets/include/slider/bootstrap-datetimepicker.min.js" charset="UTF-8"></script> 
 <script>
   //------------------------------
   // Write Reviews

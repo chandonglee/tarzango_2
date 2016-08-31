@@ -709,6 +709,7 @@
             $bookingtype = $this->input->post('btype');
             $refno = $this->input->post('refcode');
             $bookid = $this->input->post('bookingid');
+            $useremail = $this->input->post('useremail');
             if($status == "paid"){
               $remaining = $total - $deposit;
               $paid = $deposit;
@@ -760,6 +761,8 @@
               $this->emails_model->paid_sendEmail_owner($invoicedetails,$this->data['app_settings'][0]->site_title);
 
 
+             }elseif($status == 'cancelled'){
+                  $this->emails_model->booking_cancellation_email_cust($useremail,$refno);
              }else{
                 
                 $invoicedetails = invoiceDetails($bookid,$refno);

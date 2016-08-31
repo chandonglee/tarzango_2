@@ -27,6 +27,7 @@
 <input type="hidden" name="checkin" id="cin"  value="<?php echo $bdetails->checkin;?>" />
 <input type="hidden" name="checkout" id="cout"  value="<?php echo $bdetails->checkout;?>" />
 <input type="hidden" name="commissiontype" id="comtype" value="<?php echo $commtype;?>" />
+<input type="hidden" name="useremail" id="" value="<?php echo $bdetails->accountEmail;?>" />
 <input type="hidden" id="apptax" value="<?php echo $applytax;?>" />
               
 <input type="hidden" name="paidamount" value="<?php echo $invoice->amountPaid;?>" />
