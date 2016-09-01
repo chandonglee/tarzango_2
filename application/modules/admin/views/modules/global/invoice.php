@@ -57,6 +57,9 @@
    .inner-page-nav{
      display: none;
    }
+   .pay-header{
+    padding-bottom: 120px;
+   }
    @media(min-width: 1000px){
     .img-responsive, .thumbnail > img, .thumbnail a > img, .carousel-inner > .item > img, .carousel-inner > .item > a > img{
       display: block;
@@ -129,7 +132,9 @@
                   </div>
                 <?php  }else{ ?>
                   <div class="pay-block">
-                  <p class=""><?php echo trans('0409');?> <b class="text-warning wow flash animted" style="color: #fe5050;"><?php echo trans('081');?></b></p>
+                  <img src="images/status_paid.png"> 
+                  <p class=""><?php echo trans('0409');?> <b class="text-warning wow flash animted" style="color: #58f53e;"><?php echo trans('081');?></b></p>
+                  <h1 style="font-size: 30px; text-transform: uppercase; font-family:'Gotham-Bold'">Thank you for your Payment, you are all set</h1>
                   </div>
                 <?php } ?>
             </div>

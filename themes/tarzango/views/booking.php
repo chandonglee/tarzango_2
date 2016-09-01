@@ -130,6 +130,7 @@ if($result == "success" && $appModule == "ean"){ ?>
 
               </ul>
               <div class="tab-content">
+                <input type="hidden" value="<?php echo $_GET['mem_type']; ?>" id="mem_type">
                 <div id="Sign-In" class="tab-pane fade in ">
                   <form action="" method="POST" id="loginform">
                     <input type="hidden" name="form_name" value="login_mem">
@@ -281,15 +282,13 @@ if($result == "success" && $appModule == "ean"){ ?>
                     }
                     PayStand.checkoutComplete = function (data) {
 
-                     
-
                       var formname = $("#mem_pay").prop('name');
   
                       $('html, body').animate({
                           scrollTop: $('body').offset().top - 100
                           }, 'slow');
-                     $("#mem_pay").fadeOut("fast");
-                     $("#waiting").html("Please Wait...");
+                       $("#mem_pay").fadeOut("fast");
+                       $("#waiting").html("Please Wait...");
 
                      $.post("<?php echo base_url(); ?>"+"admin/ajaxcalls/processBooking"+formname,$("#bookingdetails, #"+formname+"form").serialize(), function(response){
                       var resp = $.parseJSON(response);
@@ -620,7 +619,7 @@ if($result == "success" && $appModule == "ean"){ ?>
                 </div>
                 <div class="details">
                   
-                   <img class="form-group img-responsive img-rounded" src="<?php echo $module->thumbnail;?>" alt="<?php echo $module->title;?>" />
+                   <img class="form-group img-responsive img-rounded" src="<?php echo str_replace('demo.', '', $module->thumbnail);?>" alt="<?php echo $module->title;?>" />
                   <p><?php echo trans('0461');?></p>
                   <div class="contact-box">
 

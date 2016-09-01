@@ -1,5 +1,26 @@
 </div>
 </div>
+<?php 
+/*error_reporting(E_ALL);*/
+$CI = &get_instance(); 
+$user_id =  $CI->session->userdata('pt_logged_customer');
+$CI->load->helper('member');
+if($user_id != ''){ 
+  $mem_Data =  check_is_member($user_id);
+  if($mem_Data[0]->accounts_id == $user_id){
+    $R_user_type = "_f_vip_member";
+  }else{
+    $R_user_type = "_f_free_login";
+  }
+ }else{
+  $R_user_type = "_f_no_login";
+}
+/*echo $R_user_type;*/
+
+/*echo json_encode($module);*/
+/*exit();*/
+
+?>
 <?php include 'header_search.php'; ?>
 <link href="<?php echo $theme_url; ?>assets/include/slider/slider.min.css" rel="stylesheet" />
 <link href="<?php echo $theme_url; ?>assets/include/slider/owl.carousel.css" rel="stylesheet" />
@@ -15,55 +36,55 @@
 <link rel="stylesheet" href="<?php echo $theme_url; ?>css/flexslider.css" type="text/css" media="screen" />
 <style type="text/css">
 
-.map-block img{
-  width: 6%;
-}
-#marker_info h4{
-  float: left;
-  margin-left: 10px;
-  color: #1a124e;
-  font-weight: bold;
-}
-#marker_info h3{
-  float: right;
-  margin-right: 10px;
-  margin-top: 10px;
-  color: #ff73b3;
-}
-#marker_info span{
-  float: left;
-  margin-bottom: 25px;
-  margin-left: 10px;
-
-}
-#marker_info{
-  width: 290px;
-  height: 55px;
-  padding: 10px;
-  border-radius: 2px;
-}
-  .header-right{
-    display: none;
+  .map-block img{
+    width: 6%;
   }
-  
-    #detail-block{
-    padding-top: 50px;
-    margin-top: 0px !important;
+  #marker_info h4{
+    float: left;
+    margin-left: 10px;
+    color: #1a124e;
+    font-weight: bold;
   }
+  #marker_info h3{
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+    color: #ff73b3;
+  }
+  #marker_info span{
+    float: left;
+    margin-bottom: 25px;
+    margin-left: 10px;
 
-.listing-back a {
-    font-family: 'Apercu-Light';
-    font-size: 16px;
-    color: #7c7ea2;
-}
-.rating-detail {
-    margin-top: 5px;
-}
-.listing-back {
-    display: inline-block;
-    width: 100%;
-    margin-top: 15px;
-}
+  }
+  #marker_info{
+    width: 290px;
+    height: 55px;
+    padding: 10px;
+    border-radius: 2px;
+  }
+    .header-right{
+      display: none;
+    }
+    
+      #detail-block{
+      padding-top: 50px;
+      margin-top: 0px !important;
+    }
+
+  .listing-back a {
+      font-family: 'Apercu-Light';
+      font-size: 16px;
+      color: #7c7ea2;
+  }
+  .rating-detail {
+      margin-top: 5px;
+  }
+  .listing-back {
+      display: inline-block;
+      width: 100%;
+      margin-top: 15px;
+  }
 </style>
 <script src="<?php echo $theme_url; ?>plugins/lazy/jquery.unveil.js"></script>
 <script>
@@ -104,8 +125,6 @@ $ranking_out_of = $tripadvisor->num_reviews;
                 } else {
                     $image_url = str_replace("bigger/", '', $image_url);
                 }*/
-            ?>
-  <?php 
                 for ($h_img=0; $h_img < 1; $h_img++) { 
                     
                       $image_url = $img_list[$h_img]['fullImage'];
@@ -166,49 +185,49 @@ $ranking_out_of = $tripadvisor->num_reviews;
       <?php include 'includes/reviews.php';?>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4 ">
-    <form method="get">
-      <div class="check-out-form">
-        <div class="amount-detail-page"> <span class="price-detail set_avg_rate"> $ 100 </span> <span class="slas-detail">/ </span> <span class="night-detail"> <?php echo $diff; ?> nights </span> </div>
-        <div class="">
-          <label> check in </label>
-          <div class="control-group">
-            <div class=" input-append date  form_date" >
-              <input name="checkin" size="16" class="date-block dpean3" type="text" value="<?php echo $checkin; ?>" >
-              <span class="add-on"><i class="icon-remove"></i></span> <span class="add-on"><i class="icon-th"></i></span> </div>
-            <br/>
-          </div>
-        </div>
-        <div class="">
-          <label> Check Out </label>
-          <div class="control-group">
-            <div class=" input-append date  form_date" >
-              <input name="checkOut" size="16" class="date-block dpean4" type="text" value="<?php echo $checkOut; ?>" >
-              <span class="add-on"><i class="icon-remove"></i></span> <span class="add-on"><i class="icon-th"></i></span> </div>
-            <br/>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6 col-md-6 col-sm-6 ">
-            <div class="form-group">
-              <label> Rooms </label>
-              <div class="input-next-previce"> <i class="fa fa-chevron-left"> </i>
-                <input type="number" name="room" value="<?php echo $room; ?>" >
-                <i class="fa fa-chevron-right"> </i> </div>
+      <form method="get">
+        <div class="check-out-form">
+          <div class="amount-detail-page"> <span class="price-detail set_avg_rate"> $ 100 </span> <span class="slas-detail">/ </span> <span class="night-detail"> <?php echo $diff; ?> nights </span> </div>
+          <div class="">
+            <label> check in </label>
+            <div class="control-group">
+              <div class=" input-append date  form_date" >
+                <input name="checkin" size="16" class="date-block dpean3" type="text" value="<?php echo $checkin; ?>" >
+                <span class="add-on"><i class="icon-remove"></i></span> <span class="add-on"><i class="icon-th"></i></span> </div>
+              <br/>
             </div>
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 ">
-            <div class="form-group">
-              <label> Guests </label>
-              <div class="input-next-previce"> <i class="fa fa-chevron-left"> </i>
-                <input type="number" name="adults"  value="<?php echo $adults; ?>" >
-                <i class="fa fa-chevron-right"> </i> </div>
+          <div class="">
+            <label> Check Out </label>
+            <div class="control-group">
+              <div class=" input-append date  form_date" >
+                <input name="checkOut" size="16" class="date-block dpean4" type="text" value="<?php echo $checkOut; ?>" >
+                <span class="add-on"><i class="icon-remove"></i></span> <span class="add-on"><i class="icon-th"></i></span> </div>
+              <br/>
             </div>
           </div>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 ">
+              <div class="form-group">
+                <label> Rooms </label>
+                <div class="input-next-previce"> <i class="fa fa-chevron-left"> </i>
+                  <input type="number" name="room" value="<?php echo $room; ?>" >
+                  <i class="fa fa-chevron-right"> </i> </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 ">
+              <div class="form-group">
+                <label> Guests </label>
+                <div class="input-next-previce"> <i class="fa fa-chevron-left"> </i>
+                  <input type="number" name="adults"  value="<?php echo $adults; ?>" >
+                  <i class="fa fa-chevron-right"> </i> </div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="child" value="0">
+          <button type="submit" class="detail-btn" style="">Modify</button>
         </div>
-        <input type="hidden" name="child" value="0">
-        <button type="submit" class="detail-btn" style="">Modify</button>
-        </div>
-    </form>
+      </form>
     </div>
   </div>
 </section>
@@ -309,7 +328,7 @@ $ranking_out_of = $tripadvisor->num_reviews;
                 location_longitude: <?php echo $module->longitude;?>,
                 map_image_url: '<?php echo $module->thumbnail;?>',
                 name_point: '<?php echo character_limiter($module->title, 20);?>',
-                description_point: '<?php echo character_limiter(strip_tags(trim($item->desc)),100);?>',
+                description_point: '<?php echo character_limiter(strip_tags(trim($module->desc)),100);?>',
                 url_point: '<?php echo $module->slug;?>'
             }, <?php foreach($module->relatedItems as $item):?> {
                 name: 'hotel name',

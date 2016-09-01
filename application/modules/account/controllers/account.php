@@ -379,6 +379,7 @@ class Account extends MX_Controller {
 		function logout() {
 				
 				$this->session->unset_userdata('pt_logged_customer');
+				$this->session->unset_userdata('is_member');
 				$this->load->library('facebook');
 				$this->facebook->logoutfb();
 				redirect(base_url() . 'login','refresh');

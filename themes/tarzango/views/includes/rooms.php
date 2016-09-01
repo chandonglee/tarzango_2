@@ -42,8 +42,8 @@
     </div>
     <?php } ?>
     <?php if(!empty($rooms)){ 
-     /*echo json_encode($rooms);*/
-      /*exit();*/
+     /*echo json_encode($rooms);
+      exit();*/
       ?>
       <h2 class="room-title"> Room Types </h2>
     <?php foreach($rooms as $r){ if($r->maxQuantity > 0){ ?>
@@ -80,6 +80,8 @@
              <?php  if($r->price > 100){ ?>
               <?php } ?>
               <button type="submit" class="btn btn-action btn-block chk reserve-btn">Reserve</button>
+              <button type="button" data-target="#M_f_no_login" class="btn btn-action btn-block chk reserve-btn op_modal">M_f_no_login</button>
+              <button type="button" data-target="#M_f_free_login" class="btn btn-action btn-block chk reserve-btn op_modal">M_f_free_login</button>
               <a style="display:none;" href="<?php echo trans('0142');?>" class="reserve-btn"> Reserve </a> </div>
             </form>
           
@@ -124,7 +126,15 @@
       
     </div>
 
+
 <script>
+    $(".op_modal").click(function(){
+        var op_modal = $(this).data('target');
+        console.log(op_modal);
+        $(op_modal).modal('show');
+        $(op_modal).addClass('in');
+        $(op_modal).show();
+    });
     $(document).ready(function() {
       $('.info-toggle').click(function(){
       var collapse_content_selector = $(this).attr('data-click');         
@@ -152,3 +162,205 @@
 
    
 </section>
+
+<div class="modal fade " id="M_f_free_login" role="dialog">
+    <div class="modal-dialog modal-lg">
+    
+      <!-- Modal content-->
+      <div class="modal-content vipmodal">
+        <div class="modal-header">
+          <!--<button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>-->
+        </div>
+        <div class="modal-body">
+         <div class="vippopupheadicon"><img src="images/memb1.png" /></div>
+         <h2 class="becomevip">Become a VIP Member</h2>
+         <p class="weprovide">We provide morden way for group Travelers to book large room block.</p>
+         <p class="savebox"> you save $ <?php echo number_format(($set_avg_rate * $module->starsCount) * 10 / 100, 2); ?> with your current booking if becoming vip member</p>
+         <div class="vipmemberbox">
+            <div class="vipmemberboxmain">
+              <div class="vipmemberboxhead">
+                <h3 class="vipmembertxt">VIP Membership</h3>
+                <p class="vipmemberprsc">$ 19 / month</p>
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+              </div>
+            
+            <div class="vipmemberbenift">
+               <div class="vipbenifitbox">
+                  <img src="images/memb4.png" />
+                  <p>Take a additional 10% of all bookings</p>
+               </div>
+               
+                <div class="vipbenifitbox">
+                  <img src="images/memb5.png" />
+                  <p>Cut the line  & enjoy vip check in - selected hotels</p>
+               </div>
+                <div class="vipbenifitbox">
+                  <img src="images/memb6.png" />
+                  <p>Complementrey upgraded Rooms - selected hotels</p>
+               </div>
+                <div class="vipbenifitbox">
+                  <img src="images/memb7.png" />
+                  <p>Airpot to hotel Drop off in SUV - selecetd cites</p>
+               </div>
+             <div class="vipbenifitbox">
+                  <img src="images/memb8.png" />
+                  <p>Dedicated concierge rep to assist with making reservation & planing your stay </p>
+               </div>
+                <div class="vipbenifitbox">
+                  <img src="images/memb9.png" />
+                  <p>Front in the line access to Air rental cars "coming soon"</p>
+               </div>
+            </div>
+            
+            
+            </div>
+         </div>
+        
+        <div class="VIPBTN">
+            <form action="<?php echo base_url().$appModule;?>/book/<?php echo $module->slug;?>" method="GET">
+              <input type="hidden" name="adults" value="<?php  echo $modulelib->adults; ?>" />
+              <input type="hidden" name="child" value="<?php  echo $modulelib->children; ?>" />
+              <input type="hidden" name="checkin" value="<?php  echo $checkin; ?>" />
+              <input type="hidden" name="checkout" value="<?php  echo $checkOut; ?>" />
+              <input type="hidden" name="roomid" value="<?php echo $r->id; ?>" />
+              <input type="hidden" name="room" value="<?php echo $_GET['room']; ?>" />
+              <input type="hidden" name="mem_type" value="M_c_free" />
+              <button type="button" class="btn freememberbtn" >CONTINUE AS A FREE MEMBER</button>
+            </form>
+
+            <form action="<?php echo base_url().$appModule;?>/book/<?php echo $module->slug;?>" method="GET">
+              <input type="hidden" name="adults" value="<?php  echo $modulelib->adults; ?>" />
+              <input type="hidden" name="child" value="<?php  echo $modulelib->children; ?>" />
+              <input type="hidden" name="checkin" value="<?php  echo $checkin; ?>" />
+              <input type="hidden" name="checkout" value="<?php  echo $checkOut; ?>" />
+              <input type="hidden" name="roomid" value="<?php echo $r->id; ?>" />
+              <input type="hidden" name="room" value="<?php echo $_GET['room']; ?>" />
+              <input type="hidden" name="mem_type" value="M_u_vip" />
+              <button type="button" class="btn vipmemberbtn" >UPGRADE TO VIP MEMBER</button>
+            </form>
+        </div>
+         
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn  vippoupclose" data-dismiss="modal"></button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  
+ <div class="modal fade " id="M_f_no_login" role="dialog">
+    <div class="modal-dialog modal-lg">
+    
+      <!-- Modal content-->
+      <div class="modal-content vipmodal ">
+        <div class="modal-header">
+          <!--<button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>-->
+        </div>
+        <div class="modal-body">
+         <div class="vippopupheadicon"><img src="images/memb1.png" /></div>
+         <h2 class="becomevip">Become a Member</h2>
+         <p class="weprovide">We provide morden way for group Travelers to book large room block.</p>
+         <p class="savebox"> You save <b>$ <?php echo number_format(($set_avg_rate * $module->starsCount) * 10 / 100 , 2); ?></b> with your current booking if becoming vip member</p>
+         <div class="vipmemberbox1">
+            <div class="vipmemberboxmain">
+              <div class="vipmemberboxhead">
+                <h3 class="vipmembertxt">Starter Membership</h3>
+                <p class="vipmemberprsc">$ 0 / month</p>
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+              </div>
+            
+            <div class="VIPBTNbox">
+                <form action="<?php echo base_url().$appModule;?>/book/<?php echo $module->slug;?>" method="GET">
+                  <input type="hidden" name="adults" value="<?php  echo $modulelib->adults; ?>" />
+                  <input type="hidden" name="child" value="<?php  echo $modulelib->children; ?>" />
+                  <input type="hidden" name="checkin" value="<?php  echo $checkin; ?>" />
+                  <input type="hidden" name="checkout" value="<?php  echo $checkOut; ?>" />
+                  <input type="hidden" name="roomid" value="<?php echo $r->id; ?>" />
+                  <input type="hidden" name="room" value="<?php echo $_GET['room']; ?>" />
+                  <input type="hidden" name="mem_type" value="M_c_free" />
+                  <button type="submit" class="btn vipmemberbtn" >CONTINUE AS A FREE MEMBER</button>
+                </form>
+            </div>
+            
+            <div class="vipmemberbenift">
+               <div class="vipbenifitbox">
+                  <img src="images/free_1.png" />
+                  <p>Get access to hotels at a discounted price</p>
+               </div>
+               
+                <div class="vipbenifitbox">
+                  <img src="images/free_2.png" />
+                  <p>Keep track of your bookings</p>
+               </div>
+            </div>
+            
+            
+            </div>
+         </div>
+         
+         <div class="vipmemberbox1">
+            <div class="vipmemberboxmain">
+              <div class="vipmemberboxhead">
+                <h3 class="vipmembertxt">VIP Membership</h3>
+                <p class="vipmemberprsc">$ 19 / month</p>
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+              </div>
+              
+              <div class="VIPBTNbox">
+                <form action="<?php echo base_url().$appModule;?>/book/<?php echo $module->slug;?>" method="GET">
+                  <input type="hidden" name="adults" value="<?php  echo $modulelib->adults; ?>" />
+                  <input type="hidden" name="child" value="<?php  echo $modulelib->children; ?>" />
+                  <input type="hidden" name="checkin" value="<?php  echo $checkin; ?>" />
+                  <input type="hidden" name="checkout" value="<?php  echo $checkOut; ?>" />
+                  <input type="hidden" name="roomid" value="<?php echo $r->id; ?>" />
+                  <input type="hidden" name="room" value="<?php echo $_GET['room']; ?>" />
+                  <input type="hidden" name="mem_type" value="M_c_vip_login" />
+                  <button type="button" class="btn vipmemberbtn" >CONTINUE AS A VIP MEMBER</button>
+                </form>
+              </div>
+            
+            <div class="vipmemberbenift">
+               <div class="vipbenifitbox">
+                  <img src="images/memb4.png" />
+                  <p>Take a additional 10% of all bookings</p>
+               </div>
+               
+                <div class="vipbenifitbox">
+                  <img src="images/memb5.png" />
+                  <p>Cut the line  & enjoy vip check in - selected hotels</p>
+               </div>
+                <div class="vipbenifitbox">
+                  <img src="images/memb6.png" />
+                  <p>Complementrey upgraded Rooms - selected hotels</p>
+               </div>
+                <div class="vipbenifitbox">
+                  <img src="images/memb7.png" />
+                  <p>Airpot to hotel Drop off in SUV - selecetd cites</p>
+               </div>
+             <div class="vipbenifitbox">
+                  <img src="images/memb8.png" />
+                  <p>Dedicated concierge rep to assist with making reservation & planing your stay </p>
+               </div>
+                <div class="vipbenifitbox">
+                  <img src="images/memb9.png" />
+                  <p>Front in the line access to Air rental cars "Coming soon"</p>
+               </div>
+            </div>
+            
+            
+            </div>
+         </div>
+        
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn  vippoupclose" data-dismiss="modal"></button> -->
+        </div>
+      </div>
+      
+    </div>
+  </div> 
+  </div>
+  

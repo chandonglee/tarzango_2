@@ -786,11 +786,7 @@ class Ajaxcalls extends MX_Controller {
 					$this->form_validation->set_rules('lastname', trans("0172"), 'trim|required');
 					//$this->form_validation->set_rules('agreement', "agreement", 'required');
 					if ($this->form_validation->run() == FALSE) {
-							$msg = "
-
-	<div class='alert alert-danger'>" . validation_errors() . "</div>
-
-	";
+							$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
 							$bookingResult = array("error" => "yes", 'msg' => validation_errors());
 					}
 					else {
@@ -799,9 +795,7 @@ class Ajaxcalls extends MX_Controller {
 							$this->db->where('accounts_type', 'customers');
 							$nums = $this->db->get('pt_accounts')->num_rows();
 							if ($nums > 0) {
-									$msg = "
-
-	<div class='alert alert-danger'>" . trans("0313") . "</div>";
+									$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
 									$bookingResult = array("error" => "yes", 'msg' => trans("0313"));
 							}
 							else {
@@ -821,11 +815,7 @@ class Ajaxcalls extends MX_Controller {
 					$this->form_validation->set_rules('pickup_location', 'Pickup location', 'trim|required');
 					$this->form_validation->set_rules('pickup_time', 'Pickup time', 'trim|required');
 					if ($this->form_validation->run() == FALSE) {
-							$msg = "
-
-	<div class='alert alert-danger'>" . validation_errors() . "</div>
-
-	";
+							$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
 							$bookingResult = array("error" => "yes", 'msg' => validation_errors());
 					}
 					else {
@@ -834,9 +824,7 @@ class Ajaxcalls extends MX_Controller {
 							$this->db->where('accounts_type', 'customers');
 							$nums = $this->db->get('pt_accounts')->num_rows();
 							if ($nums > 0) {
-									$msg = "
-
-	<div class='alert alert-danger'>" . trans("0313") . "</div>";
+									$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
 									$bookingResult = array("error" => "yes", 'msg' => trans("0313"));
 							}
 							else {

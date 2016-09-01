@@ -19,6 +19,12 @@ footer{
     font-size: 19px !important;
     cursor: pointer;
 }
+.img-responsive{
+  height: 255px;
+}
+.box{
+  height: 363px;
+}
 </style>
 
 <link rel="stylesheet" href="<?php echo $theme_url; ?>css/style_listing.css" type="text/css" media="screen" />
@@ -401,30 +407,7 @@ if($room <= 0){
         }
       });
 });
-var clicks = 1;
-              function onClick() {
-                  clicks += 1;
-                  clicks <= 25;
-                  if (clicks <= 25){
-                    document.getElementById("clicks").innerHTML = clicks;
-                  }else if (clicks > 25) {
-                      clicks = 1;
-                      document.getElementById("clicks").innerHTML = clicks;
-                  }
-
-              };
-              var clicks = 1;
-              function onClick1() {
-                
-                 if (clicks > 1){
-                  clicks -= 1;
-                  document.getElementById("clicks").innerHTML = clicks;
-                }else if (clicks = 1) {
-                      clicks = 25;
-                       document.getElementById("clicks").innerHTML = clicks;
-                  }
-
-              };
+              
   $(".update_btn").click(function(){
   //$(document).ready(function(){
       //$(".form_header_one")
@@ -459,8 +442,9 @@ var clicks = 1;
         {
           //console.log(data);
           response = $.parseJSON(data);
-          
-          var HTML_DATA = '';
+          var clicks = 1;
+              
+          var HTML_DATA = '<script>function onClick() {clicks += 1;clicks <= '+response.hotel.length+';if (clicks <= '+response.hotel.length+'){document.getElementById("clicks").innerHTML = clicks;}else if (clicks > '+response.hotel.length+') {clicks = 1;document.getElementById("clicks").innerHTML = clicks;}};var clicks = 1;function onClick1() { if (clicks > 1){ clicks -= 1;document.getElementById("clicks").innerHTML = clicks;}else if (clicks = 1) {clicks = '+response.hotel.length+';document.getElementById("clicks").innerHTML = clicks;}};<\/script>';
             if(response.location_img != '' && response.location_img != null){
               HTML_DATA += '<style>.group_booking_body .section5{background-image:url('+url+'uploads/images/location_img/'+response.location_img+')}</style>';
             }
@@ -470,17 +454,22 @@ var clicks = 1;
           for (var i = 0;  i < response.hotel.length; i++) {
             var base_date = response.hotel[i];
            var hotel_name = base_date.title;
+           var add_dot = '';
+           if(hotel_name.length > 20){
+              add_dot = '...';
+           }
             HTML_DATA += '<li><div class="col-sm-4">';  
             HTML_DATA += '<img  class="img-responsive" src="'+base_date.thumbnail.replace('http://demo.tarzango.com/','http://tarzango.com/')+'"><div class="box">';
             HTML_DATA += '<div class="stars" style="font-size: 18px !important;">'+base_date.stars+'</div>';
-            HTML_DATA += '<h1>'+hotel_name.substring(0,25)+'</h1>';
-            HTML_DATA += '<p> '+base_date.room_Data[0].maxQuantity+' avalible room <br>'+ base_date.distance+' miles from '+city +'</p>';
+            HTML_DATA += '<h1>'+hotel_name.substring(0,20)+add_dot+'</h1>';
+            //HTML_DATA += '<p> '+base_date.room_Data[0].maxQuantity+' avalible room <br>';
+            HTML_DATA += '<p> '+base_date.distance.substring(0,4)+' miles from '+city +'</p>';
             HTML_DATA += '<h2>$ '+base_date.price+'<span> / night</span></h2><input style="float:right;width: 38px;" class="verified" type="checkbox" id="sel_hotel_'+base_date.id+'" onClick="get_hotel('+base_date.id+',\''+base_date.title+'\')">'; 
              HTML_DATA += '</div></li> ';
 
           }
            HTML_DATA += '</ul></div>';
-           HTML_DATA += '<div class="buttons"><p><img  type="button" onClick="onClick1()" id="prev" class="pre" src="images/group_booking_icon4.png">#<a id="clicks">1</a><img  type="button" onClick="onClick()" id="next" class="next" src="images/group_booking_icon5.png"></p></div></div></div></div></div> </div>';
+           HTML_DATA += '<div class="buttons" style="width:390px;"><p><img  type="button" onClick="onClick1()" id="prev" class="pre" src="images/group_booking_icon4.png">#<a id="clicks">1</a><img  type="button" onClick="onClick()" id="next" class="next" src="images/group_booking_icon5.png"></p></div></div></div></div></div> </div>';
 
           $("#hotel_deta").html(HTML_DATA);
              

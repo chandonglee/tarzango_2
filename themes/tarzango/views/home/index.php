@@ -495,7 +495,7 @@ $('#myModal').show();
             </div>
             <h3>Become a Member</h3>
             <h4>We provide a modern way for Group Travellers to book large room blocks.</h4>
-            <a class="get-button" href="#">GET STARTED</a>
+            <a class="get-button" href="<?php echo base_url().'membership' ?>">GET STARTED</a>
           </div>
           </div>
         </div>
