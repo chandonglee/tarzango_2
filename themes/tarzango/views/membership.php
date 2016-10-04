@@ -3,6 +3,17 @@
 </div>
 </div>
 <style type="text/css">
+
+
+@media(min-width: 1600px){
+  .center{
+    margin-left: 120px !important;
+    z-index: 999;
+    margin-top: 20px;
+
+
+  }
+}
 .container-fluid inner-page-nav{
 	display: none !important;
 }
@@ -14,37 +25,18 @@ footer{
 footer .row .col-sm-12{
 	padding-top: 50px;
 }
-.header-navigation-section .menu img {
-    float: right;
-    margin-top: 27px;
-    cursor: pointer;
-}
-.header-navigation-section .menu p.close-button {
-    display: none;
-    background-color: #fff;
-    padding: 20px 7px;
-    line-height: 0px;
-    font-size: 50px;
-    color: #a0e5fd;
-    font-family: proximanova_light;
-    border-radius: 100%;
-    position: absolute;
-    top: 17px;
-    right: 0px;
-    cursor: pointer;
-}
 
 </style>
+			<?php include 'new_header.php';?>
 <div class="membership">
-	
-<div class="contact" style="z-index:999;">
-  <div class="container-main main_header">
+  
+<div class="contact" style="margin-top:85px">
+  <div class="container-main main_header" >
     <div class="container">
       <div class="row">
        
-			<?php include 'menu_header.php';?>
-            <center style="margin-left: 88px; z-index: 999;
-    margin-top: 20px;"><a  href="<?php echo base_url(); ?>"><img class="" style="z-index:999" src="images/contact-logo.png"></a></center>
+            <center class="center" style="margin-left: 88px; z-index: 999;
+    margin-top: 20px;"></center>
           
          
      
@@ -56,7 +48,7 @@ footer .row .col-sm-12{
     </div>
   </div>
   </div>
-	<div class="membership_body" style="z-index:999;">
+	<div class="membership_body" >
 	<img class="left-bg" src="images/membership-left-bg.png">
 	<img class="right-bg" src="images/membership-right-bg.png">
 		<div class="container">
@@ -96,7 +88,7 @@ footer .row .col-sm-12{
 								<h5>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </h5>
 							</div>
 							<div class="get-started">
-							<?php if($this->_ci->session->userdata('pt_logged_customer')){ ?>
+							<?php if($this->_ci->session->userdata('pt_logged_customer')) { ?>
 								<button  id="element_id_1470283648" type="button">Already a member</button>
 
 								<?php }else{ ?>

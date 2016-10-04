@@ -5,15 +5,29 @@ if ( ! function_exists('invoiceDetails'))
     function invoiceDetails($id,$ref,$reviewData = null)
     {
       $CI = get_instance();
-        $CI->db->select('pt_bookings.*,pt_accounts.ai_mobile,pt_accounts.accounts_id,pt_accounts.ai_country,pt_accounts.accounts_email,pt_accounts.ai_first_name,pt_accounts.ai_last_name,pt_accounts.ai_address_1,pt_accounts.ai_address_2');
+        $CI->db->select('pt_bookings.*,pt_accounts.ai_mobile,pt_accounts.accounts_id,pt_accounts.ai_country,pt_accounts.accounts_email,pt_accounts.ai_first_name,pt_accounts.ai_last_name,pt_accounts.ai_address_1,pt_accounts.ai_address_2,pt_book_extra.*,pt_bookings.booking_id');
         $CI->db->where('pt_bookings.booking_id',$id);
         $CI->db->where('pt_bookings.booking_ref_no',$ref);
         $CI->db->join('pt_accounts','pt_bookings.booking_user = pt_accounts.accounts_id','left');
+        $CI->db->join('pt_book_extra','pt_book_extra.booking_id = pt_bookings.booking_id','left');
         $invoiceData = $CI->db->get('pt_bookings')->result();
-        /*echo json_encode($invoiceData);
+        if(!$invoiceData){
+            $CI->db->select('pt_bookings.*,pt_bookings.booking_id,pt_accounts.ai_mobile,pt_accounts.accounts_id,pt_accounts.ai_country,pt_accounts.accounts_email,pt_accounts.ai_first_name,pt_accounts.ai_last_name,pt_accounts.ai_address_1,pt_accounts.ai_address_2');
+          $CI->db->where('pt_bookings.booking_id',$id);
+          $CI->db->where('pt_bookings.booking_ref_no',$ref);
+          $CI->db->join('pt_accounts','pt_bookings.booking_user = pt_accounts.accounts_id','left');
+          $invoiceData = $CI->db->get('pt_bookings')->result();
+        }
+        /*echo $CI->db->last_query();
+        echo "<br>";
+        echo $id;
+        echo json_encode($invoiceData);
         exit();*/
         $bookingsubitem = json_decode($invoiceData[0]->booking_subitem);
         $bookingExtras = json_decode($invoiceData[0]->booking_extras);
+        if($invoiceData[0]->extra_data){
+          $extra_data = json_decode($invoiceData[0]->extra_data);
+        }
         $bookingExtrasInfo = array();
         $subItemData = "";
         $itemData = "";
@@ -133,6 +147,7 @@ if ( ! function_exists('invoiceDetails'))
           "expiryFullDate" => $fullExpiry,
           "reviewsData" => $reviewData,
           "bookingExtras" => $bookingExtrasInfo,
+          "Extra_data" => $extra_data,
           "amountPaid" => $invoiceData[0]->booking_amount_paid,
           "bookingUser" => $invoiceData[0]->booking_user,
           "userCountry" => $invoiceData[0]->ai_country,
@@ -158,13 +173,26 @@ if ( ! function_exists('pt_get_einvoice_details'))
 {
     function pt_get_einvoice_details($id,$itid)
     {
+      /*error_reporting(-1);*/
     $CI = get_instance();
-    $CI->db->select('pt_ean_booking.*,pt_accounts.ai_mobile,pt_accounts.accounts_id,pt_accounts.ai_country,pt_accounts.accounts_email,pt_accounts.ai_first_name,pt_accounts.ai_last_name,pt_accounts.ai_address_1,pt_accounts.ai_address_2');
+    $CI->db->select('pt_ean_booking.*,pt_accounts.ai_mobile,pt_accounts.accounts_id,pt_accounts.ai_country,pt_accounts.accounts_email,pt_accounts.ai_first_name,pt_accounts.ai_last_name,pt_accounts.ai_address_1,pt_accounts.ai_address_2,pt_book_extra.*');
     $CI->db->where('pt_ean_booking.book_id',$id);
     $CI->db->where('pt_ean_booking.book_itineraryid',$itid);
+    $CI->db->where('pt_book_extra.hotel_type',1);
     $CI->db->join('pt_accounts','pt_ean_booking.book_user = pt_accounts.accounts_id','left');
+     $CI->db->join('pt_book_extra','pt_book_extra.booking_id = pt_ean_booking.book_id','left');
     $invoiceData = $CI->db->get('pt_ean_booking')->result();
-
+    if(!$invoiceData){
+        $CI->db->select('pt_ean_booking.*,pt_accounts.ai_mobile,pt_accounts.accounts_id,pt_accounts.ai_country,pt_accounts.accounts_email,pt_accounts.ai_first_name,pt_accounts.ai_last_name,pt_accounts.ai_address_1,pt_accounts.ai_address_2');
+        $CI->db->where('pt_ean_booking.book_id',$id);
+        $CI->db->where('pt_ean_booking.book_itineraryid',$itid);
+        
+        $CI->db->join('pt_accounts','pt_ean_booking.book_user = pt_accounts.accounts_id','left');
+        
+        $invoiceData = $CI->db->get('pt_ean_booking')->result();
+    }
+    /*echo json_encode($invoiceData);
+    exit();*/
    /* $returnData = (object)array("id" => $invoiceData[0]->book_id, 
           "module" => "ean",
           "itemid" => $invoiceData[0]->book_hotelid,
@@ -280,6 +308,20 @@ if(! function_exists('updateInvoiceStatus')){
   }
 }
 
+
+if(! function_exists('updateInvoiceStatus_hb')){
+  function updateInvoiceStatus_hb($invoiceid,$amount,$txnid,$paymethod,$status,$module,$totalamount){
+    $CI = get_instance();
+    $remaining = $totalamount - $amount;
+    $bookingdata = array(
+      'book_cancelnumber' => 'paid',
+      );
+    $CI->db->where('book_id',$invoiceid);
+    $CI->db->update('pt_ean_booking',$bookingdata);
+
+
+  }
+}
 if ( ! function_exists('pt_get_selected_rooms'))
 {
     function pt_get_selected_rooms($roomstring)

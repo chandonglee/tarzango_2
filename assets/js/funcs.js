@@ -92,7 +92,8 @@ function delfunc(id,baseurl){
   var answer = confirm("Are you sure you want to delete?");
   if (answer){
      $.post(baseurl, { id: id }, function(theResponse){
-                 location.reload();
+          //console.log(theResponse);
+          location.reload();
       });
 
   }else{

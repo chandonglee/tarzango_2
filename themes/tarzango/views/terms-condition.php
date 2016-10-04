@@ -1,4 +1,20 @@
 <style type="text/css">
+
+.menu-header{
+  position: absolute;
+    margin-left: -70px;
+    margin-right: 100px;
+}
+
+@media(min-width: 1600px){
+  .center{
+    margin-left: 120px !important;
+    z-index: 999;
+    margin-top: 20px;
+
+
+  }
+}
 .container-fluid inner-page-nav{
 	display: none !important;
 }
@@ -31,16 +47,17 @@ h3{
 	font-size: 16px;
 }
 
+
 </style>
 
-<div class="contact" style="z-index:999;">
+      <?php include 'new_header.php';?>
+<div class="contact" style="z-index:999;padding-top:85px">
   <div class="container-main main_header">
   <div class="container">
       <div class="row">
        
-      <?php include 'menu_header.php';?>
-            <center style="margin-left: 88px; z-index: 999;
-    margin-top: 20px;"><a  href="<?php echo base_url(); ?>"><img class="" style="z-index:999" src="images/contact-logo.png"></a></center>
+            <center class="center" style="margin-left: 88px; z-index: 999;
+    margin-top: 20px;"></center>
           
          
      
@@ -55,7 +72,7 @@ h3{
   </div>
 <div class="innerpage">
 
-	<img class="top-bg" src="images/innerpage_top_bg.png">
+	<img class="top-bg" src="images/innerpage_top_bg.png" >
 	<img class="left-bg" src="images/innerpage_left_bg.png">
 	<img class="right-bg" src="images/innerpage_right_bg.png">
 		<div class="container">

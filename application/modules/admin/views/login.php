@@ -17,6 +17,70 @@
     <script src="<?php echo base_url(); ?>assets/include/login/ladda.min.js"></script>
   </head>
   <style>
+  @font-face {
+    font-family: gotham_medium;
+    src: url(<?php echo base_url(); ?>themes/tarzango/fonts_attraction/GothamNarrow-Medium_0.otf);
+}
+@font-face {
+    font-family: apercu_regular;
+    src: url(<?php echo base_url(); ?>themes/tarzango//fonts_attraction/Apercu-Regular.otf);
+}
+
+
+  ::-webkit-input-placeholder {
+    font-family: apercu_regular !important;
+   color: #6d84b4  !important;
+}
+:-moz-placeholder { /* Firefox 18- */
+    font-family: apercu_regular !important;
+   color: #6d84b4  !important;
+}
+::-moz-placeholder {  /* Firefox 19+ */
+   font-family: apercu_regular !important;
+   color: #6d84b4  !important;
+}
+:-ms-input-placeholder {  
+    font-family: apercu_regular !important;
+   color: #6d84b4  !important;
+}
+
+  .checkbox-text{
+    font-family: apercu_regular;
+    color: #6d84b4 !important;
+    font-size: 13px;
+    padding-left: 2px;
+  }
+  .form-heading{
+    font-family: gotham_medium;
+    color: #4867aa !important;
+    
+  }
+  input{
+      height: 45px !important;
+    border: 1px solid #d3d4e0 !important;
+    padding: 10px 25px !important;
+    font-size: 17px !important;
+    color: #373b71 !important;
+    font-family: apercu_regular;
+  }
+  button{
+    text-align: center ;
+    font-family: gotham_medium;
+    font-size: 15px !important;
+    color: #fff !important;
+    padding: 15px 20% !important;
+    background: #3ecdff !important;
+    border-radius: 2px !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    border: none !important;
+    letter-spacing: 1px !important;
+    margin: 1% 0 5% !important;
+  }
+    form{
+          padding: 30px;
+      background: #fff; 
+    }
     body {
     width: 100%;
     height: 100%;
@@ -126,22 +190,22 @@
   <div class="container">
     <!-- BEGIN SIGNIN SECTION-->
     <form method="POST" role="form" style="margin-top:100px;" class="form-signin form-horizontal wow flipInX animated" style="display: block;" onsubmit="return false;">
-      <img src="<?php echo base_url(); ?>assets/img/admin.png" class="center-block" style="width:78px;height:60px" alt="" />
-      <h2 class="form-heading text-center" style="color: black;" >Please Sign in</h2>
+      <img src="<?php echo base_url(); ?>assets/img/admin.png" class="center-block" style="width:55px;height:50px" alt="" />
+      <h2 class="form-heading text-center" style="color: black;" >Sign in</h2>
       <input type="text" name="email" placeholder="Username" required="" autofocus="" class="form-control">
       <input type="password" name="password" placeholder="Password" required="" class="form-control">
       <div class="row">
-        <div class="col-xs-6">
+      <div class="forget-password" style="color:black; margin-top: 0px;" >
+        <a id="link-forgot" href="#"> Forgot password?</a>
+      </div>
+        <div class="col-xs-12">
           <label class="checkbox" style="color:black" >
-          <input type="checkbox" name="remember" value="remember-me" > Remember me
+          <input type="checkbox" name="remember" value="remember-me" style=""><span class="checkbox-text"> Keep me signed in on this computer</span>
           </label>
         </div>
-        <div class="col-xs-6">
-          <button type="submit" class="btn btn-primary btn-block ladda-button" data-style="zoom-in">Sign in</button>
+        <div class="col-xs-12">
+          <button type="submit" class="btn btn-primary btn-block ladda-button" data-style="zoom-in">Sign In</button>
         </div>
-      </div>
-      <div class="forget-password" style="color:black" >Forgot password?
-        <a id="link-forgot" href="#" style="color: black;"> Click here to reset</a>
       </div>
       <div class="resultlogin"></div>
     </form>
@@ -149,19 +213,21 @@
     <!-- END SIGNIN SECTION-->
     <!-- BEGIN SIGNUP SECTION-->
     <!-- BEGIN FORGOT PASSWORD SECTION-->
-    <form role="form" class="form-forgot form-horizontal wow flipInY animated" style="display: none; margin-top:180px;"  id="passresetfrm" onsubmit="return false;">
-      <h2 class="form-heading text-center"> Forgot Password</h2>
+    <form role="form" class="form-forgot form-horizontal wow flipInY animated" style="display: none; margin-top:160px;height: 260px;"  id="passresetfrm" onsubmit="return false;">
+      <h2 class="form-heading text-center" style="margin-top: 0px"> Forgot Password</h2>
       <div class="resultreset"></div>
-      <div style="font-size: 12px;" class="text-center">Enter your email address to reset your password</div>
+      <div style="font-size: 12px; font-family: apercu_regular;color: #6d84b4 !important;" class="text-center">Enter your email address to reset your password</div>
       <br>
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-envelope"></i>
         </span>
-        <input type="email" id="resetemail" name="email" placeholder="Email" class="form-control">
+        <input style="padding: 15px 23px !important;" type="email" id="resetemail" name="email" placeholder="Email" class="form-control">
       </div>
       <br>
-      <div class="form-actions">
+      <div class="form-actions col-xs-6" style="padding-left: 0px">
         <button type="button" class="btn btn-primary btn-back"><i class="fa fa-angle-left"></i>&nbsp;Back</button>
+      </div>
+      <div class="form-actions col-xs-6" style="padding-right: 0px">  
         <button id="btn-forgot" type="button" class="btn btn-success pull-right resetbtn ladda-button">Reset My Password</button>
       </div>
     </form>

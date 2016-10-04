@@ -8,8 +8,18 @@ $return_url = $_GET['ret_url'];
 
 ?>
 <style type="text/css">
+	
+
+@media(min-width: 1600px){
+  .center{
+    margin-left: 120px !important;
+    z-index: 999;
+    margin-top: 20px;
 
 
+  }
+}
+	
 
 	::-webkit-input-placeholder { /* WebKit, Blink, Edge */
 	    color:    #373b71 !important;
@@ -30,15 +40,11 @@ $return_url = $_GET['ret_url'];
 	.container-fluid inner-page-nav{
 		display: none !important;
 	}
-	footer{
-		background-size: 94% !important ;
-		min-height: 480px;
-		height: auto;
-	}
+	
 	footer .row .col-sm-12{
 		padding-top: 50px;
 	}
-
+	
 		@media (min-width: 1200px)
 		{
 			.col-sm-2, .check-new 
@@ -46,15 +52,18 @@ $return_url = $_GET['ret_url'];
 				width: 16.666667%;
 			}
 		}
+		
 </style>
+<?php include 'new_header.php';?>
 <div class="membership">
-	<div class="container-main main_header">
-		<div class="container">
+  
+<div class="contact" style="margin-top:85px">
+  <div class="container-main main_header" >
+    <div class="container">
       <div class="row">
        
-      <?php include 'menu_header.php';?>
-            <center style="margin-left: 88px; z-index: 999;
-    margin-top: 20px;"><a  href="<?php echo base_url(); ?>"><img class="" style="z-index:999" src="images/contact-logo.png"></a></center>
+            <center class="center" style="margin-left: 88px; z-index: 999;
+    margin-top: 20px;"></center>
           
          
      
@@ -64,8 +73,8 @@ $return_url = $_GET['ret_url'];
         </div>
       </div>
     </div>
-    </div>
-	</div>
+  </div>
+  </div>
 	<div class="membership_steps_body">
 	<!--<img class="left-bg" src="images/membership-left-bg.png">
 	<img class="right-bg" src="images/membership-right-bg.png">-->
@@ -83,40 +92,103 @@ $return_url = $_GET['ret_url'];
 						</div>
 						<form class="" id="signupform" name="signup" method="POST">
 							<input type="hidden" name="form_name" value="signup_mem_new">
-							<div class="col-sm-12 no-padding">
+
+							<div class="col-sm-12 no-padding" id="account">
 								<div class="col-sm-6">
 			                      <div class="form-group">
-			                        <label for="name">First Name</label>
+			                     
 			                        <input type="text" class="form-control" id="name" name="firstname" value="" placeholder="Full Name">
 			                      </div>
 			                    </div>
 								  <div class="col-sm-6">
 			                      <div class="form-group">
-			                       <label  class="required go-right"><?php echo trans('0172');?></label>
+			                       
 			                        <input class="form-control form" type="text" placeholder="<?php echo trans('0172');?>" name="lastname"  value="">                    
 			                      </div>
 			                    </div>
 			                    <div class="col-sm-6">
 			                      <div class="form-group">
-			                        <label for="no">Mobile Number</label>
+			                        
 			                        <input type="number" class="form-control" id="no" name="no" value="" placeholder="Mobile Number">
 			                      </div>
 			                    </div>
 			                    <div class="col-sm-6">
 			                      <div class="form-group">
-			                        <label for="email">Email</label>
+			                        
 			                        <input type="email" class="form-control" id="email" name="email" value="" placeholder="Email">
 			                      </div>
 			                    </div>
 								<div class="col-sm-6">
 			                      <div class="form-group">
-			                        <label for="pass">Password</label>
+			                        
 			                        <input type="password" class="form-control" id="pass" name="password" value="" placeholder="password">
 			                      </div>
 			                    </div>
 			                    <div class="col-sm-6">
 			                      <div class="form-group">
-			                        <label for="conf_pass">Confirm Password</label>
+			                       
+			                        <input type="password" class="form-control" id="conf_pass" name="confirmpassword" value="" placeholder="Confirm Password">
+			                      </div>
+			                    </div>
+			                   
+								<div class="col-sm-12 check" style="display:none;">
+									<div class="checkbox">
+									  <label><input type="checkbox" value="" name="add_conf" id="add_conf">My billing address is the same as my home address.</label>
+									</div>
+								</div>
+								<div class="col-sm-12 check">
+									<div class="checkbox">
+									  <label class="agreement"><input type="checkbox" checked="checked" value="" name="agreement" id="agreement">I have read and agree to the Tarzango VIP Membership <a href="#">terms and conditions.</a></label>
+									</div>
+								</div>
+								
+								<div class="col-sm-4 col-sm-offset-4">
+									 <center><div class="form-group submit-button">
+									  <input type="submit" style="display:none;" class="form-control" id="submit" name="submit" value="Sign Up">
+									  <div style="display:none;">
+									   <button  id="element_id_1470283648" style="display:none;" type="button"></button>
+									   </div>
+									  <button type="button" id="submit" style="" class=" btn btn-action btn-lg  completebook" name="signup"  onclick="return completebook('<?php echo base_url();?>','<?php echo trans('0159')?>');">Continue to Billing</button>
+									</div>
+								</div></center>	
+							</div>
+
+
+
+							<!-- <div class="col-sm-12 no-padding " style="display:none" id="contact">
+								<div class="col-sm-6">
+			                      <div class="form-group">
+			                     
+			                        <input type="text" class="form-control" id="name" name="firstname" value="" placeholder="Full Name">
+			                      </div>
+			                    </div>
+								  <div class="col-sm-6">
+			                      <div class="form-group">
+			                       
+			                        <input class="form-control form" type="text" placeholder="<?php echo trans('0172');?>" name="lastname"  value="">                    
+			                      </div>
+			                    </div>
+			                    <div class="col-sm-6">
+			                      <div class="form-group">
+			                        
+			                        <input type="number" class="form-control" id="no" name="no" value="" placeholder="Mobile Number">
+			                      </div>
+			                    </div>
+			                    <div class="col-sm-6">
+			                      <div class="form-group">
+			                        
+			                        <input type="email" class="form-control" id="email" name="email" value="" placeholder="Email">
+			                      </div>
+			                    </div>
+								<div class="col-sm-6">
+			                      <div class="form-group">
+			                        
+			                        <input type="password" class="form-control" id="pass" name="password" value="" placeholder="password">
+			                      </div>
+			                    </div>
+			                    <div class="col-sm-6">
+			                      <div class="form-group">
+			                       
 			                        <input type="password" class="form-control" id="conf_pass" name="confirmpassword" value="" placeholder="Confirm Password">
 			                      </div>
 			                    </div>
@@ -133,9 +205,76 @@ $return_url = $_GET['ret_url'];
 								</div>
 								<div class="col-sm-8">
 									<div class="process_tab">
-										<p class="">Account</p><img src="images/arrow-right.png">
-										<p class="">Contact</p><img src="images/arrow-right.png">
-										<p class="last">Billing</p>
+										<p id="account1" class="account1">Account</p><img src="images/arrow-right.png">
+										<p class="contact1">Contact</p><img src="images/arrow-right.png">
+										<p class="billing1 last">Billing</p>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group submit-button">
+									  <input type="submit" style="display:none;" class="form-control" id="submit" name="submit" value="Sign Up">
+									  <div style="display:none;">
+									   <button  id="element_id_1470283648" style="display:none;" type="button"></button>
+									   </div>
+									   <button type="button" id="submit" style="" class=" btn btn-action btn-lg  completebook" name="signup"  onclick="return completebook('<?php echo base_url();?>','<?php echo trans('0159')?>');">Continue to Billing</button>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="col-sm-12 no-padding membership" style="display:none;" id="billing">
+								<div class="col-sm-6">
+			                      <div class="form-group">
+			                     
+			                        <input type="text" class="form-control" id="name" name="firstname" value="" placeholder="Full Name">
+			                      </div>
+			                    </div>
+								  <div class="col-sm-6">
+			                      <div class="form-group">
+			                       
+			                        <input class="form-control form" type="text" placeholder="<?php echo trans('0172');?>" name="lastname"  value="">                    
+			                      </div>
+			                    </div>
+			                    <div class="col-sm-6">
+			                      <div class="form-group">
+			                        
+			                        <input type="number" class="form-control" id="no" name="no" value="" placeholder="Mobile Number">
+			                      </div>
+			                    </div>
+			                    <div class="col-sm-6">
+			                      <div class="form-group">
+			                        
+			                        <input type="email" class="form-control" id="email" name="email" value="" placeholder="Email">
+			                      </div>
+			                    </div>
+								<div class="col-sm-6">
+			                      <div class="form-group">
+			                        
+			                        <input type="password" class="form-control" id="pass" name="password" value="" placeholder="password">
+			                      </div>
+			                    </div>
+			                    <div class="col-sm-6">
+			                      <div class="form-group">
+			                       
+			                        <input type="password" class="form-control" id="conf_pass" name="confirmpassword" value="" placeholder="Confirm Password">
+			                      </div>
+			                    </div>
+			                   
+								<div class="col-sm-12 check" style="display:none;">
+									<div class="checkbox">
+									  <label><input type="checkbox" value="" name="add_conf" id="add_conf">My billing address is the same as my home address.</label>
+									</div>
+								</div>
+								<div class="col-sm-12 check">
+									<div class="checkbox">
+									  <label class="agreement"><input type="checkbox" checked="checked" value="" name="agreement" id="agreement">I have read and agree to the Tarzango VIP Membership <a href="#">terms and conditions.</a></label>
+									</div>
+								</div>
+								<div class="col-sm-8">
+									<div class="process_tab">
+										<p id="account1" class="account1">Account</p><img src="images/arrow-right.png">
+										<p class="contact1">Contact</p><img src="images/arrow-right.png">
+										<p class="billing1 last">Billing</p>
 									</div>
 								</div>
 								<div class="col-sm-4">
@@ -147,7 +286,8 @@ $return_url = $_GET['ret_url'];
 									   <button type="button" id="submit" style="" class=" btn btn-action btn-lg  completebook" name="signup"  onclick="return completebook('<?php echo base_url();?>','<?php echo trans('0159')?>');">Sign up</button>
 									</div>
 								</div>
-							</div>
+							</div> -->
+
 						</form>
 					</div>
 					<div class="col-sm-1">
@@ -184,6 +324,26 @@ $return_url = $_GET['ret_url'];
 
 
 <script type="text/javascript">
+
+/*$(".account1").click(function(){
+    $("#account").show();
+     $("#contact").hide();
+     $("#billing").hide();
+});
+
+$(".contact1").click(function(){
+    $("#contact").show();
+     $("#account").hide();
+     $("#billing").hide();
+});
+$(".billing1").click(function(){
+    $("#billing").show();
+     $("#account").hide();
+     $("#contact").hide();
+});*/
+
+
+
 
 function completebook(url,msg){
     var formname = $(".completebook").prop('name');

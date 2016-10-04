@@ -9,6 +9,8 @@ class Home extends MX_Controller {
 		function __construct() {
 	  		  	modules :: load('front');
 	  		  	//$this->load->helper("member");
+	  		  	$this->load->model('admin/accounts_model');
+
 				$this->data['app_settings'] = $this->settings_model->get_settings_data();
 			   	$this->data['geo'] = $this->load->get_var('geolib');
 				$this->data['phone'] = $this->load->get_var('phone');
@@ -16,7 +18,15 @@ class Home extends MX_Controller {
 				$this->data['contact_address'] = $this->load->get_var('contact_address');
 				$this->data['usersession'] = $this->session->userdata('pt_logged_customer');
 
+				$profile = $this->accounts_model->get_profile_details($this->session->userdata('pt_logged_customer'));
+				if($profile != array()){
 
+				$this->data['profile'] = $profile[0];
+				}else{
+					
+				$this->data['profile'] = array();
+				}
+				
                 $pageslugg = $this->uri->segment(1);
                 $this->validlang = pt_isValid_language($pageslugg);
                 if($this->validlang){
@@ -122,7 +132,7 @@ class Home extends MX_Controller {
 							$this->data['featuredSection']['divClass'] = "";	
 						}
 
-					/*	$this->data['featuredSection']['modules'] = array(
+						/*	$this->data['featuredSection']['modules'] = array(
 							"tours" => (object)array("featured" => $this->tours_lib->getFeaturedTours(),'moduleTitle' => trans('Tours'), 'bgImg' => 'featured-tours.jpg', 'booknowClass' => 'warning','featuredText' => trans('0451'), 'featuredPrice' => 200,'currCode' => 'USD'),
 							"cars" => (object)array("featured" => $this->cars_lib->getFeaturedCars(),'moduleTitle' => trans('Cars'), 'bgImg' => 'featured-cars.jpg', 'booknowClass' => 'success','featuredText' => trans('0142'), 'featuredPrice' => 125,'currCode' => 'USD'),
 							);*/
@@ -198,10 +208,82 @@ class Home extends MX_Controller {
 						$this->data['main_content'] = 'index';
                         $this->data['langurl'] = base_url()."{langid}";
 						$this->data['page_title'] = $this->data['app_settings'][0]->home_title;
+						/*error_reporting(E_ALL);
+						echo "asdas";*/
+						$this->load->model('top_destinations/top_destinations_model');
+						$this->data['dest'] = $this->top_destinations_model->all_destinations();
+
+						$this->load->model('admin/accounts_model');
+						$local_book = $this->accounts_model->get_last_bookings();
+
+						$this->load->model('ean/ean_model');
+						$hb_book = $this->ean_model->get_last_bookings_hb();
+
+						$this->load->model('hotels/hotels_model');
+
+						/*error_reporting(-1);*/
+						$local_count = count($local_book);
+						$hb_count = count($hb_book);
+
+						/*echo $hb_book[0]->expiryUnixtime;
+						echo "<pre>";
+						print_r($hb_book[0]);
+						exit();*/
+						$datetime = new DateTime('tomorrow');
+				        $datetime->modify('+1 day');
+				        $checkIn =  $datetime->format('m/d/Y');
+
+				        $datetime = new DateTime('tomorrow');
+				        $datetime->modify('+2 day');
+				        $checkOut =  $datetime->format('m/d/Y');
+						for ($hb_i=0; $hb_i < $hb_count; $hb_i++) { 
+							$hb_book[$hb_i]->expiryUnixtime = $hb_book[$hb_i]->book_date;
+							$hb_book[$hb_i]->title = $hb_book[$hb_i]->book_hotel;
+							$st = '';
+							for ($s_i=0; $s_i < $hb_book[$hb_i]->book_stars ; $s_i++) { 
+								$st .= '<i class="price-text-color fa fa-star"></i>';
+							}
+							for ($s_i_a=$s_i; $s_i_a < 5; $s_i_a++) { 
+								$st .= '<i class="fa fa-star"></i>';
+							}
+							$hb_book[$hb_i]->stars = $st;
+							$hb_book[$hb_i]->thumbnail = $hb_book[$hb_i]->book_thumbnail;
+							//http://localhost/tarzango_2/properties/hbhotel/223036?adults=1&child=&checkin=09/16/2016&checkOut=09/17/2016&room=1
+							$hb_book[$hb_i]->slug = base_url().'properties/hbhotel/'.$hb_book[$hb_i]->book_hotelid.'?adults=1&child=&room=1&checkin='.$checkIn.'&checkOut='.$checkOut;
+						}
+
+						for ($l_h=0; $l_h < $local_count ; $l_h++) { 
+							$hotel_ids[] = $local_book[$l_h]->itemid;
+						}
+
+						$l_book = $this->hotels_model->search_hotels_by_lat_lang_gb_1($hotel_ids);
 						
+
+						if($local_count > 0 && $hb_count >0){
+							$final_data = array_merge($hb_book , $local_book);
+						}else if($local_count > 0 && $hb_count < 1){
+							$final_data = $local_book;
+						}else if($local_count < 1 && $hb_count > 0){
+							$final_data = $hb_book;
+						}
+
+							function custom_sort($a,$b) {
+                                return $a->book_date < $b->book_date;
+                            }
+                            $sort_Data = usort($final_data, "custom_sort");
+                           $this->data['recent_book'] = $final_data;
+                           $this->data['recent_book_l'] = $l_book;
+						/*echo json_encode($final_data);
+						echo "<br>";
+						echo "<br>";
+						echo "<br>";
+						echo "<br>";
+						echo json_encode($sort_Data);
+						exit();*/
+						/*exit();
+						*/
 						$this->theme->view('home/index', $this->data);
-				}
-				elseif ($check) {
+				}elseif ($check) {
 
 						$content = $this->cms_model->get_page_content($pageslug, $langid);
 						if (empty ($content)) {
@@ -209,6 +291,8 @@ class Home extends MX_Controller {
 						}
 						$submitcontactform = $this->input->post('submit_contact');
 						$this->data['res2'] = $this->settings_model->get_contact_page_details();
+						/*print_r($this->data['res2'][0]->contact_email);
+						exit();*/
 						if (!empty ($submitcontactform)) {
 								$this->form_validation->set_rules('contact_email', 'Email', 'trim|required|valid_email');
 								$this->form_validation->set_rules('contact_message', 'Message', 'trim|required');
@@ -217,8 +301,12 @@ class Home extends MX_Controller {
 								}
 								else {
 										$this->load->model("admin/emails_model");
-										$senddata = array('contact_email' => $this->input->post('contact_email'), 'contact_name' => $this->input->post('contact_name'), 'contact_subject' => $this->input->post('contact_subject'), 'contact_message' => $this->input->post('contact_message'));
-										$this->emails_model->send_contact_email($this->data['res2'][0]->contact_email, $senddata);
+										$senddata = array('contact_email' => $this->input->post('contact_email'),
+														 'contact_name' => $this->input->post('contact_name'),
+														  'contact_subject' => $this->input->post('contact_subject'), 
+														  'contact_message' => $this->input->post('contact_message'));
+										$this->emails_model->send_contact_email($this->input->post('contact_email'), $senddata);
+										$this->emails_model->send_contact_email_admin($this->data['res2'][0]->contact_email, $senddata);
 										$this->data['successmsg'] = "Message Sent Successfully";
 								}
 						}
@@ -245,7 +333,25 @@ class Home extends MX_Controller {
 				}
 				elseif($pageslug == "membership")
 				{
-					$this->theme->view('membership', $this->data);
+					$this->load->helper("member_helper");
+
+					// Check user login or not
+					if ( $this->session->userdata('pt_logged_customer') > 0 ) {
+
+						//Check user is member or not
+						$result = check_is_member($this->session->userdata('pt_logged_customer'));
+
+						if ( !empty($result) ) {
+							$this->theme->view('vip_membership_perks', $this->data);
+						} else {
+							$this->theme->view('membership_perks', $this->data);
+						}
+
+					} else {
+						$this->theme->view('membership', $this->data);
+					}				
+					
+					
 				}
 				elseif($pageslug == "membership-step")
 				{
@@ -279,9 +385,107 @@ class Home extends MX_Controller {
 				elseif($pageslug == "become-a-supplier")
 				{
 					$this->theme->view('become-a-supplier', $this->data);
-				}elseif($pageslug == "menu_header")
-				{
+
+				}elseif($pageslug == "menu_header"){
+
 					$this->theme->view('menu_header', $this->data);
+
+				}elseif($pageslug == "new_header"){
+
+					$this->theme->view('new_header', $this->data);
+
+				}elseif($pageslug == "agent_show_guide"){
+
+					$this->theme->view('agent_show_guide', $this->data);
+				
+				}elseif($pageslug == "we_are_hiring"){
+
+					$this->theme->view('we_are_hiring', $this->data);
+
+				}elseif($pageslug == "services"){
+
+
+						$this->load->model('admin/accounts_model');
+						$local_book = $this->accounts_model->get_last_bookings();
+
+						$this->load->model('ean/ean_model');
+						$hb_book = $this->ean_model->get_last_bookings_hb();
+
+						$this->load->model('hotels/hotels_model');
+
+						/*error_reporting(-1);*/
+						$local_count = count($local_book);
+						$hb_count = count($hb_book);
+
+						$this->load->model('hotels/hotels_model');
+
+
+						/*error_reporting(-1);*/
+						$local_count = count($local_book);
+						$hb_count = count($hb_book);
+
+						/*echo $hb_book[0]->expiryUnixtime;
+						echo "<pre>";
+						print_r($hb_book[0]);
+						exit();*/
+						$datetime = new DateTime('tomorrow');
+				        $datetime->modify('+1 day');
+				        $checkIn =  $datetime->format('m/d/Y');
+
+				        $datetime = new DateTime('tomorrow');
+				        $datetime->modify('+2 day');
+				        $checkOut =  $datetime->format('m/d/Y');
+						for ($hb_i=0; $hb_i < $hb_count; $hb_i++) { 
+							$hb_book[$hb_i]->expiryUnixtime = $hb_book[$hb_i]->book_date;
+							$hb_book[$hb_i]->title = $hb_book[$hb_i]->book_hotel;
+							$st = '';
+							for ($s_i=0; $s_i < $hb_book[$hb_i]->book_stars ; $s_i++) { 
+								$st .= '<i class="price-text-color fa fa-star"></i>';
+							}
+							for ($s_i_a=$s_i; $s_i_a < 5; $s_i_a++) { 
+								$st .= '<i class="fa fa-star"></i>';
+							}
+							$hb_book[$hb_i]->stars = $st;
+							$hb_book[$hb_i]->thumbnail = $hb_book[$hb_i]->book_thumbnail;
+							//http://localhost/tarzango_2/properties/hbhotel/223036?adults=1&child=&checkin=09/16/2016&checkOut=09/17/2016&room=1
+							$hb_book[$hb_i]->slug = base_url().'properties/hbhotel/'.$hb_book[$hb_i]->book_hotelid.'?adults=1&child=&room=1&checkin='.$checkIn.'&checkOut='.$checkOut;
+						}
+
+						for ($l_h=0; $l_h < $local_count ; $l_h++) { 
+							$hotel_ids[] = $local_book[$l_h]->itemid;
+						}
+
+						$l_book = $this->hotels_model->search_hotels_by_lat_lang_gb_1($hotel_ids);
+						
+
+						if($local_count > 0 && $hb_count >0){
+							$final_data = array_merge($hb_book , $local_book);
+						}else if($local_count > 0 && $hb_count < 1){
+							$final_data = $local_book;
+						}else if($local_count < 1 && $hb_count > 0){
+							$final_data = $hb_book;
+						}
+
+							function custom_sort($a,$b) {
+                                return $a->book_date < $b->book_date;
+                            }
+                            $sort_Data = usort($final_data, "custom_sort");
+                           $this->data['recent_book'] = $final_data;
+                           $this->data['recent_book_l'] = $l_book;
+
+					$this->theme->view('services', $this->data);
+
+				}elseif($pageslug == "membership_perks"){
+
+					$this->theme->view('membership_perks', $this->data);
+
+				}elseif($pageslug == "vip_membership_perks"){
+
+					$this->theme->view('vip_membership_perks', $this->data);
+
+				}elseif($pageslug == "About_us"){
+
+					$this->theme->view('About_us', $this->data);
 				}
 				
 				elseif($this->validlang && $pageslug == "supplier-register"){
@@ -323,49 +527,25 @@ class Home extends MX_Controller {
 								$this->data['error'] = validation_errors();
 						}
 						else {
-/* if(isset($_FILES['photo']) && !empty($_FILES['photo']['name'])){
+							/*if(isset($_FILES['photo']) && !empty($_FILES['photo']['name'])){
 
+								$result = $this->uploads_model->__profileimg();
 
-
-$result = $this->uploads_model->__profileimg();
-
-if($result == '1'){
-
-$this->data['errormsg'] = "Invalid file type kindly select only jpg/jpeg, png, gif file types";
-
-
-
-}elseif($result == '2'){
-
-
-
-$this->data['errormsg'] = "Only upto 2MB size photos allowed";
-
-
-
-}elseif($result == '3'){
-
-
-
-
-
-$this->session->set_flashdata('flashmsgs', "Customer Account Added Successfully");
-
-
-
-redirect('admin/accounts/customers/');
-
-
-
-}
-
-}else{*/
+								if($result == '1'){
+									$this->data['errormsg'] = "Invalid file type kindly select only jpg/jpeg, png, gif file types";
+								}elseif($result == '2'){
+									$this->data['errormsg'] = "Only upto 2MB size photos allowed";
+								}elseif($result == '3'){
+									$this->session->set_flashdata('flashmsgs', "Customer Account Added Successfully");
+									redirect('admin/accounts/customers/');
+								}
+							}else{*/
 								
 								$this->accounts_model->register_supplier();
 								//$this->session->set_flashdata('success', trans('0244'));
 								$this->data['success'] = "1";
 								//redirect(base_url() . 'supplier-register');
-//   }
+							//   }
 						}
 				}
 				$this->lang->load("front", $this->data['lang_set']);

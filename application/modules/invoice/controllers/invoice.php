@@ -13,6 +13,7 @@ class Invoice extends MX_Controller {
 				$this->data['app_settings'] = $this->settings_model->get_settings_data();
 				$this->data['errormsg'] = $this->session->flashdata("invoiceerror");
 				$this->data['lang_set'] = $this->session->userdata('set_lang');
+				$this->data['usersession'] = $this->session->userdata('pt_logged_customer');
 				$defaultlang = pt_get_default_language();
 				if (empty ($this->data['lang_set'])) {
 						$this->data['lang_set'] = $defaultlang;
@@ -24,7 +25,8 @@ class Invoice extends MX_Controller {
 
 
 		public function index() {
-
+				/*echo $this->session->userdata('pt_logged_customer');
+				exit();*/
 				$this->load->helper('invoice');
 				$this->data['hideLang'] = "hide";
 				$this->data['hideCurr'] = "hide";
@@ -34,19 +36,25 @@ class Invoice extends MX_Controller {
 				$ebookingid = $this->input->get('eid');
 				$payerID = $this->input->get('PayerID');
 				$token = $this->input->get('token');
-
+				
 				$this->data['hideHeader'] = "1";
 			
 				if (!empty ($ebookingid)) {
 
-						$this->data['invoice'] = pt_get_einvoice_details($ebookingid, $bookingref);
-						$this->data['extra_details'] = pt_get_extra_details($ebookingid,'1');
+						$invoice = pt_get_einvoice_details($ebookingid, $bookingref);
+						$invoice = $invoice[0];
+						$invoice->Extra_data = json_decode($invoice->extra_data);
 
-						$book_response = json_decode($this->data['invoice'][0]->book_response);
-						$latitude =  $book_response->latitude;
-						$longitude =  $book_response->longitude;
+						$this->data['invoice'] = $invoice;
+						//$this->data['extra_details'] = pt_get_extra_details($ebookingid,'1');
+
+						$book_response = json_decode($this->data['invoice']->book_response);
+						/*echo json_encode($book_response);
+						exit();*/
+						$latitude =  $book_response->hotel->latitude;
+						$longitude =  $book_response->hotel->longitude;
 						
-						$this->data['response'] = json_decode($this->data['invoice'][0]->book_response);
+						$this->data['response'] = json_decode($this->data['invoice']->book_response);
 						if (empty ($this->data['invoice'])) {
 								redirect(base_url());
 						}
@@ -54,10 +62,10 @@ class Invoice extends MX_Controller {
 							 $this->lang->load("front", $this->data['lang_set']);
 								/* $this->session->set_userdata('checkout_amount', $this->data['invoice'][0]->booking_deposit);
 								$this->session->set_userdata('checkout_total', $this->data['invoice'][0]->booking_total);*/
-								$hotel_details_extra = $this->get_extra_details_1($latitude,$longitude);
+								//$hotel_details_extra = $this->get_extra_details_1($latitude,$longitude);
 								/*echo json_encode($hotel_details_extra);
 								exit();*/
-								$this->data['invoice'][0]->hotel_details_extra = $hotel_details_extra;
+								//$this->data['invoice'][0]->hotel_details_extra = $hotel_details_extra;
 
 								$contact = $this->settings_model->get_contact_page_details();
 								$this->data['contactphone'] = $contact[0]->contact_phone;
@@ -67,31 +75,31 @@ class Invoice extends MX_Controller {
 								$this->data['page_title_1'] = 'EInvoice';
 								//   $this->theme->partial('invoice',$this->data);
 								 $this->lang->load("front", $this->data['lang_set']);
-								$this->theme->view('admin/modules/global/invoice', $this->data);
+								$this->theme->view('admin/modules/global/einvoice', $this->data);
 								/*$this->theme->view('admin/modules/global/invoice', $this->data);*/
 						}
-				}
-				else {
+				}else {
 
 						if (empty ($bookingref) || empty ($bookingid)) {
 								$bookingid = $this->session->userdata("BOOKING_ID");
 								$bookingref = $this->session->userdata("REF_NO");
 						}
 						$this->data['invoice'] = invoiceDetails($bookingid, $bookingref);
+						/*echo json_encode($this->data['invoice']);
+						exit();*/
 						//$this->data['extra_details'] = pt_get_extra_details($bookingid,'2');
 						$extra_details = get_pickup_detail($bookingid);
             			$this->data['extra_details'] = json_decode($extra_details[0]->extra_data);
 						$hotel_id = $this->data['invoice']->itemid;
 
 						$hotel_details_extra = $this->get_extra_details($hotel_id);
-						$this->data['invoice']->hotel_details_extra = $hotel_details_extra;
+						//$this->data['invoice']->hotel_details_extra = $hotel_details_extra;
 						
 						if (empty ($this->data['invoice']->id)) {
 								redirect(base_url());
 						}
 						else {
 							//for paypal express
-
 
 							if(!empty($token) && !empty($payerID)){
 								$this->load->model("admin/bookings_model");
@@ -137,8 +145,6 @@ class Invoice extends MX_Controller {
 
 								}
 								
-
-
 							}else{
 
 							    $this->lang->load("front", $this->data['lang_set']);
@@ -209,8 +215,35 @@ class Invoice extends MX_Controller {
 			redirect(base_url().'invoice?id='.$bookingid.'&sessid='.$bookingref,'refresh');
 		}
 
+		function booking_paid_paystand_hb(){
+
+			$abc = $this->input->post();
+			//echo json_encode($abc);
+			$invoice_id = $this->input->post('invoice_id');
+			$invoice_code = $this->input->post('invoice_code');
+			$pay_data = $this->input->post('pay_data');
+			$order_id = $pay_data['paystand_order']['order_id'];
+			
+			$booking_total = $pay_data['paystand_order']['merchant_total'];
+			
+			//print_r($pay_data);
+			//print_r($pay_data_1);
+			//error_reporting(E_ALL);
+			$this->load->helper('invoice');
+			updateInvoiceStatus_hb($invoice_id,$booking_total,$order_id,"paystand","paid","hotels",$booking_total);
+			$invoicedetails = pt_get_einvoice_details($invoice_id,$invoice_code);
+
+			$this->load->model('admin/emails_model');
+
+			$this->emails_model->paid_sendEmail_customer($invoicedetails);
+			$this->emails_model->paid_sendEmail_admin($invoicedetails);
+			$this->emails_model->paid_sendEmail_supplier($invoicedetails);
+			$this->emails_model->paid_sendEmail_owner($invoicedetails);
+			redirect(base_url().'invoice?eid='.$bookingid.'&sessid='.$bookingref,'refresh');
+		}
+
 		function add_member(){
-//error_reporting(E_ALL);
+			//error_reporting(E_ALL);
 			$abc = $this->input->post();
 			//echo json_encode($abc);
 			$user_id = $this->input->post('user_id');

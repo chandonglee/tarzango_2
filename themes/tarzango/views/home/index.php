@@ -1,7 +1,25 @@
+<style type="text/css">
+  ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  font-family: 'Apercu-Regular';
+    color: #373b71;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  font-family: 'Apercu-Regular';
+    color: #373b71;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  font-family: 'Apercu-Regular';
+    color: #373b71;
+}
+:-moz-placeholder { /* Firefox 18- */
+  font-family: 'Apercu-Regular';
+    color: #373b71;
+}
+</style>
 <?php require $themeurl.'views/home/slider.php';?>
 </div>
 <div class="container-fluid planning">
-  <div class="container">
+  <div class="container ">
     <div class="row">
       <div class="row book-detail">
         <h2>Planning a Event and need to accommodate your group with a hotel?</h2>
@@ -48,12 +66,15 @@
   </div>
   <div class="hotel-btn-space"> <a href="<?php echo base_url().'groupbooking'; ?>" title="Let’s get Started" class="pink-btn">Let’s get Started</a></div>
 </div>
-<div class="container-fluid how-section">
+<div class="container-fluid how-section vip-membership">
   <div class="container">
-    <div class="col-md-9" style="padding-top:60px">
-      <h4 style="text-align:left;font-size:30px;padding-bottom: 0px;">Become a V.I.P member Now and receive additional</h4></br>
+    <div class="col-md-7" style="padding-top:60px">
+      <h4 class="description" style="text-align:left;font-size:30px;padding-bottom: 0px;">Become a V.I.P member Now and receive additional</h4></br>
       <h4 style="text-align:left;font-size:30px;margin-top:-10px;font-family: 'Apercu-Bold';">10% off plus some AWESOME perks...</h4>
     <a href="<?php echo base_url().'membership';?>" style="float:left" title="group booking" class="pink-btn">membership</a> </div>
+    <div class="col-sm-5">
+            <img style="margin-top: 0px" src="images/membership-door.png">
+          </div>
     </div>
 
 </div>
@@ -61,62 +82,42 @@
 <div class="section3">
       <div class="container">
         <div class="row">
-          <div class="col-sm-12">
+          <div class="col-sm-12 ">
             <h2>Hotels Just Booked</h2>
-            <div class="col-sm-4">
-              <div class="box first">
-                <div class="stars">
-                  <img src="images/star.png">
-                  <img src="images/star.png">
-                  <img src="images/star.png">
-                  <img src="images/star.png">
-                  <img class="light" src="images/star.png">
+            <?php 
+            $img_ary_repla = array('bigger/','demo.');
+            for ($r_b=0; $r_b < 3 ; $r_b++) {  
+              if($recent_book[$r_b]->book_response){
+                $total = $recent_book[$r_b]->book_roomtotal;
+                $url = $recent_book[$r_b]->slug;
+                $book_location = $recent_book[$r_b]->book_location;
+              }else{
+                for ($l_ex=0; $l_ex < count($recent_book_l) ; $l_ex++) { 
+                  if($recent_book_l[$l_ex]->id == $recent_book[$r_b]->itemid){
+                    $total = $recent_book_l[$l_ex]->book_roomtotal;
+                    $url = $recent_book_l[$l_ex]->slug;
+                    $book_location = $recent_book_l[$l_ex]->book_location;
+                  }
+                }
+              }
+              ?>
+                <div class="col-sm-4">
+                  <div class="box first" style="background-image:linear-gradient(to bottom, rgba(276,86,155,0) -30%, rgba(12,6,119,6) 100%),url('<?php echo str_replace($img_ary_repla, "",  $recent_book[$r_b]->thumbnail); ?>')">
+                    <div class="stars">
+                      <?php echo $recent_book[$r_b]->stars; ?>
+                    </div>
+                    <div class="texts">
+                      <h1><?php echo $recent_book[$r_b]->title; ?></h1>
+                      <!-- <h2><?php echo $book_location; ?></h2> -->
+                    </div>
+                    <h3>$ <?php echo $total; ?><span> /night</span></h3>
+                    <a href="<?php echo $url; ?>"><img class="arrow" src="<?php echo $theme_url; ?>img/home_arrow.png"></a>
+                  </div>
+                  <p>30 minutes ago</p>
                 </div>
-                <div class="texts">
-                  <h1>The D Hotel</h1>
-                  <h2>Las Vegas</h2>
-                </div>
-                <h3>$ 129<span> /night</span></h3>
-                <a href=""><img class="arrow" src="<?php echo $theme_url; ?>img/home_arrow.png"></a>
-              </div>
-              <p>30 minutes ago</p>
-            </div>
-            <div class="col-sm-4">
-              <div class="box second">
-                <div class="stars">
-                  <img src="images/star.png">
-                  <img src="images/star.png">
-                  <img src="images/star.png">
-                  <img src="images/star.png">
-                  <img class="light" src="images/star.png">
-                </div>
-                <div class="texts">
-                  <h1>Hyatt Regency</h1>
-                  <h2>Atlanta</h2>
-                </div>
-                <h3>$ 189<span> /night</span></h3>
-                <a href=""><img class="arrow" src="<?php echo $theme_url; ?>img/home_arrow.png"></a>
-              </div>
-              <p>30 minutes ago</p>
-            </div>
-            <div class="col-sm-4">
-              <div class="box third">
-                <div class="stars">
-                  <img src="images/star.png">
-                  <img src="images/star.png">
-                  <img src="images/star.png">
-                  <img src="images/star.png">
-                  <img class="light" src="images/star.png">
-                </div>
-                <div class="texts">
-                  <h1>Rosen Centre Hotel</h1>
-                  <h2>Orlando</h2>
-                </div>
-                <h3>$ 199<span> /night</span></h3>
-                <a href=""><img class="arrow" src="<?php echo $theme_url; ?>img/home_arrow.png"></a>
-              </div>
-              <p>30 minutes ago</p>
-            </div>
+            <?php }
+            ?>
+           
           </div>
         </div>
       </div>
@@ -124,31 +125,63 @@
     <div class="section4">
       <div class="container">
         <div class="row">
-          <div class="col-sm-12">
-            <h2>Explore your favourite Cities</h2>
-            <div class="col-sm-4">
-              <div class="box first">
-                <h2>Las Vegas</h2>
-                <a href=""><img class="arrow" src="<?php echo $theme_url; ?>img/home_arrow.png"></a>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="box second">
-                <h2>New York</h2>
-                <a href=""><img class="arrow" src="<?php echo $theme_url; ?>img/home_arrow.png"></a>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="box third">
-                <h2>Miami</h2>
-                <a href=""><img class="arrow" src="<?php echo $theme_url; ?>img/home_arrow.png"></a>
-              </div>
-            </div>
+          <div class="col-sm-12 fav-block clearfix">
+            <h2 style="    z-index: 1;    top: -70px;     font-size: 34px;    font-family: 'Apercu-Light';    color: #2c3748; width: 100%;    text-align: center;">Explore your favorite Cities</h2>
+            <?php if(count($dest) > 3){ 
+              for ($d_i=0; $d_i < 3 ; $d_i++) { 
+                
+              ?>
+            <div class="col-sm-4  fav-block clearfix ">
+                  <img style="width:100%;" class="img-responsive" src="<?php echo base_url().'uploads/images/dest_img/thumb_img/'.$dest[$d_i]->thumb_img; ?>">
+                  <h2><?php echo $dest[$d_i]->name; ?></h2>
+                  <a href="<?php echo base_url().'attraction/city/'.$dest[$d_i]->top_destinations_id; ?>" ><img class="arrow" src="images/arrow_img.png"></a>
+                </div>
+            <?php } } ?>
+            
           </div>
         </div>
       </div>
     </div>
-    <div class="section5" style="">
+    <div class="trust-us" style="">
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <h2>They Trust Us</h2>
+            <p>For once, it’s completely okay to follow the crowd - especially when that crowd is made up of over 10,000 different companies,<br> switching from “OTA” to Tarzango for their business bookings. All the cool kids are doing it, so why not you?</p>
+            <div class="col-sm-12 company-logo1" style="">
+              <div class="col-sm-3">
+                <img src="<?php echo $theme_url; ?>img/company-logo-1.png">
+              </div> 
+              <div class="col-sm-3">
+                <img src="<?php echo $theme_url; ?>img/company-logo-2.png">
+              </div>
+               <div class="col-sm-3">
+                <img src="<?php echo $theme_url; ?>img/company-logo-3.png">
+              </div> 
+              <div class="col-sm-3">
+                <img  src="<?php echo $theme_url; ?>img/company-logo-4.png">
+              </div>
+            </div>
+             <div class="col-sm-12 company-logo2" style=" padding-top: 50px; padding-bottom: 50px; padding-left: 100px;">
+              <div class="col-sm-3">
+                <img src="<?php echo $theme_url; ?>img/company-logo-5.png">
+              </div> 
+              <div class="col-sm-3">
+                <img style="padding-top: 30px" src="<?php echo $theme_url; ?>img/company-logo-6.png">
+              </div>
+               <div class="col-sm-3">
+                <img style="padding-top: 15px" src="<?php echo $theme_url; ?>img/company-logo-7.png">
+              </div> 
+              <div class="col-sm-3">
+                <img style="padding-top: 15px" src="<?php echo $theme_url; ?>img/company-logo-8.png">
+              </div>
+            </div>
+            <p style="margin-bottom: 40px">And many more..</p>
+          </div>
+         </div>
+      </div>
+    </div>
+   <!--  <div class="section5" style="">
       <div class="container">
         <div class="row">
           <div class="col-sm-12">
@@ -160,17 +193,23 @@
           </div>
         </div>
       </div>
-      </div>
+      </div> -->
 <div class="container-fluid newsletter">
   <div class="container">
     <h2>Sign Up for our Newsletter </h2>
     <form>
       <ul>
+        <div style="font-family: 'ProximaNovaA-Light'; font-size: 18px; color: #fff;" class="subscriberesponse"></div>
         <li>
-          <input type="text" value="Your Email">
+         <?php  if(!empty($customerloggedin)){ 
+          ?>
+            <input class="form-control fccustom2 sub_email" type="email" id="exampleInputEmail1" value="<?php echo $profile->accounts_email ?>" placeholder="Email">
+         <?php }else{ ?> 
+            <input class="form-control fccustom2 sub_email" type="email" id="exampleInputEmail1" placeholder="Email">
+         <?php } ?>
         </li>
         <li>
-          <input type="submit" value="subscribe">
+          <input type="submit" class="btn btn-default btncustom sub_newsletter" value="subscribe">
         </li>
       </ul>
     </form>
@@ -202,7 +241,7 @@
           </div>
           <div class="col-sm-1">
           </div>
-          <div class="col-sm-12">
+          <div class="col-sm-12 get-app">
             <div class="col-sm-3">
               <hr class="line">
               <h6>plan an Event</h6>
@@ -411,12 +450,20 @@ and delivers you to safety with the right way to travel.</p>
     <h2 class="main-title go-right"><?php echo trans('056');?></h2>
     <div class="clearfix"></div>
     <i class="tiltle-line go-right"></i> </div>
-  <?php foreach($featuredHotels as $item){ ?>
-  <div class="col-md-4 col-sm-6 col-xs-12 wow fadeInUp animated">
+  <?php //$f_h= 0; 
+  //echo json_encode($featuredHotels);
+  for ($f_h=0; $f_h < 3 ; $f_h++) { 
+    
+    $item = $featuredHotels[$f_h];
+  //foreach($featuredHotels as $item){ 
+    ?>
+  <div class="col-md-4 col-sm-6 col-xs-12 ">
     <div class="row">
-      <div class="img_list"> <a href="<?php echo $item->slug;?>"> <img class="dealthumb go-right" src="<?php echo $item->thumbnail;?>" alt="<?php echo character_limiter($item->title,35);?>">
-        <div class="short_info"></div>
-        </a> </div>
+      <div class="img_list"> 
+        <a href="<?php echo $item->slug;?>"> <img class="dealthumb go-right" src="<?php echo $item->thumbnail;?>" alt="<?php echo character_limiter($item->title,35);?>">
+          <div class="short_info"></div>
+        </a> 
+      </div>
       <div class="custom">
         <div class="dealtitle go-right">
           <p><a href="<?php echo $item->slug;?>" class="dark go-text-right go-right rtl_title_home shadow"><?php echo character_limiter($item->title,20);?></a></p>
@@ -431,7 +478,7 @@ and delivers you to safety with the right way to travel.</p>
       </div>
     </div>
   </div>
-  <?php } ?>
+  <?php  } ?>
   <div class="clearfix"></div>
   <br>
   <br>
@@ -441,22 +488,22 @@ and delivers you to safety with the right way to travel.</p>
     <!-- Hotel -->
 
     <!-- Expedia Hotels -->
-    <?php if(pt_main_module_available('ean')){ ?> <div class="form-group"> <h2 class="main-title go-right"><?php echo trans('056');?></h2> <div class="clearfix"></div> <i class="tiltle-line go-right"></i> </div> <?php foreach($featuredHotelsEan->hotels as $item){ ?> <div class="col-md-4 col-sm-6 col-xs-12 wow fadeInUp animated"> <div class="row"> <div class="img_list"> <a href="<?php echo $item->slug;?>"> <img class="dealthumb go-right" src="<?php echo $item->thumbnail;?>" alt="<?php echo character_limiter($item->title,35);?>"> <img class="overlay" src="<?php echo $theme_url; ?>assets/img/overlay.png" style="z-index: " alt="overlay"> <div class="short_info"></div> </a> </div> <div class="custom"> <div class="dealtitle go-right"> <p><a href="<?php echo $item->slug;?>" class="dark go-text-right go-right rtl_title_home shadow"><?php echo character_limiter($item->title,20);?></a></p> <span class="size13 white mt-9 go-right"><?php echo $item->stars;?> <br><span class="go-right"><?php echo character_limiter($item->location,20);?>&nbsp;</span></span> </div> <div class="dealprice go-left mt0"> <?php if($item->price > 0){ ?> <p class="size12 white lh2"><?php echo $item->currCode;?> <span class="white shadow rate"> <?php echo $item->currSymbol; ?><?php echo $item->price;?> <?php } ?> </span> </p> </div> </div> </div> </div> <?php } ?> <div class="clearfix"></div> <br><br> <?php } ?>
+    <?php if(pt_main_module_available('ean') && 1==2 ){ ?> <div class="form-group" style="display:none;" > <h2 class="main-title go-right"><?php echo trans('056');?></h2> <div class="clearfix"></div> <i class="tiltle-line go-right"></i> </div> <?php foreach($featuredHotelsEan->hotels as $item){ ?> <div class="col-md-4 col-sm-6 col-xs-12 wow fadeInUp animated"> <div class="row"> <div class="img_list"> <a href="<?php echo $item->slug;?>"> <img class="dealthumb go-right" src="<?php echo $item->thumbnail;?>" alt="<?php echo character_limiter($item->title,35);?>"> <img class="overlay" src="<?php echo $theme_url; ?>assets/img/overlay.png" style="z-index: " alt="overlay"> <div class="short_info"></div> </a> </div> <div class="custom"> <div class="dealtitle go-right"> <p><a href="<?php echo $item->slug;?>" class="dark go-text-right go-right rtl_title_home shadow"><?php echo character_limiter($item->title,20);?></a></p> <span class="size13 white mt-9 go-right"><?php echo $item->stars;?> <br><span class="go-right"><?php echo character_limiter($item->location,20);?>&nbsp;</span></span> </div> <div class="dealprice go-left mt0"> <?php if($item->price > 0){ ?> <p class="size12 white lh2"><?php echo $item->currCode;?> <span class="white shadow rate"> <?php echo $item->currSymbol; ?><?php echo $item->price;?> <?php } ?> </span> </p> </div> </div> </div> </div> <?php } ?> <div class="clearfix"></div> <br><br> <?php } ?>
     <!-- Expedia Hotels -->
 
     <!-- Tours -->
-    <?php if(pt_main_module_available('tours')){ ?> <div class="form-group"> <h2 class="main-title go-right"><?php echo trans('0451');?></h2> <div class="clearfix"></div> <i class="tiltle-line go-right"></i> </div> <div class="row" ng-controller="appCtrl as ctrl" layout="column" ng-cloak="" ng-app="phptravelsApp"> <div id="accordion"> <div class="col-md-3 col-sm-6 col-xs-12 wow fadeInLeft animated"> <div class="list-group"> <a href="javascript:void(0)" class="list-group-item active"><i class="icon_set_1_icon-61"></i> <?php echo trans('032');?></a> <?php $toursLocation = toursWithLocations(); foreach($toursLocation->locations as $loc){ ?> <a href="" class="list-group-item" ng-click="getData(<?php echo $loc->id;?>)"><i class="icon_set_1_icon-41"></i> <?php echo $loc->name; ?> <span class="btn btn-default btn-xs pull-right"><?php echo $loc->count; ?></span></a> <?php } ?> </div> </div> <div class="panel"> <div id="collapse1" class="panel-collapse collapse in"> <div class="col-md-9 col-sm-6 col-xs-12"> <div class="col-lg-{{lg}} col-md-{{md}} col-sm-12 col-xs-12 wow fadeIn animated" ng-repeat="item in items"> <div class="row"> <div class="img_list"> <a href="{{item.slug}}"> <img class="dealthumb go-right" ng-src="{{item.thumbnail}}" alt="{{item.title}}"> <div class="short_info"></div> </a> </div> <div class="custom"> <div class="dealtitle go-right"> <p><a href="<?php echo $item->slug;?>" class="dark go-text-right go-right rtl_title_home shadow"> {{item.title | strLimit: 20}} </a></p> <span class="size13 white mt-9 go-right"><span ng-bind-html="item.stars"></span> <br><span class="go-right"> {{item.location | strLimit: 20}}</span></span> </div> <div class="dealprice go-left mt0"> <p class="size12 white lh2">{{item.currCode}} <span class="white shadow rate"> {{item.currSymbol}}{{item.price}} </span> </p> </div> </div> </div> </div> </div> </div> </div> </div> </div> <div class="clearfix"></div> <br><br> <style> .panel { margin-bottom: 0px; background-color: transparent; border: 1px solid transparent; border-radius: 0px; -webkit-box-shadow: 0 0px 0px rgba(0, 0, 0, .05); box-shadow: 0 0px 0px rgba(0, 0, 0, .05); } </style> <?php } ?> <script src='<?php echo base_url(); ?>assets/js/angular.js'></script> <script src="<?php echo base_url(); ?>assets/js/angular-sanitize.js"></script> <script type="text/javascript"> (function () { 'use strict'; angular .module('phptravelsApp',['ngSanitize']) .controller('appCtrl', appCtrl); function appCtrl ($scope, $http) { var self = this; var url = "<?php echo base_url();?>tours/featuredTours/"; $scope.lg = "6"; $scope.md = "6"; $scope.items = []; $http.get(url).success(function(data) { $scope.items = data; $scope.setClasses($scope.items); }); $scope.getData = function(loc){ $http.get(url+loc).success(function(data) { $scope.items = data; $scope.setClasses($scope.items); }); }; $scope.setClasses = function(data){ var totalItems = data.length; if(totalItems == 1){ $scope.lg = "6 tours12"; $scope.md = "6 tours12"; }else if(totalItems == 2){ $scope.lg = "6"; $scope.md = "6"; }else if(totalItems > 2){ $scope.lg = "6"; $scope.md = "6"; } }; } angular.module('phptravelsApp').filter('strLimit', function() { 'use strict'; return function(input, limit) { if (input) { if (limit > input.length) { return input.slice(0, limit); } else { return input.slice(0, limit) + '...'; } } }; }); })(); </script>
+    <?php if(pt_main_module_available('tours')){ ?> <div class="form-group" style="display:none;"> <h2 class="main-title go-right"><?php echo trans('0451');?></h2> <div class="clearfix"></div> <i class="tiltle-line go-right"></i> </div> <div class="row" ng-controller="appCtrl as ctrl" layout="column" ng-cloak="" ng-app="phptravelsApp"> <div id="accordion"> <div class="col-md-3 col-sm-6 col-xs-12 wow fadeInLeft animated"> <div class="list-group"> <a href="javascript:void(0)" class="list-group-item active"><i class="icon_set_1_icon-61"></i> <?php echo trans('032');?></a> <?php $toursLocation = toursWithLocations(); foreach($toursLocation->locations as $loc){ ?> <a href="" class="list-group-item" ng-click="getData(<?php echo $loc->id;?>)"><i class="icon_set_1_icon-41"></i> <?php echo $loc->name; ?> <span class="btn btn-default btn-xs pull-right"><?php echo $loc->count; ?></span></a> <?php } ?> </div> </div> <div class="panel"> <div id="collapse1" class="panel-collapse collapse in"> <div class="col-md-9 col-sm-6 col-xs-12"> <div class="col-lg-{{lg}} col-md-{{md}} col-sm-12 col-xs-12 wow fadeIn animated" ng-repeat="item in items"> <div class="row"> <div class="img_list"> <a href="{{item.slug}}"> <img class="dealthumb go-right" ng-src="{{item.thumbnail}}" alt="{{item.title}}"> <div class="short_info"></div> </a> </div> <div class="custom"> <div class="dealtitle go-right"> <p><a href="<?php echo $item->slug;?>" class="dark go-text-right go-right rtl_title_home shadow"> {{item.title | strLimit: 20}} </a></p> <span class="size13 white mt-9 go-right"><span ng-bind-html="item.stars"></span> <br><span class="go-right"> {{item.location | strLimit: 20}}</span></span> </div> <div class="dealprice go-left mt0"> <p class="size12 white lh2">{{item.currCode}} <span class="white shadow rate"> {{item.currSymbol}}{{item.price}} </span> </p> </div> </div> </div> </div> </div> </div> </div> </div> </div> <div class="clearfix"></div> <br><br> <style> .panel { margin-bottom: 0px; background-color: transparent; border: 1px solid transparent; border-radius: 0px; -webkit-box-shadow: 0 0px 0px rgba(0, 0, 0, .05); box-shadow: 0 0px 0px rgba(0, 0, 0, .05); } </style> <?php } ?> <script src='<?php echo base_url(); ?>assets/js/angular.js'></script> <script src="<?php echo base_url(); ?>assets/js/angular-sanitize.js"></script> <script type="text/javascript"> (function () { 'use strict'; angular .module('phptravelsApp',['ngSanitize']) .controller('appCtrl', appCtrl); function appCtrl ($scope, $http) { var self = this; var url = "<?php echo base_url();?>tours/featuredTours/"; $scope.lg = "6"; $scope.md = "6"; $scope.items = []; $http.get(url).success(function(data) { $scope.items = data; $scope.setClasses($scope.items); }); $scope.getData = function(loc){ $http.get(url+loc).success(function(data) { $scope.items = data; $scope.setClasses($scope.items); }); }; $scope.setClasses = function(data){ var totalItems = data.length; if(totalItems == 1){ $scope.lg = "6 tours12"; $scope.md = "6 tours12"; }else if(totalItems == 2){ $scope.lg = "6"; $scope.md = "6"; }else if(totalItems > 2){ $scope.lg = "6"; $scope.md = "6"; } }; } angular.module('phptravelsApp').filter('strLimit', function() { 'use strict'; return function(input, limit) { if (input) { if (limit > input.length) { return input.slice(0, limit); } else { return input.slice(0, limit) + '...'; } } }; }); })(); </script>
     <!-- Tours -->
 
     <!-- Cars -->
-    <?php if(pt_main_module_available('cars')){ ?> <div class="form-group"> <h2 class="main-title go-right"><?php echo trans('0490');?></h2> <div class="clearfix"></div> <i class="tiltle-line go-right"></i> </div> <?php foreach($featuredCars as $item){ ?> <div class="col-md-4 col-sm-6 col-xs-12 wow fadeInUp animated"> <div class="row"> <div class="img_list"> <a href="<?php echo $item->slug;?>"> <img class="dealthumb go-right" src="<?php echo $item->thumbnail;?>" alt="<?php echo character_limiter($item->title,35);?>"> <div class="short_info"></div> </a> </div> <div class="custom"> <div class="dealtitle go-right"> <p><a href="<?php echo $item->slug;?>" class="dark go-text-right go-right rtl_title_home shadow"><?php echo character_limiter($item->title,20);?></a></p> <span class="size13 white mt-9 go-right"><?php echo $item->stars;?> <br><span class="go-right"><?php echo character_limiter($item->location,20);?>&nbsp;</span></span> </div> <div class="dealprice go-left mt0"> <?php if($item->price > 0){ ?> <p class="size12 white lh2"><?php echo $item->currCode;?> <span class="white shadow rate"> <?php echo $item->currSymbol; ?><?php echo $item->price;?> <?php } ?> </span> </p> </div> </div> </div> </div> <?php } ?> <div class="clearfix"></div> <br><br> <?php } ?>
+    <?php if(pt_main_module_available('cars')){ ?> <div class="form-group" style="display:none;"> <h2 class="main-title go-right"><?php echo trans('0490');?></h2> <div class="clearfix"></div> <i class="tiltle-line go-right"></i> </div> <?php foreach($featuredCars as $item){ ?> <div class="col-md-4 col-sm-6 col-xs-12 wow fadeInUp animated"> <div class="row"> <div class="img_list"> <a href="<?php echo $item->slug;?>"> <img class="dealthumb go-right" src="<?php echo $item->thumbnail;?>" alt="<?php echo character_limiter($item->title,35);?>"> <div class="short_info"></div> </a> </div> <div class="custom"> <div class="dealtitle go-right"> <p><a href="<?php echo $item->slug;?>" class="dark go-text-right go-right rtl_title_home shadow"><?php echo character_limiter($item->title,20);?></a></p> <span class="size13 white mt-9 go-right"><?php echo $item->stars;?> <br><span class="go-right"><?php echo character_limiter($item->location,20);?>&nbsp;</span></span> </div> <div class="dealprice go-left mt0"> <?php if($item->price > 0){ ?> <p class="size12 white lh2"><?php echo $item->currCode;?> <span class="white shadow rate"> <?php echo $item->currSymbol; ?><?php echo $item->price;?> <?php } ?> </span> </p> </div> </div> </div> </div> <?php } ?> <div class="clearfix"></div> <br><br> <?php } ?>
     <!-- Cars -->
   </div>
 </div>
 
 
 <!-- offers -->
-<?php if($offersCount > 500){ ?> <div class="lastminute4"> <div class="container"> <div class="form-group"> <h2 class="main-title"><?php echo trans('0341');?> <?php echo trans('Offers');?></h2> <div class="clearfix"></div> <i class="tiltle-line"></i> </div> <div class="row"> <!-- Carousel --> <div class="wrapper"> <div class="list_carousel wow fadeInUp"> <ul id="foo2"> <?php foreach($specialoffers as $offer){ ?> <li> <a href="<?php echo $offer->slug;?>"><img class="offers-hover img-responsive" src="<?php echo $offer->thumbnail;?>" alt="<?php echo character_limiter($offer->title,15);?>"/></a> <div class="m1"> <h6 class="lh1 dark go-right"><b> <?php echo character_limiter($offer->title,35);?> &nbsp;&nbsp;</b></h6> <h6 class="lh1 green go-right"> <!--<?php echo character_limiter($offer->desc,120);?>--> <?php if($offer->price > 0){ ?> <?php echo $offer->currCode;?> <b><?php echo $offer->currSymbol; ?><?php echo $offer->price;?></b> <?php } ?>&nbsp;&nbsp; </h6> </div> </li> <?php } ?> </ul> <div class="clearfix"></div> <a id="prev_btn2" class="prev offers" href="#"><img src="<?php echo $theme_url; ?>images/spacer.png" alt=""/></a> <a id="next_btn2" class="next offers" href="#"><img src="<?php echo $theme_url; ?>images/spacer.png" alt=""/></a> </div> </div> </div> </div> </div> <?php } ?>
+<?php if($offersCount > 500){ ?> <div class="lastminute4" style="display:none;"> <div class="container" > <div class="form-group"> <h2 class="main-title"><?php echo trans('0341');?> <?php echo trans('Offers');?></h2> <div class="clearfix"></div> <i class="tiltle-line"></i> </div> <div class="row"> <!-- Carousel --> <div class="wrapper"> <div class="list_carousel wow fadeInUp"> <ul id="foo2"> <?php foreach($specialoffers as $offer){ ?> <li> <a href="<?php echo $offer->slug;?>"><img class="offers-hover img-responsive" src="<?php echo $offer->thumbnail;?>" alt="<?php echo character_limiter($offer->title,15);?>"/></a> <div class="m1"> <h6 class="lh1 dark go-right"><b> <?php echo character_limiter($offer->title,35);?> &nbsp;&nbsp;</b></h6> <h6 class="lh1 green go-right"> <!--<?php echo character_limiter($offer->desc,120);?>--> <?php if($offer->price > 0){ ?> <?php echo $offer->currCode;?> <b><?php echo $offer->currSymbol; ?><?php echo $offer->price;?></b> <?php } ?>&nbsp;&nbsp; </h6> </div> </li> <?php } ?> </ul> <div class="clearfix"></div> <a id="prev_btn2" class="prev offers" href="#"><img src="<?php echo $theme_url; ?>images/spacer.png" alt=""/></a> <a id="next_btn2" class="next offers" href="#"><img src="<?php echo $theme_url; ?>images/spacer.png" alt=""/></a> </div> </div> </div> </div> </div> <?php } ?>
 <!-- offers -->
 
 <?php
@@ -468,9 +515,9 @@ if($is_gb_done == 'true'){
 ?>
 <script>
 $(document).ready(function(){
-$('#myModal').modal('show');
-$('#myModal').addClass('in');
-$('#myModal').show();
+  $('#myModal').modal('show');
+  $('#myModal').addClass('in');
+  $('#myModal').show();
 });
 </script>
 
@@ -494,7 +541,7 @@ $('#myModal').show();
               <a href=""><img class="img-responsive" src="images/logo.png"></a>
             </div>
             <h3>Become a Member</h3>
-            <h4>We provide a modern way for Group Travellers to book large room blocks.</h4>
+            <h4>We provide a modern way for Group Travelers to book large room blocks.</h4>
             <a class="get-button" href="<?php echo base_url().'membership' ?>">GET STARTED</a>
           </div>
           </div>
@@ -504,3 +551,4 @@ $('#myModal').show();
       </div>
     </div>
 <?php } ?>
+

@@ -301,9 +301,20 @@ class Hotels_lib {
 				$this->db->order_by('room_id', 'desc');
 				$q = $this->db->get('pt_rooms');
 				$data = $q->result();
-				
+				/*echo "ASd";
+				exit();*/
+				/*echo $checkin;
+				exit();*/
                 return $this->getRoomsResultObject($data,$checkin,$checkout);
 
+		}
+
+		function hotel_terminal($hotelid){
+			
+				$this->db->select('code,name');
+				$this->db->like('name', $hotelid);
+				return $this->db->get('terminals')->result();
+				
 		}
 
 		function totalRooms($hotelid = null){
@@ -1316,13 +1327,19 @@ class Hotels_lib {
           $Roomresult = array();
           $curr = $this->ci->currconverter;
           $this->ci->load->model('hotels/rooms_model');
+         /* echo "asdsa";
+          exit();*/
+          $asd = 0;
           foreach($rooms as $room){
+          	/*echo $asd;
+          	$asd++;*/
            	$details = $this->room_short_details($room->id);
            	$extrabeds = $details[0]->extra_bed;
-           
+           	/*echo "asdsa";
+           	exit()	*/
            	$images = $this->roomImages($room->id,4);
             $roomprice = $this->ci->rooms_model->getRoomPrice($room->id,$checkin,$checkout);
-           /* print_r($roomprice);
+          /*  print_r($roomprice);
             exit();*/
             $bookedRooms = pt_is_room_booked($room->id, $checkin, $checkout);
             $checkAvail = ptRoomAvailability($room->id, $checkin, $checkout);
@@ -1347,10 +1364,10 @@ class Hotels_lib {
             	}
             	
 
-       		 }else{
-        	$availQuantity = 0;
-       		 }
-         /*   print_r($availQuantity);
+       		}else{
+        		$availQuantity = 0;
+       		}
+            /*print_r($availQuantity);
           echo "<br>";
           
           exit();*/

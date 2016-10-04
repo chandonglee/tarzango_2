@@ -11,7 +11,7 @@ border-radius:0px;
       <div class="row">
         <div class="col-md-12 ">
           <h1 class="text-center slider-header">Tarzango</br><span style="font-family: 'gotham_light_test' "> The Hotel Negotiator</span> </h1>
-          <a href="#" class="btn" title="Beta Test For Free!">Beta Test For Free!</a>
+          <a href="#" id="whitelink" class="btn" title="Beta Test For Free!">Beta Test For Free!</a>
            <form action="<?php echo base_url();?>ean/search" method="GET"> 
             <ul class="slider-form">
               <li>
@@ -51,6 +51,76 @@ border-radius:0px;
 
      </div>
 </div>
+
+<!-- Beta email -->
+
+<div class="modal fadeIn animated" id="BetaMail" style="display:none">
+  <div class="modal-dialog modal-sm" style="width:450px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" style="font-family: 'Gotham-Bold'; color: #4867aa; font-size: 28px; display: inherit;"> Beta test for free</h4>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="" id="passresetfrm" accept-charset="UTF-8" onsubmit="return false;">
+          <div class="resultreset"></div>
+          <div class="input-group" style="width:95%">
+            <input style=" background:none;  
+              height: 60px !important;
+    border: 1px solid #d3d4e0 !important;
+    padding: 15px 25px !important;
+    font-size: 17px !important;
+    color: #373b71 !important;" type="text" placeholder="your@email.com" class="form-control form" id="betaemail" name="email" required>
+            <span class="input-group-btn">
+            <button type="button" style="text-align: center; font-family: 'Gotham-Bold'; font-size: 14px;color: #fff;    padding: 20px 30%;    background: #3ecdff; text-transform: uppercase; text-decoration: none;   border: none;
+    letter-spacing: 1px;    " class="btn btn-primary resetbtn beta_btn" type="button">Send</button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+ $('.beta_btn').click(function(){
+    var to_email = $('#betaemail').val();
+    var url = '<?php echo base_url(); ?>';
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(to_email))  
+  {
+      $.ajax({
+             type: 'POST',
+             data: {
+                 to_email: to_email
+             },
+             url: url + "admin/ajaxcalls/beta_test_email",
+             cache: false,
+             beforeSend: function() {
+
+             },
+             success: function(response) {
+                 console.log(response);
+                 $('#betaemail').val('');
+                 $('.resultreset').html("<div class='alert alert-success'>Your Beta test email has been sent.</div>");
+                 $('#BetaMail').hide();
+             }
+         });
+    }else{
+      $('.resultreset').html("<div class='alert alert-danger'>Enter Valid Email</div>");
+    }
+ });
+     $("#whitelink").click(function(){      
+        $("#BetaMail").toggle();
+    });
+ $(".close").click(function(){      
+        $("#BetaMail").hide();
+    });
+
+  </script>
+
+
+
+
 <div class="container">
 	<div class="row">
     	

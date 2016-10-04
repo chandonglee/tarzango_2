@@ -1,7 +1,7 @@
 <?php
 if (!defined('BASEPATH'))
 		exit ('No direct script access allowed');
-
+/*error_reporting(E_ALL);*/
 class Ajaxcalls extends MX_Controller {
 		private $data = array();
 		private $appsettings;
@@ -9,6 +9,7 @@ class Ajaxcalls extends MX_Controller {
 		function __construct() {
 				modules :: load('admin');
 				$this->load->model('admin/extras_model');
+				$this->load->model('attraction/attraction_model');
 				$defaultlang = pt_get_default_language();
 				if (empty ($this->data['lang_set'])) {
 						$this->data['lang_set'] = $defaultlang;
@@ -29,6 +30,21 @@ class Ajaxcalls extends MX_Controller {
 		}
 // update menu order
 		
+		public function booking_paid_paystand(){
+			//error_reporting(-1);
+			$pt_attr_booking_id  = $this->input->post('pt_attr_booking_id');
+			$pay_data  = $this->input->post('pay_data');
+			
+			$data = array(
+						'booking_status' => 'paid',
+						'booking_payment_type' => 'paystand',
+						'payment_data' => json_encode($pay_data),
+						'booking_remaining' => 0
+						);
+
+			$this->attraction_model->update_attr_booking($data,$pt_attr_booking_id);
+		}
+
 		public function group_booking_add(){
 
 			
@@ -38,6 +54,8 @@ class Ajaxcalls extends MX_Controller {
 
 			print_r($input_Data);*/
 			
+
+
 			$this->load->library('session');
 
 			$this->form_validation->set_message('matches', trans("0310"));
@@ -59,9 +77,11 @@ class Ajaxcalls extends MX_Controller {
 				
 				$g_data = array("error" => "yes", 'msg' => validation_errors());
 				$this->session->set_userdata('is_gb_done','false');
-			}
-			else {
+				
+			}else {
+
 				$sel_hotel_id = $this->input->post('sel_hotel_id');
+				$sel_hotel_type = $this->input->post('sel_hotel_type');
 				$sel_hotel_name = $this->input->post('sel_hotel_name');
 				$sel_hotel_room = $this->input->post('sel_hotel_room');
 				$hotel_ids = $this->input->post('hotel_ids');
@@ -82,8 +102,10 @@ class Ajaxcalls extends MX_Controller {
 				
 
 				$hotel_data['hotel_id'] = $sel_hotel_id;
+				$hotel_data['sel_hotel_type'] = $sel_hotel_type;
 				$hotel_data['hotel_name'] = $sel_hotel_name;
 				$hotel_data['hotel_room'] = $sel_hotel_room;
+
 				$store_data = array(
 								'company_name' => $company_name,
 								'check_in' => $check_in,
@@ -105,6 +127,11 @@ class Ajaxcalls extends MX_Controller {
 				 $g_DATA = add_group_booking($store_data);
 				 $g_data = array("error" => "no", 'msg' => $g_DATA);
 				 $this->session->set_userdata('is_gb_done','true');
+				 $this->load->model('gb_emails_model');
+				 $final_data = (object)$store_data;
+
+				$this->gb_emails_model->gb_sendEmail_request_customer($final_data);
+
 			}
 			echo json_encode($g_data);
 			
@@ -701,6 +728,9 @@ class Ajaxcalls extends MX_Controller {
 		function processBookinglogged() {
 				$this->load->model('admin/bookings_model');
 				$user = $this->session->userdata('pt_logged_customer');
+				if($this->input->post('member_add')){
+						$this->add_member_whenbook($user);
+				}
 				echo json_encode($this->bookings_model->do_booking($user));
 		}
 
@@ -711,13 +741,411 @@ class Ajaxcalls extends MX_Controller {
 				if ($this->input->is_ajax_request()) {
 				  $bookingtype = $this->input->post('btype');
 
+					$bookingResult = $this->bookings_model->do_login_booking($username, $password);
+					echo json_encode($bookingResult);
+				}
+		}
+
+		function attrprocessBookinglogged() {
+			
+			$this->load->model('accounts_model');
+			$user = $this->session->userdata('pt_logged_customer');
+			if($this->input->post('member_add')){
+				$this->add_member_whenbook($user);
+			}
+			$profile = $this->accounts_model->get_profile_details($user);
+			$bookingResult = array("error" => "no", 'msg' => $profile);
+			echo json_encode($bookingResult);
+		}
+
+		function attrprocessBooking_final(){
+			$this->load->model('attraction/attraction_model');
+			$user = $this->input->post('user_id');
+			if($this->input->post('member_add')){
+				$this->add_member_whenbook($user);
+			}
+
+			$this->attraction_model->book_attraction();
+
+		}
+
+		function attrprocessBookinglogin() {
+				
+			$this->form_validation->set_rules('username', trans("094"), 'required|valid_email');
+			$this->form_validation->set_rules('password', trans("095"), 'required|min_length[6]');
+			if ($this->form_validation->run() == FALSE) {
+					$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
+					$bookingResult = array("error" => "yes", 'msg' => validation_errors());
+			}else {
+				$this->load->model('ean/hb_model');
+				$this->load->model('accounts_model');
+
+			 	$username = $this->input->post('username');
+			 	$password = $this->input->post('password');
+				$login = $this->accounts_model->login_customer($username, $password);
+				if ($login) {
+					$userid = $this->session->userdata('pt_logged_customer');
+				 	$input_data_1 = $this->input->post();
+				 	$profile = $this->accounts_model->get_profile_details($userid);
+				 	
+	                $bookingResult = array("error" => "no", 'msg' => $profile);
+				}else {
+					$bookingResult = array("error" => "yes", 'msg' => 'Invalid Email or Password');
+				}
+				
+			}
+			echo json_encode($bookingResult);
+			 	 
+		}
+
+		function attrprocessBookingsignup() {
+			
+			$this->load->model('accounts_model');
+
+			$this->form_validation->set_message('matches', trans("0310"));
+			$this->form_validation->set_message('valid_email', trans("0311"));
+			$this->form_validation->set_message('required', "%s " . trans("0312"));
+			$this->form_validation->set_rules('email', trans("094"), 'required|valid_email');
+			$this->form_validation->set_rules('password', trans("095"), 'required|min_length[6]');
+			$this->form_validation->set_rules('firstname', trans("0171"), 'trim|required');
+			$this->form_validation->set_rules('lastname', trans("0172"), 'trim|required');
+			if ($this->form_validation->run() == FALSE) {
+					$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
+					$bookingResult = array("error" => "yes", 'msg' => validation_errors());
+			}else {
+					$this->db->select('accounts_email');
+					$this->db->where('accounts_email', $this->input->post('email'));
+					$this->db->where('accounts_type', 'customers');
+					$nums = $this->db->get('pt_accounts')->num_rows();
+					if ($nums > 0) {
+							$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
+							$bookingResult = array("error" => "yes", 'msg' => trans("0313"));
+					}else {
+							
+						$userid = $this->accounts_model->signup_account('customers', '1');
+						$profile = $this->accounts_model->get_profile_details($userid);
+						$bookingResult = array("error" => "no", 'msg' => $profile );
+			           
+			            if($this->input->post('member_add')){
+							$this->add_member_whenbook($userid);
+						}
+			
+					}
+			}
+
+			echo json_encode($bookingResult);
+				
+		}
+
+		function attrprocessMemberignup() {
+				/*echo json_encode($this->input->post());
+				exit();*/
+				$this->load->model('bookings_model');
+				$this->load->model('accounts_model');
+
+				$form_type = $this->input->post("form_name");
+				
+				if($form_type == "login_mem"){
+					$this->form_validation->set_rules('username', trans("094"), 'required|valid_email');
+					$this->form_validation->set_rules('password', trans("095"), 'required|min_length[6]');
+					/*$this->form_validation->set_rules('pickup_location', 'Pickup location', 'trim|required');
+					$this->form_validation->set_rules('pickup_time', 'Pickup time', 'trim|required');*/
+					if ($this->form_validation->run() == FALSE) {
+						$bookingResult = array("error" => "yes", 'msg' => validation_errors());
+					}else{
+						$username = $this->input->post('username');
+						$password = $this->input->post('password');
+						$userid = $this->accounts_model->login_member_customer($username, $password);
+
+			            if ($userid) {
+			              	$profile = $this->accounts_model->get_profile_details($userid);
+							
+			                $bookingResult = array("error" => "no", 'msg' => $profile );
+			                if($this->input->post('member_add')){
+								$this->add_member_whenbook($userid);
+							}
+			            }else {
+			                $bookingResult = array("error" => "yes", 'msg' => 'Invalid Email or Password');
+			            }
+						            
+					}
+					
+
+				}else if($form_type == 'signup_mem_new'){
+					$this->form_validation->set_message('matches', trans("0310"));
+					$this->form_validation->set_message('valid_email', trans("0311"));
+					$this->form_validation->set_message('required', "%s " . trans("0312"));
+					$this->form_validation->set_rules('email', trans("094"), 'required|valid_email');
+					$this->form_validation->set_rules('password', trans("095"), 'required|min_length[6]');
+					$this->form_validation->set_rules('firstname', trans("0171"), 'trim|required');
+					$this->form_validation->set_rules('lastname', trans("0172"), 'trim|required');
+					//$this->form_validation->set_rules('agreement', "agreement", 'required');
+					if ($this->form_validation->run() == FALSE) {
+							$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
+							$bookingResult = array("error" => "yes", 'msg' => validation_errors());
+					}
+					else {
+							$this->db->select('accounts_email');
+							$this->db->where('accounts_email', $this->input->post('email'));
+							$this->db->where('accounts_type', 'customers');
+							$nums = $this->db->get('pt_accounts')->num_rows();
+							if ($nums > 0) {
+									//$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
+									$bookingResult = array("error" => "yes", 'msg' => trans("0313"));
+							}else{
+									$userid = $this->accounts_model->signup_account('customers', '1');
+									$profile = $this->accounts_model->get_profile_details($userid);
+									$bookingResult = array("error" => "no", 'msg' => $profile );
+						           
+						            if($this->input->post('member_add')){
+										$this->add_member_whenbook($userid);
+									}
+									/*$bookingResult = "";*/
+									/*echo json_encode($bookingResult);*/
+							}
+					}
+				}else{
+
+					$this->form_validation->set_message('matches', trans("0310"));
+					$this->form_validation->set_message('valid_email', trans("0311"));
+					$this->form_validation->set_message('required', "%s " . trans("0312"));
+					$this->form_validation->set_rules('email', trans("094"), 'required|valid_email');
+					$this->form_validation->set_rules('password', trans("095"), 'required|min_length[6]');
+					$this->form_validation->set_rules('firstname', trans("0171"), 'trim|required');
+					$this->form_validation->set_rules('lastname', trans("0172"), 'trim|required');
+					/*$this->form_validation->set_rules('pickup_location', 'Pickup location', 'trim|required');
+					$this->form_validation->set_rules('pickup_time', 'Pickup time', 'trim|required');*/
+					if ($this->form_validation->run() == FALSE) {
+							$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
+							$bookingResult = array("error" => "yes", 'msg' => validation_errors());
+					}
+					else {
+							$this->db->select('accounts_email');
+							$this->db->where('accounts_email', $this->input->post('email'));
+							$this->db->where('accounts_type', 'customers');
+							$nums = $this->db->get('pt_accounts')->num_rows();
+							if ($nums > 0) {
+									//$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
+									$bookingResult = array("error" => "yes", 'msg' => trans("0313"));
+							}
+							else {
+									$userid = $this->accounts_model->signup_account('customers', '1');
+									$profile = $this->accounts_model->get_profile_details($userid);
+									$bookingResult = array("error" => "no", 'msg' => $profile );
+						           
+						            if($this->input->post('member_add')){
+										$this->add_member_whenbook($userid);
+									}
+							}
+					}
+				}
+				
+
+				echo json_encode($bookingResult);
+
+		}
+
+		function hbprocessBookinglogin() {
+			/*error_reporting(-1);*/
+			//$this->load->model('admin/bookings_model');
+			$this->form_validation->set_rules('username', trans("094"), 'required|valid_email');
+			$this->form_validation->set_rules('password', trans("095"), 'required|min_length[6]');
+			if ($this->form_validation->run() == FALSE) {
+					$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
+					$bookingResult = array("error" => "yes", 'msg' => validation_errors());
+			}else {
+				$this->load->model('ean/hb_model');
+				$this->load->model('accounts_model');
+			 	/*echo $this->hb_model->test();
+			 	exit();*/
+
+	                  //$bookingResult = array("error" => "yes", 'msg' => $book_data);
+
+			 	$username = $this->input->post('username');
+			 	$password = $this->input->post('password');
+				$login = $this->accounts_model->login_customer($username, $password);
+				if ($login) {
+					$userid = $this->session->userdata('pt_logged_customer');
+				 	$input_data_1 = $this->input->post();
+				 	$profile = $this->accounts_model->get_profile_details($userid);
+				 	/*echo "ASdsa";
+				 	echo "\n";*/
+				 	$input_data = array_merge($input_data_1 , $profile);
+	                echo $bookingResult = $this->hb_model->do_booking($input_data);
+	                if($this->input->post('member_add')){
+						$this->add_member_whenbook($userid);
+					}
+					exit();
+				}else {
+					$bookingResult = array("error" => "yes", 'msg' => 'Invalid Email or Password');
+				}
+				
+			}
+			echo json_encode($bookingResult);
+			 	 
+                  //$bookingResult = array("error" => "yes", 'msg' => $this->input->post());
+                  //echo  json_encode($bookingResult);
+				/*exit();
+				$this->load->model('bookings_model');
+				$username = $this->input->post('username');
+				$password = $this->input->post('password');
+				if ($this->input->is_ajax_request()) {
+				  $bookingtype = $this->input->post('btype');
+
 						$bookingResult = $this->bookings_model->do_login_booking($username, $password);
 						echo json_encode($bookingResult);
+				}*/
+		}
+
+		function hbprocessBookingsignup() {
+			$this->load->model('ean/hb_model');
+			$this->load->model('accounts_model');
+				
+
+				$this->form_validation->set_message('matches', trans("0310"));
+				$this->form_validation->set_message('valid_email', trans("0311"));
+				$this->form_validation->set_message('required', "%s " . trans("0312"));
+				$this->form_validation->set_rules('email', trans("094"), 'required|valid_email');
+				$this->form_validation->set_rules('password', trans("095"), 'required|min_length[6]');
+				$this->form_validation->set_rules('firstname', trans("0171"), 'trim|required');
+				$this->form_validation->set_rules('lastname', trans("0172"), 'trim|required');
+				if ($this->form_validation->run() == FALSE) {
+						$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
+						$bookingResult = array("error" => "yes", 'msg' => validation_errors());
 				}
+				else {
+						$this->db->select('accounts_email');
+						$this->db->where('accounts_email', $this->input->post('email'));
+						$this->db->where('accounts_type', 'customers');
+						$nums = $this->db->get('pt_accounts')->num_rows();
+						if ($nums > 0) {
+								$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
+								$bookingResult = array("error" => "yes", 'msg' => trans("0313"));
+						}
+						else {
+								
+								$userid = $this->accounts_model->signup_account('customers', '1');
+								//$this->session->set_userdata('pt_logged_customer', $userid);
+								//$bookingResult = array("error" => "no", 'msg' => '' , 'user_id' => $userid);
+								$profile = $this->accounts_model->get_profile_details($userid);
+		 						$input_data_1 = $this->input->post();
+							 	$input_data = array_merge($input_data_1 , $profile);
+							 	//print_r($input_data);
+							 	//exit();
+					            $bookingResult = $this->hb_model->do_booking($input_data);
+					            if($this->input->post('member_add')){
+									$this->add_member_whenbook($userid);
+								}
+							
+								echo $bookingResult;
+								exit();
+								/*$profile = $this->accounts_model->get_profile_details($userid);
+								$profile_1 = $profile[0];
+								$input_data = array_merge($input_data_1 , $profile);
+								if($this->input->post('member_add')){
+									$this->session->set_userdata('is_member', '1');
+									$this->add_member_whenbook($userid);
+								}
+								$bookingResult = $this->hb_model->do_booking($input_data);*/
+								//exit();
+								/*echo json_encode($bookingResult);*/
+						}
+				}
+
+				echo json_encode($bookingResult);
+				
+		}
+
+
+		function hbprocessBookinglogged() {
+				$this->load->model('ean/hb_model');
+				$this->load->model('accounts_model');
+				$user = $this->session->userdata('pt_logged_customer');
+				$input_data_1 = $this->input->post();
+				$profile = $this->accounts_model->get_profile_details($user);
+				$profile_1 = $profile[0];
+				$input_data = array_merge($input_data_1 , $profile);
+				/*echo "<br>";
+				error_reporting(-1);*/
+
+				if($this->input->post('member_add')){
+					$this->session->set_userdata('is_member', '1');
+					$this->add_member_whenbook($user);
+				}
+				echo $book_data = $this->hb_model->do_booking($input_data);
+				
+		}
+
+		function hbprocessMemberignup() {
+				/*echo "ASdasd";
+				error_reporting(E_ALL);*/
+				/*$this->load->model('ean/hb_model');*/
+				$this->load->model('accounts_model');
+				$this->load->model('bookings_model');
+
+				$form_type = $this->input->post("form_name");
+				if($form_type == "login" || $form_type == 'login_mem'){
+					$this->form_validation->set_rules('username', trans("094"), 'required|valid_email');
+					$this->form_validation->set_rules('password', trans("095"), 'required|min_length[6]');
+					/*$this->form_validation->set_rules('pickup_location', 'Pickup location', 'trim|required');
+					$this->form_validation->set_rules('pickup_time', 'Pickup time', 'trim|required');*/
+					if ($this->form_validation->run() == FALSE) {
+						$bookingResult = array("error" => "yes", 'msg' => validation_errors());
+					}else{
+						$username = $this->input->post('username');
+						$password = $this->input->post('password');
+						$bookingResult = $this->bookings_model->check_login_user_for_member($username, $password);
+					}
+					
+
+				}else{
+					/*
+					echo $bookingResult = $this->bookings_model->do_customer_booking();
+					exit();*/
+					$this->form_validation->set_message('matches', trans("0310"));
+					$this->form_validation->set_message('valid_email', trans("0311"));
+					$this->form_validation->set_message('required', "%s " . trans("0312"));
+					$this->form_validation->set_rules('email', trans("094"), 'required|valid_email');
+					$this->form_validation->set_rules('password', trans("095"), 'required|min_length[6]');
+					$this->form_validation->set_rules('firstname', trans("0171"), 'trim|required');
+					$this->form_validation->set_rules('lastname', trans("0172"), 'trim|required');
+					if ($this->form_validation->run() == FALSE) {
+							$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
+							$bookingResult = array("error" => "yes", 'msg' => validation_errors());
+					}else {
+							$this->db->select('accounts_email');
+							$this->db->where('accounts_email', $this->input->post('email'));
+							$this->db->where('accounts_type', 'customers');
+							$nums = $this->db->get('pt_accounts')->num_rows();
+							if ($nums > 0) {
+									$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
+									$bookingResult = array("error" => "yes", 'msg' => trans("0313"));
+							}
+							else {
+									$userid = $this->accounts_model->signup_account('customers', '1');
+									$this->session->set_userdata('pt_logged_customer', $userid);
+									$bookingResult = array("error" => "no", 'msg' => '' , 'user_id' => $userid);
+									/*$profile = $this->accounts_model->get_profile_details($userid);
+									$profile_1 = $profile[0];
+									$input_data = array_merge($input_data_1 , $profile);
+									if($this->input->post('member_add')){
+										$this->session->set_userdata('is_member', '1');
+										$this->add_member_whenbook($userid);
+									}
+									$bookingResult = $this->hb_model->do_booking($input_data);*/
+									//exit();
+									/*echo json_encode($bookingResult);*/
+							}
+					}
+				}
+				echo json_encode($bookingResult);
+
 		}
 
 		function processBookingsignup() {
 				$this->load->model('bookings_model');
+				/*echo json_encode($this->input->post());
+				exit();*/
 				/*error_reporting(E_ALL);
 				echo $bookingResult = $this->bookings_model->do_customer_booking();
 				exit();*/
@@ -729,11 +1157,7 @@ class Ajaxcalls extends MX_Controller {
 				$this->form_validation->set_rules('firstname', trans("0171"), 'trim|required');
 				$this->form_validation->set_rules('lastname', trans("0172"), 'trim|required');
 				if ($this->form_validation->run() == FALSE) {
-						$msg = "
-
-<div class='alert alert-danger'>" . validation_errors() . "</div>
-
-";
+						$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
 						$bookingResult = array("error" => "yes", 'msg' => validation_errors());
 				}
 				else {
@@ -742,22 +1166,30 @@ class Ajaxcalls extends MX_Controller {
 						$this->db->where('accounts_type', 'customers');
 						$nums = $this->db->get('pt_accounts')->num_rows();
 						if ($nums > 0) {
-								$msg = "
-
-<div class='alert alert-danger'>" . trans("0313") . "</div>";
+								$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
 								$bookingResult = array("error" => "yes", 'msg' => trans("0313"));
-						}
-						else {
-								$bookingResult = $this->bookings_model->do_customer_booking();
+						}else {
+								if(!$this->input->post('member_add')){
+									$bookingResult = $this->bookings_model->do_customer_booking();
+									
+								}else{
+									/*echo "AsdAS";*/
+									$bookingResult = $this->bookings_model->do_customer_booking_vip();
+									
+								}
+								//exit();
 								/*echo json_encode($bookingResult);*/
 						}
 				}
-
+				/*$bookingResult = array("error" => "yes", 'msg' => trans("0313"));*/
 				echo json_encode($bookingResult);
+				exit();
 
 		}
 
 		function processMemberignup() {
+				/*echo json_encode($this->input->post());
+				exit();*/
 				$this->load->model('bookings_model');
 
 				$form_type = $this->input->post("form_name");
@@ -765,8 +1197,8 @@ class Ajaxcalls extends MX_Controller {
 				if($form_type == "login_mem"){
 					$this->form_validation->set_rules('username', trans("094"), 'required|valid_email');
 					$this->form_validation->set_rules('password', trans("095"), 'required|min_length[6]');
-					$this->form_validation->set_rules('pickup_location', 'Pickup location', 'trim|required');
-					$this->form_validation->set_rules('pickup_time', 'Pickup time', 'trim|required');
+					/*$this->form_validation->set_rules('pickup_location', 'Pickup location', 'trim|required');
+					$this->form_validation->set_rules('pickup_time', 'Pickup time', 'trim|required');*/
 					if ($this->form_validation->run() == FALSE) {
 						$bookingResult = array("error" => "yes", 'msg' => validation_errors());
 					}else{
@@ -795,7 +1227,7 @@ class Ajaxcalls extends MX_Controller {
 							$this->db->where('accounts_type', 'customers');
 							$nums = $this->db->get('pt_accounts')->num_rows();
 							if ($nums > 0) {
-									$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
+									//$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
 									$bookingResult = array("error" => "yes", 'msg' => trans("0313"));
 							}
 							else {
@@ -812,8 +1244,8 @@ class Ajaxcalls extends MX_Controller {
 					$this->form_validation->set_rules('password', trans("095"), 'required|min_length[6]');
 					$this->form_validation->set_rules('firstname', trans("0171"), 'trim|required');
 					$this->form_validation->set_rules('lastname', trans("0172"), 'trim|required');
-					$this->form_validation->set_rules('pickup_location', 'Pickup location', 'trim|required');
-					$this->form_validation->set_rules('pickup_time', 'Pickup time', 'trim|required');
+					/*$this->form_validation->set_rules('pickup_location', 'Pickup location', 'trim|required');
+					$this->form_validation->set_rules('pickup_time', 'Pickup time', 'trim|required');*/
 					if ($this->form_validation->run() == FALSE) {
 							$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
 							$bookingResult = array("error" => "yes", 'msg' => validation_errors());
@@ -824,7 +1256,7 @@ class Ajaxcalls extends MX_Controller {
 							$this->db->where('accounts_type', 'customers');
 							$nums = $this->db->get('pt_accounts')->num_rows();
 							if ($nums > 0) {
-									$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
+									//$msg = "<div class='alert alert-danger'>" . trans("0313") . "</div>";
 									$bookingResult = array("error" => "yes", 'msg' => trans("0313"));
 							}
 							else {
@@ -842,18 +1274,55 @@ class Ajaxcalls extends MX_Controller {
 		public function add_member_whenbook($userid){
 			/*error_reporting(E_ALL);*/
 			$this->load->helper('member');
-			$userid = $this->input->post("user_id");
+			if($this->input->post("user_id")){
+				$userid = $this->input->post("user_id");
+			}
 			$mem_data = check_is_member($userid);
 			//echo $mem_data[0]->accounts_id;
 			if($mem_data[0]->accounts_id == $userid){
 				$memberResult = array("error" => "yes", 'msg' => $mem_data);
 			}else{
 				$abc = add_member($userid);
+				/*$this->load->model('admin/email_model');
+        		$this->email_model->signupEmail_VIP();*/
 				$memberResult = array("error" => "no", 'msg' => $mem_data);
 				
 			}
-			echo json_encode($memberResult);
+			return json_encode($memberResult);
 		}
+
+
+		public function beta_test_email(){
+			/*error_reporting(-1);*/
+			$to_email = $this->input->post('to_email');
+			$this->load->model('admin/emails_model');
+        	echo $this->emails_model->beta_test_email($to_email);
+		}
+
+		public function invoice_ticket_email(){
+			/*error_reporting(-1);*/
+			$to_email = $this->input->post('to_email');
+			$image = $this->input->post('image');
+			$this->load->model('admin/emails_model');
+        	echo $this->emails_model->invoice_ticket_email($to_email,$image);
+		}
+
+
+		public function check_memer_or_not(){
+			$this->load->helper('member');
+            $userid = $this->input->post('user_id');
+            //print_r($userid);
+            $mem_data = check_is_member($userid);
+           if($mem_data[0]->accounts_id == $userid){
+				$memberResult = array("error" => "no", 'msg' => $mem_data);
+			}else{
+				//$abc = add_member($userid);
+				$memberResult = array("error" => "yes", 'msg' => $mem_data);
+				
+			}
+			echo json_encode($memberResult);
+            //echo $is_member;
+          }
 
 		public function verifyAccount() {
 				$id = $this->input->post('id');
@@ -1400,7 +1869,5 @@ class Ajaxcalls extends MX_Controller {
        }
 
        }
-
-
 
 }

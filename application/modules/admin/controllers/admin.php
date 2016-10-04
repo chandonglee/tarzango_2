@@ -641,9 +641,106 @@ class Admin extends MX_Controller {
         }
 
 
-// hotels module controller
+		// hotels module controller
 		function hotels($args = null, $id = null, $roomid = null) {
 				$hotelsmod = modules :: load('hotels/hotelsback/');
+				if (!method_exists($hotelsmod, 'index')) {
+						redirect('admin');
+				}
+				if ($args == "") {
+						$hotelsmod->index();
+				}
+				elseif ($args == "add") {
+						$hotelsmod->add();
+				}
+				elseif ($args == "settings") {
+						$hotelsmod->settings();
+				}
+                elseif ($args == "manage") {
+						$hotelsmod->manage($id);
+				}elseif ($args == "extras") {
+						$hotelsmod->extras($id);
+				}elseif ($args == "reviews") {
+						$hotelsmod->reviews($id);
+				}
+                elseif ($args == "gallery") {
+						$hotelsmod->gallery($id);
+				}
+                elseif ($args == "roomgallery") {
+						$hotelsmod->roomgallery($id);
+				}
+				elseif ($args == "translate") {
+						$hotelsmod->translate($id, $roomid);
+				}
+				elseif ($args == "rooms") {
+						$hotelsmod->rooms($id, $roomid);
+				}
+		}
+
+		// hotels module controller
+		function top_destinations($args = null, $id = null, $roomid = null) {
+				$hotelsmod = modules :: load('top_destinations/top_destinationsback/');
+				if (!method_exists($hotelsmod, 'index')) {
+						redirect('admin');
+				}
+				if ($args == "") {
+						$hotelsmod->index();
+				}
+				elseif ($args == "add") {
+						$hotelsmod->add();
+				}
+				elseif ($args == "settings") {
+						$hotelsmod->settings();
+				}
+                elseif ($args == "manage") {
+						$hotelsmod->manage($id);
+				}elseif ($args == "extras") {
+						$hotelsmod->extras($id);
+				}elseif ($args == "reviews") {
+						$hotelsmod->reviews($id);
+				}
+                elseif ($args == "gallery") {
+						$hotelsmod->gallery($id);
+				}
+                elseif ($args == "roomgallery") {
+						$hotelsmod->roomgallery($id);
+				}
+				elseif ($args == "translate") {
+						$hotelsmod->translate($id, $roomid);
+				}
+				elseif ($args == "rooms") {
+						$hotelsmod->rooms($id, $roomid);
+				}
+		}
+
+		function attraction($args = null, $id = null, $roomid = null) {
+				$hotelsmod = modules :: load('attraction/attractionback/');
+			
+				if (!method_exists($hotelsmod, 'index')) {
+						redirect('admin');
+				}
+				if ($args == "") {
+						$hotelsmod->index();
+				}
+				elseif ($args == "add") {
+						$hotelsmod->add();
+				}
+				elseif ($args == "settings") {
+						$hotelsmod->settings();
+				}
+                elseif ($args == "manage") {
+						$hotelsmod->manage($id);
+				
+				}
+                elseif ($args == "gallery") {
+						$hotelsmod->gallery($id);
+				}
+               
+		}
+
+		// HB hotels module controller by STP
+		function hb_images($args = null, $id = null, $roomid = null) {
+				$hotelsmod = modules :: load('hb_images/hb_imagesback/');
 				if (!method_exists($hotelsmod, 'index')) {
 						redirect('admin');
 				}

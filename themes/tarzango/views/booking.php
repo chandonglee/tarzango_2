@@ -1,3 +1,13 @@
+<?php 
+$cur_url = $module->slug.'?'.$_SERVER['QUERY_STRING'];
+$mem_type = $_GET['mem_type'];
+
+/*echo "<br>";*/
+$ajax_call_url = str_replace('hotels/', 'hotels/ajax_call_vip_booking/', $cur_url);
+/*
+exit();*/
+?>
+
 <?php
 if($result == "success" && $appModule == "ean"){ ?>
 
@@ -81,7 +91,7 @@ if($result == "success" && $appModule == "ean"){ ?>
 
 
  
-
+<input type="hidden" value="<?php echo $ajax_call_url; ?>" id="ajax_call_url">
   <div class="container-main ">
    <?php include'main-header.php';?>
   </div>
@@ -113,7 +123,7 @@ if($result == "success" && $appModule == "ean"){ ?>
              <div class="result"></div>
              <div class="left-section"> 
              <div class="tab-content"> 
-             <div class="col-sm-12 check">
+             <div class="col-sm-12 check" style="display:none;">
                       <div class="checkbox">
                         <label style="    color: #3f296c; font-family: 'Gotham-Bold';  margin: 10px 0px;    text-align: center;"><input type="checkbox" value="" name="mem_checkbox" id="mem_checkbox">Become member and book this hotel with price <?php echo $room->currSymbol;?> <?php echo $room->price - ($room->price * 10 / 100); ?></label>
                       </div>
@@ -124,14 +134,14 @@ if($result == "success" && $appModule == "ean"){ ?>
               
             <div class="col-sm-7 col-xs-12 left-section">
               <ul class="nav nav-tabs responsive" id="myTab">
-                <li class="col-sm-5 "><a data-toggle="tab" id="guesttab" href="#Guest">Book as a Guest</a></li>
+                <!-- <li class="col-sm-5 "><a data-toggle="tab" id="guesttab" href="#Guest">Book as a Guest</a></li> -->
                 <li class="col-sm-4 "><a data-toggle="tab" id="signintab" href="#Sign-In" style="padding-left:25px">Sign In</a></li>
                 <li class="col-sm-3"><a data-toggle="tab" id="signuptab" href="#sign_up">Sign Up</a></li>
 
               </ul>
               <div class="tab-content">
                 <input type="hidden" value="<?php echo $_GET['mem_type']; ?>" id="mem_type">
-                <div id="Sign-In" class="tab-pane fade in ">
+                <div id="Sign-In" class="tab-pane fade in active">
                   <form action="" method="POST" id="loginform">
                     <input type="hidden" name="form_name" value="login_mem">
                     <div class="col-sm-12">
@@ -158,18 +168,6 @@ if($result == "success" && $appModule == "ean"){ ?>
                       <div class="form-group ">
                         <label  class="required go-right"><?php echo trans('0178');?></label>
                         <textarea class="form-control form" placeholder="<?php echo trans('0415');?>" rows="4" name="additionalnotes"></textarea>
-                      </div>
-                    </div>
-                    <div class="col-sm-12 pickup_location" id="pickup_location">
-                      <div class="form-group">
-                        <label for="conf_pass">Pickup location</label>
-                        <input type="text" class="form-control"  name="pickup_location" value="" placeholder="Pickup location">
-                      </div>
-                    </div>
-                    <div class="col-sm-12 pickup_time" id="pickup_time">
-                      <div class="form-group">
-                        <label for="conf_pass">Pickup time</label>
-                        <input type="date" class="form-control"  name="pickup_time" value="" placeholder="Pickup time">
                       </div>
                     </div>
                     <div class="col-sm-12">
@@ -227,18 +225,6 @@ if($result == "success" && $appModule == "ean"){ ?>
                         <input type="password" class="form-control" id="conf_pass" name="conf_pass" value="" placeholder="Confirm Password">
                       </div>
                     </div>
-                    <div class="col-sm-12 pickup_location" id="pickup_location">
-                      <div class="form-group">
-                        <label for="conf_pass">Pickup location</label>
-                        <input type="text" class="form-control"  name="pickup_location" value="" placeholder="Pickup location">
-                      </div>
-                    </div>
-                    <div class="col-sm-12 pickup_time" id="pickup_time">
-                      <div class="form-group">
-                        <label for="conf_pass">Pickup time</label>
-                        <input type="date" class="form-control"  name="pickup_time" value="" placeholder="Pickup time">
-                      </div>
-                    </div>
                     <div class="col-sm-12 check">
                       <div class="checkbox">
                         <label><input type="checkbox" value="" name="keep" id="keep">Keep me signed in on this computer</label>
@@ -290,7 +276,7 @@ if($result == "success" && $appModule == "ean"){ ?>
                        $("#mem_pay").fadeOut("fast");
                        $("#waiting").html("Please Wait...");
 
-                     $.post("<?php echo base_url(); ?>"+"admin/ajaxcalls/processBooking"+formname,$("#bookingdetails, #"+formname+"form").serialize(), function(response){
+                     $.post("<?php echo base_url(); ?>"+"admin/ajaxcalls/processBooking"+formname,$("#bookingdetails, #"+formname+"form , #vip_details").serialize(), function(response){
                       var resp = $.parseJSON(response);
                       console.log(resp);
                       if(resp.error == "yes"){
@@ -330,7 +316,7 @@ if($result == "success" && $appModule == "ean"){ ?>
                     PayStand.script = document.createElement('script');
                     PayStand.script.type = 'text/javascript';
                     PayStand.script.async = true;
-                    //PayStand.script.src = 'https://app.paystand.com/js/gen/checkout.min.js';
+                   // PayStand.script.src = 'https://app.paystand.com/js/gen/checkout.min.js';
                     PayStand.script.src = 'https://sandbox.paystand.com/js/gen/checkout.min.js';
                     var s = document.getElementsByTagName('script')[0];
                     s.parentNode.insertBefore(PayStand.script, s);
@@ -349,7 +335,7 @@ if($result == "success" && $appModule == "ean"){ ?>
                   </a>
                   -->
                 </div>
-                <div id="Guest" class="tab-pane fade in active">
+                <div id="Guest" class="tab-pane fade">
                   <form class="" id="guestform" name="book_guest"  method="post">
                     <div class="col-sm-12">
 
@@ -457,6 +443,174 @@ if($result == "success" && $appModule == "ean"){ ?>
 
 
                 </div>
+
+                  
+                <div id="vip_drop" class="tab-pane fade  ">
+                  <div class="col-sm-12">
+                   <form id="vip_details" action="" onsubmit="return false">
+                              <div class="col-sm-12 col-xs-12 vip_perks">
+                               <h3>VIP Perks</h3>
+                               <div class="signupperkrow"><img src="images/memb4.png" />10% off, <b> you saved <?php echo $room->currSymbol;?> <?php echo $room->price * 10 / 100; ?></b> on this booking </div>
+                               <div class="signupperkrow"><img src="images/memb7.png" />Airport Pickup, Enter your Details</div>
+                               <div class="airport col-md-offset-1">
+                                <div class="form-group ">
+                                    <label for="sel1">Airport</label>
+                                    <input type="text" value="" name="pickup_location" class="form-control" id="sel1">
+                                  </div>
+                               
+                                 <div class="form-group" style="width:35%; float:left;">
+                                    <label for="sel1">Pickup Time </label>
+                                    <!-- <input type="text" value="" name="pickup_time" class="form-control" id="sel1"> -->
+                                    <select class="selectx" name="pickup_time" class="form-control" id="sel1">
+                                        <option value="00:00">00:00</option>
+                                        <option value="00:30">00:30</option>
+                                        <option value="01:00">01:00</option>
+                                        <option value="01:30">01:30</option>
+                                        <option value="02:00">02:00</option>
+                                        <option value="02:30">02:30</option>
+                                        <option value="03:00">03:00</option>
+                                        <option value="03:30">03:30</option>
+                                        <option value="04:00">04:00</option>
+                                        <option value="04:30">04:30</option>
+                                        <option value="05:00">05:00</option>
+                                        <option value="05:30">05:30</option>
+                                        <option value="06:00">06:00</option>
+                                        <option value="06:30">06:30</option>
+                                        <option value="07:00">07:00</option>
+                                        <option value="07:30">07:30</option>
+                                        <option value="08:00">08:00</option>
+                                        <option value="08:30">08:30</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="20:30">20:30</option>
+                                        <option value="21:00">21:00</option>
+                                        <option value="21:30">21:30</option>
+                                        <option value="22:00">22:00</option>
+                                        <option value="22:30">22:30</option>
+                                        <option value="23:00">23:00</option>
+                                        <option value="23:30">23:30</option>
+                                      </select>
+                                  </div>
+                                  
+                                  <div class="form-group" style="width:60%; float:right;">
+                                    <label for="sel1">Pickup Date</label>
+                                    <input type="text" value=""  name="pickup_date"  class="form-control dpean1" id="sel1">
+                                  </div>
+                               
+                                <div class="form-group" style="width:35%; float:left;">
+                                    <label for="sel1">Dropoff Time </label>
+                                    <!--<input type="text" value="" name="dropoff_time"  class="form-control " id="sel1">-->
+                                    <select class="selectx" name="dropoff_time" class="form-control" id="sel1">
+                                        <option value="00:00">00:00</option>
+                                        <option value="00:30">00:30</option>
+                                        <option value="01:00">01:00</option>
+                                        <option value="01:30">01:30</option>
+                                        <option value="02:00">02:00</option>
+                                        <option value="02:30">02:30</option>
+                                        <option value="03:00">03:00</option>
+                                        <option value="03:30">03:30</option>
+                                        <option value="04:00">04:00</option>
+                                        <option value="04:30">04:30</option>
+                                        <option value="05:00">05:00</option>
+                                        <option value="05:30">05:30</option>
+                                        <option value="06:00">06:00</option>
+                                        <option value="06:30">06:30</option>
+                                        <option value="07:00">07:00</option>
+                                        <option value="07:30">07:30</option>
+                                        <option value="08:00">08:00</option>
+                                        <option value="08:30">08:30</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="20:30">20:30</option>
+                                        <option value="21:00">21:00</option>
+                                        <option value="21:30">21:30</option>
+                                        <option value="22:00">22:00</option>
+                                        <option value="22:30">22:30</option>
+                                        <option value="23:00">23:00</option>
+                                        <option value="23:30">23:30</option>
+                                      </select>
+                                  </div>
+                                  
+                                  <div class="form-group" style="width:60%; float:right;">
+                                    <label for="sel1">Dropoff Date</label>
+                                    <input type="text" value="" name="dropoff_date" class="form-control dpean2" id="sel1">
+                                  </div>
+                                </div>
+                                <div class="signupperkrow"><img src="images/memb5.png" />Vip check in - Front of the line pass </div>
+                                 <div class="signupperkrow" id="vip_mem_room_sel">
+                                 <img src="images/memb6.png" />Upgraded suite <div class="form-group" style="width:50%; float:right;text-align:center;">
+                                     
+                                        <select class="form-control room_type_vip" id="sel1" >
+                                          <option>Select room type</option>
+                                          <option>Ac</option>
+                                        </select>
+                                        <p>Based upon availability</p>
+                                      </div> 
+                                 </div>
+                             
+                            <div class="signupperkrow"><img src="images/memb8.png" />Meet your dedicated Concierge represantative</div> 
+                             
+                            <div class="signupperkprsn">
+                                <div class="imgbox"><img src="images/signper.png"></div>
+                                <div class="prsndetail">
+                                     <b>Angel K. Brent</b>
+                                     <p>546-589-321</p>
+                                     <p>angel@tazario.com</p>
+                                </div>
+                            </div>  
+                            <button type="submit"  class="btn btn-action btn-lg  completebook" name="<?php if(empty($usersession)){ echo "login";}else{ echo "logged"; } ?>"  onclick="return completebook('<?php echo base_url();?>','<?php echo trans('0159')?>');"><?php echo trans('0306');?></button>
+                            
+                            <!-- <a data-toggle="tab" class="btn btn-action btn-lg back_tologin" data-frmname="login" id="signintab1" href="#Sign-In" style="padding-left:25px">Sign In</a>
+
+                            <a data-toggle="tab" class="btn btn-action btn-lg back_tologin" data-frmname="signup" id="signuptab1" href="#sign_up" style="padding-left:25px">Sign up</a> -->
+                        </div>
+                      
+                     </form> 
+                  </div>
+                </div>
+                  
               </div>
             
             <?php }else{ ?>
@@ -465,80 +619,283 @@ if($result == "success" && $appModule == "ean"){ ?>
                       <div class="col-sm-7 col-xs-12 left-section">
                   
                         <form id="loggedform">
-                <div class="panel-body">
-                  <div class="col-md-6  go-right">
-                    <div class="form-group ">
-                      <label  class="required go-right"><?php echo trans('0171');?></label>
-                      <input class="form-control form" type="text" placeholder="" name=""  value="<?php echo $profile[0]->ai_first_name?>" disabled="disabled" style="background-color: #DEDEDE !important"/>
-                    </div>
-                  </div>
-                  <div class="col-md-6  go-left">
-                    <div class="form-group ">
-                      <label  class="required go-right"><?php echo trans('0172');?></label>
-                      <input class="form-control form" type="text" placeholder="" name=""  value="<?php echo $profile[0]->ai_last_name?>" disabled="disabled" style="background-color: #DEDEDE !important">
-                    </div>
-                  </div>
-                  <div class="col-md-12 go-right">
-                    <div class="form-group ">
-                      <label  class="required  go-right"><?php echo trans('094');?></label>
-                      <input class="form-control form" type="text" placeholder="" name=""  value="<?php echo $profile[0]->accounts_email?>" disabled="disabled" style="background-color: #DEDEDE !important">
-                    </div>
-                  </div>
-                  <div class="col-md-12  go-right">
-                    <div class="form-group ">
-                      <label  class="required go-right"><?php echo trans('0178');?></label>
-                      <textarea class="form-control form" placeholder="<?php echo trans('0415');?>" rows="4" name="additionalnotes"></textarea>
-                    </div>
+                          <div class="panel-body">
+                            <div class="col-md-6  go-right">
+                              <div class="form-group ">
+                                <label  class="required go-right"><?php echo trans('0171');?></label>
+                                <input class="form-control form" type="text" placeholder="" name=""  value="<?php echo $profile[0]->ai_first_name?>" disabled="disabled" style="background-color: #DEDEDE !important"/>
+                              </div>
+                            </div>
+                            <div class="col-md-6  go-left">
+                              <div class="form-group ">
+                                <label  class="required go-right"><?php echo trans('0172');?></label>
+                                <input class="form-control form" type="text" placeholder="" name=""  value="<?php echo $profile[0]->ai_last_name?>" disabled="disabled" style="background-color: #DEDEDE !important">
+                              </div>
+                            </div>
+                            <div class="col-md-12 go-right">
+                              <div class="form-group ">
+                                <label  class="required  go-right"><?php echo trans('094');?></label>
+                                <input class="form-control form" type="text" placeholder="" name=""  value="<?php echo $profile[0]->accounts_email?>" disabled="disabled" style="background-color: #DEDEDE !important">
+                              </div>
+                            </div>
+                            <div class="col-md-12  go-right">
+                              <div class="form-group ">
+                                <label  class="required go-right"><?php echo trans('0178');?></label>
+                                <textarea class="form-control form" placeholder="<?php echo trans('0415');?>" rows="4" name="additionalnotes"></textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+              
+                  <div class="tab-content">
+                <input type="hidden" value="<?php echo $_GET['mem_type']; ?>" id="mem_type">
+                <div id="vip_drop" class="tab-pane fade  ">
+                  <div class="col-sm-12">
+                   <form id="vip_details" action="" onsubmit="return false">
+                              <div class="col-sm-12 col-xs-12 vip_perks">
+                               <h3>VIP Perks</h3>
+                               <div class="signupperkrow"><img src="images/memb4.png" />10% off, <b> you saved <?php echo $room->currSymbol;?> <?php echo $room->price * 10 / 100; ?></b> on this booking </div>
+                               <div class="signupperkrow"><img src="images/memb7.png" />Airport Pickup, Enter your Details</div>
+                               <div class="airport col-md-offset-1">
+                                <div class="form-group ">
+                                    <label for="sel1">Airport</label>
+                                    <input type="text" value="" name="pickup_location" class="form-control" id="sel1">
+                                  </div>
+                               
+                                 <div class="form-group" style="width:35%; float:left;">
+                                    <label for="sel1">Pickup Time </label>
+                                    <!-- <input type="text" value="" name="pickup_time" class="form-control" id="sel1"> -->
+                                    <select class="selectx" name="pickup_time" class="form-control" id="sel1">
+                                        <option value="00:00">00:00</option>
+                                        <option value="00:30">00:30</option>
+                                        <option value="01:00">01:00</option>
+                                        <option value="01:30">01:30</option>
+                                        <option value="02:00">02:00</option>
+                                        <option value="02:30">02:30</option>
+                                        <option value="03:00">03:00</option>
+                                        <option value="03:30">03:30</option>
+                                        <option value="04:00">04:00</option>
+                                        <option value="04:30">04:30</option>
+                                        <option value="05:00">05:00</option>
+                                        <option value="05:30">05:30</option>
+                                        <option value="06:00">06:00</option>
+                                        <option value="06:30">06:30</option>
+                                        <option value="07:00">07:00</option>
+                                        <option value="07:30">07:30</option>
+                                        <option value="08:00">08:00</option>
+                                        <option value="08:30">08:30</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="20:30">20:30</option>
+                                        <option value="21:00">21:00</option>
+                                        <option value="21:30">21:30</option>
+                                        <option value="22:00">22:00</option>
+                                        <option value="22:30">22:30</option>
+                                        <option value="23:00">23:00</option>
+                                        <option value="23:30">23:30</option>
+                                      </select>
+                                  </div>
+                                  
+                                  <div class="form-group" style="width:60%; float:right;">
+                                    <label for="sel1">Pickup Date</label>
+                                    <input type="text" value=""  name="pickup_date"  class="form-control dpean1" id="sel1">
+                                  </div>
+                               
+                                <div class="form-group" style="width:35%; float:left;">
+                                    <label for="sel1">Dropoff Time </label>
+                                    <!--<input type="text" value="" name="dropoff_time"  class="form-control " id="sel1">-->
+                                    <select class="selectx" name="dropoff_time" class="form-control" id="sel1">
+                                        <option value="00:00">00:00</option>
+                                        <option value="00:30">00:30</option>
+                                        <option value="01:00">01:00</option>
+                                        <option value="01:30">01:30</option>
+                                        <option value="02:00">02:00</option>
+                                        <option value="02:30">02:30</option>
+                                        <option value="03:00">03:00</option>
+                                        <option value="03:30">03:30</option>
+                                        <option value="04:00">04:00</option>
+                                        <option value="04:30">04:30</option>
+                                        <option value="05:00">05:00</option>
+                                        <option value="05:30">05:30</option>
+                                        <option value="06:00">06:00</option>
+                                        <option value="06:30">06:30</option>
+                                        <option value="07:00">07:00</option>
+                                        <option value="07:30">07:30</option>
+                                        <option value="08:00">08:00</option>
+                                        <option value="08:30">08:30</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="20:30">20:30</option>
+                                        <option value="21:00">21:00</option>
+                                        <option value="21:30">21:30</option>
+                                        <option value="22:00">22:00</option>
+                                        <option value="22:30">22:30</option>
+                                        <option value="23:00">23:00</option>
+                                        <option value="23:30">23:30</option>
+                                      </select>
+                                  </div>
+                                  
+                                  <div class="form-group" style="width:60%; float:right;">
+                                    <label for="sel1">Dropoff Date</label>
+                                    <input type="text" value="" name="dropoff_date" class="form-control dpean2" id="sel1">
+                                  </div>
+                                </div>
+                                <div class="signupperkrow"><img src="images/memb5.png" />Vip check in - Front of the line pass </div>
+                                 <div class="signupperkrow" id="vip_mem_room_sel">
+                                 <img src="images/memb6.png" />Upgraded suite <div class="form-group" style="width:50%; float:right;text-align:center;">
+                                     
+                                        <select class="form-control room_type_vip" id="sel1" >
+                                          <option>Select room type</option>
+                                          <option>Ac</option>
+                                        </select>
+                                        <p>Based upon availability</p>
+                                      </div> 
+                                 </div>
+                             
+                            <div class="signupperkrow"><img src="images/memb8.png" />Meet your dedicated Concierge represantative</div> 
+                             
+                            <div class="signupperkprsn">
+                                <div class="imgbox"><img src="images/signper.png"></div>
+                                <div class="prsndetail">
+                                     <b>Angel K. Brent</b>
+                                     <p>546-589-321</p>
+                                     <p>angel@tazario.com</p>
+                                </div>
+                            </div>  
+                            <button type="submit"  class="btn btn-action btn-lg  completebook" name="<?php if(empty($usersession)){ echo "login";}else{ echo "logged"; } ?>"  onclick="return completebook('<?php echo base_url();?>','<?php echo trans('0159')?>');"><?php echo trans('0306');?></button>
+                          
+                        </div>
+                      
+                     </form> 
                   </div>
                 </div>
-              </form>
-              
-            
+                     
+              </div>
             <!-- PHPTRAVELS LoggeIn Booking Starting  -->
             
             <!-- PHPTRAVELS LoggedIn User Booking Ending  -->
             <?php } ?>
-              <button style="ma" type="submit"  class="btn btn-action btn-lg  completebook" name="<?php if(empty($usersession)){ echo "guest";}else{ echo "logged"; } ?>"  onclick="return completebook('<?php echo base_url();?>','<?php echo trans('0159')?>');"><?php echo trans('0306');?></button>
-               <button type="submit" id="mem_pay" style="display:none;" class="btn btn-action btn-lg  signup_btn" name="signup"  ><?php echo trans('0306');?></button>
+            <?php
+              if($mem_type == 'M_c_free'){
+            ?>
+              <button type="submit"  class="btn btn-action btn-lg  completebook" name="<?php if(empty($usersession)){ echo "guest";}else{ echo "logged"; } ?>"  onclick="return completebook('<?php echo base_url();?>','<?php echo trans('0159')?>');"><?php echo trans('0306');?></button>
+              <?php }else{ ?>
+                <a data-toggle="tab" class="btn btn-action btn-lg Viptab" id="Viptab" href="#vip_drop">Cont. VIP Perks</a>
+                <script>
+                $('.Viptab').click(function(){
+                    //alert();
+                      $(this).hide();
+                      /*$(this).css('display','none');*/
+                });
+                $(".back_tologin").click(function(){
+                  $('.Viptab').show();
+                  var frmname = $(this).data('frmname');
+                   $(".completebook").prop('name',frmname);
+                });
+
+                </script>
+                <button type="button" id="mem_pay"  style="display:none;"  class="btn btn-action btn-lg  signup_btn" name="signup"  >cont to pick</button>
+                
+
+              <?php } ?>
+               <button type="button" style="display:none;" id="mem_pay"  class="btn btn-action btn-lg  signup_btn" name="signup"  >cont</button>
                <div id="mem_pay" style="display:none;">
                 <button id="element_id_1470283648" style="display:none;"></button>
               </div>
+              <script type="text/javascript">
+                 $(function(){
+                    
+                    $('#vip_mem_room_sel').hide();
+                    var ajax_call_url = $("#ajax_call_url").val();
+                     $.ajax({
+                        type: 'GET',
+                        data:{},
+                        url: ajax_call_url,
+                        cache: false,
+                        beforeSend:function(){
+                          // show image here
+                        },
+                        success: function(data)
+                        {
+                           var data1 = $.parseJSON(data);
+                           var cur_sel_room = $("#subitemid").val();
+                           var is_show = 0;
+                           HTML_DAT = ' <option>Select room type</option>';
+                           if(data1.hasRooms > 1){
+                              for (var vip_r_c=0; vip_r_c < data1.hasRooms ; vip_r_c++) { 
+                                  if(cur_sel_room != data1.rooms[vip_r_c].id){
+                                    var base_ddd = data1.rooms[vip_r_c];
+                                    var price = base_ddd.Info['totalPrice'];
+                                    HTML_DAT += '<option value="'+base_ddd.id+'" data-price="'+price+'">'+base_ddd.title+'</option>';
+                                    is_show++;
+                                  }
+                              }
+                              if(is_show > 0){
+                                $('.room_type_vip').html(HTML_DAT);
+                                $('#vip_mem_room_sel').show();
+                              }
+                           }
+                        }
+                    });
+                     $('.room_type_vip').change(function(){
+                        
+                          var new_p = $(".room_type_vip option:selected").data('price');
+                          var subitemid = $(".room_type_vip option:selected").val();
+                          $(".new_total").html('$ '+new_p);
+                          $("#subitemid").val(subitemid);
+                        
+
+                     });
+                    });
+                        
+              </script>
               <script>
                   
-                   $(".pickup_time").hide();
-                    $(".pickup_location").hide();
-              $("#mem_checkbox").click( function(){
+              $("#mem_pay").click( function(){
                 
-                if (this.checked) {
-                    $(".completebook").prop('name','signup');
-                    
-                    /*$(".completebook").hide();
-                    $("#mem_pay").show();*/
-                    $(".pickup_time").show();
-                    $(".pickup_location").show();
-                    $("#myTab").children("li").removeClass("active");
-                    $("#myTab").children("li").children("#signuptab").parent("li").addClass("active");
-                    $("#sign_up").addClass("active");
-                    $("#sign_up").addClass("in");
-                    $("#Sign-In").removeClass("active");
-                    $("#Sign-In").removeClass("in");
-                    $("#Guest").removeClass("active");
-                    $("#Guest").removeClass("in");
-                }else{
-                  $(".completebook").prop('name','guest');
-                  $("#myTab").children("li").removeClass("active");
-                    $("#myTab").children("li").children("#guesttab").parent("li").addClass("active");
-                    $("#Guest").addClass("active");
-                    $("#Guest").addClass("in");
-                    $("#Sign-In").removeClass("active");
-                    $("#Sign-In").removeClass("in");
-                    $("#signuptab").removeClass("active");
-                    $("#signuptab").removeClass("in");
-                   /* $(".completebook").show();
-                    $("#mem_pay").hide();*/
-                   $(".pickup_time").hide();
-                    $(".pickup_location").hide();
-                }
+                
                
               });
              </script> 
@@ -613,7 +970,7 @@ if($result == "success" && $appModule == "ean"){ ?>
 
                   <div class="col-sm-12">
                     <div class="total">
-                      <h3><?php echo $room->currSymbol;?> <?php echo $room->price;?></h3><h3 class="divider"> /</h3><p> total amount</p>
+                      <h3 class="new_total"><?php echo $room->currSymbol;?> <?php echo $room->price - ($room->price * 10 / 100);?></h3><h3 class="divider"> /</h3><p> total amount</p>
                     </div>
                   </div>
                 </div>
@@ -734,7 +1091,7 @@ if($result == "success" && $appModule == "ean"){ ?>
               <input type="hidden" id="couponid" name="couponid" value="" />
               <input type="hidden" id="btype" name="btype" value="<?php echo $appModule;?>" />
               <?php if($appModule == "hotels"){ ?>
-              <input type="hidden" name="subitemid" value="<?php echo $room->id;?>" />
+              <input type="hidden" name="subitemid" id="subitemid" value="<?php echo $room->id;?>" />
               <input type="hidden" name="roomscount" value="<?php echo $room->roomscount;?>" />
               <input type="hidden" name="bedscount" value="<?php echo $room->extraBedsCount;?>" />
               <input type="hidden" name="checkin" value="<?php echo $module->checkin;?>" />
@@ -807,199 +1164,199 @@ if($result == "success" && $appModule == "ean"){ ?>
 
            <!-- End Other Modules Booking left section -->
             <?php }else{?>
-            <!-- Start Expedia Booking Form -->
-            <form role="form" action="" method="POST"  >
-            <div class="step">
-              <div class="panel-body">
-                <div class="col-md-6  go-right">
-                  <div class="form-group ">
-                    <label  class="required go-right"><?php echo trans('0171');?></label>
+                <!-- Start Expedia Booking Form -->
+                <form role="form" action="" method="POST"  >
+                <div class="step">
+                  <div class="panel-body">
+                    <div class="col-md-6  go-right">
+                      <div class="form-group ">
+                        <label  class="required go-right"><?php echo trans('0171');?></label>
 
-                    <input class="form-control form" id="card-holder-firstname" type="text" placeholder="<?php echo trans('0171');?>" name="firstName"  value="<?php echo @@$profile[0]->ai_first_name?>">
+                        <input class="form-control form" id="card-holder-firstname" type="text" placeholder="<?php echo trans('0171');?>" name="firstName"  value="<?php echo @@$profile[0]->ai_first_name?>">
+                      </div>
+                    </div>
+                    <div class="col-md-6  go-left">
+                      <div class="form-group ">
+                        <label  class="required go-right"><?php echo trans('0172');?></label>
+                        <input class="form-control form" id="card-holder-lastname" type="text" placeholder="<?php echo trans('0172');?>" name="lastName"  value="<?php echo @$profile[0]->ai_last_name?>">
+                      </div>
+                    </div>
+                    <div class="col-md-6 go-right">
+                      <div class="form-group ">
+                        <label  class="required  go-right"><?php echo trans('094');?></label>
+                        <input class="form-control form" id="card-holder-email" type="text" placeholder="<?php echo trans('094');?>" name="email"  value="<?php echo @$profile[0]->accounts_email; ?>">
+                      </div>
+                    </div>
+                    <div class="col-md-6 go-right">
+                      <div class="form-group ">
+                        <label  class="required go-right"><?php echo trans('0173');?></label>
+                        <input class="form-control form" id="card-holder-phone" type="text" placeholder="<?php echo trans('0414');?>" name="phone"  value="<?php echo @$profile[0]->ai_mobile; ?>">
+                      </div>
+                    </div>
+                    <div class="col-md-6  go-right">
+                      <div class="form-group ">
+                        <label  class="required go-right"><?php echo trans('0105');?></label>
+                        <select data-placeholder="Select" id="country" name="country" class="form-control">
+                          <option value=""> <?php echo trans('0158');?> <?php echo trans('0105');?> </option>
+                          <?php foreach($allcountries as $c){ ?>
+                          <option value="<?php echo $c->iso2;?>" <?php makeSelected($c->iso2, @$profile[0]->ai_country); ?> ><?php echo $c->short_name;?></option>
+                          <?php }  ?>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-6  go-left">
+                      <div class="form-group ">
+                        <label  class="required go-right"><?php echo trans('0101');?></label>
+                        <input id="card-holder-state" class="form-control form" type="text" placeholder="<?php echo trans('0101');?>" name="province"  value="<?php if(!empty($profile[0]->ai_state)){ echo @$profile[0]->ai_state; } ?>">
+                      </div>
+                    </div>
+                    <div class="col-md-6 go-right">
+                      <div class="form-group ">
+                        <label  class="required  go-right"><?php echo trans('0100');?></label>
+                        <input id="card-holder-city" class="form-control form" type="text" placeholder="<?php echo trans('0100');?>" name="city"  value="<?php echo @$profile[0]->ai_mobile; ?>">
+                      </div>
+                    </div>
+                    <div class="col-md-6 go-left">
+                      <div class="form-group">
+                        <label  class="required go-right"><?php echo trans('0103');?></label>
+                        <input id="card-holder-postalcode" class="form-control form" type="text" placeholder="<?php echo trans('0104');?>" name="postalcode"  value="<?php if(!empty($profile[0]->ai_postal_code)){ echo @$profile[0]->ai_postal_code; } ?>">
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-12  go-right">
+                      <div class="form-group ">
+                        <label  class="required go-right"><?php echo trans('098');?></label>
+                        <textarea class="form-control form" placeholder="<?php echo trans('098');?>" rows="4"  name="address"><?php echo @$profile[0]->ai_address_1; ?></textarea>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
                   </div>
                 </div>
-                <div class="col-md-6  go-left">
-                  <div class="form-group ">
-                    <label  class="required go-right"><?php echo trans('0172');?></label>
-                    <input class="form-control form" id="card-holder-lastname" type="text" placeholder="<?php echo trans('0172');?>" name="lastName"  value="<?php echo @$profile[0]->ai_last_name?>">
+                <!--End step -->
+                <script type="text/javascript">
+                  $(function(){
+                  $('.popz').popover({ trigger: "hover" });
+                  });
+                </script>
+                <!-- Complete This booking button only starting -->
+                <div class="panel panel-default btn_section" style="display:none;">
+                  <div class="panel-body">
+                    <center>
                   </div>
                 </div>
-                <div class="col-md-6 go-right">
-                  <div class="form-group ">
-                    <label  class="required  go-right"><?php echo trans('094');?></label>
-                    <input class="form-control form" id="card-holder-email" type="text" placeholder="<?php echo trans('094');?>" name="email"  value="<?php echo @$profile[0]->accounts_email; ?>">
-                  </div>
-                </div>
-                <div class="col-md-6 go-right">
-                  <div class="form-group ">
-                    <label  class="required go-right"><?php echo trans('0173');?></label>
-                    <input class="form-control form" id="card-holder-phone" type="text" placeholder="<?php echo trans('0414');?>" name="phone"  value="<?php echo @$profile[0]->ai_mobile; ?>">
-                  </div>
-                </div>
-                <div class="col-md-6  go-right">
-                  <div class="form-group ">
-                    <label  class="required go-right"><?php echo trans('0105');?></label>
-                    <select data-placeholder="Select" id="country" name="country" class="form-control">
-                      <option value=""> <?php echo trans('0158');?> <?php echo trans('0105');?> </option>
-                      <?php foreach($allcountries as $c){ ?>
-                      <option value="<?php echo $c->iso2;?>" <?php makeSelected($c->iso2, @$profile[0]->ai_country); ?> ><?php echo $c->short_name;?></option>
-                      <?php }  ?>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-6  go-left">
-                  <div class="form-group ">
-                    <label  class="required go-right"><?php echo trans('0101');?></label>
-                    <input id="card-holder-state" class="form-control form" type="text" placeholder="<?php echo trans('0101');?>" name="province"  value="<?php if(!empty($profile[0]->ai_state)){ echo @$profile[0]->ai_state; } ?>">
-                  </div>
-                </div>
-                <div class="col-md-6 go-right">
-                  <div class="form-group ">
-                    <label  class="required  go-right"><?php echo trans('0100');?></label>
-                    <input id="card-holder-city" class="form-control form" type="text" placeholder="<?php echo trans('0100');?>" name="city"  value="<?php echo @$profile[0]->ai_mobile; ?>">
-                  </div>
-                </div>
-                <div class="col-md-6 go-left">
-                  <div class="form-group">
-                    <label  class="required go-right"><?php echo trans('0103');?></label>
-                    <input id="card-holder-postalcode" class="form-control form" type="text" placeholder="<?php echo trans('0104');?>" name="postalcode"  value="<?php if(!empty($profile[0]->ai_postal_code)){ echo @$profile[0]->ai_postal_code; } ?>">
-                  </div>
-                </div>
+                <!-- End Complete This booking button only -->
+                <input type="hidden" name="pay" value="1" />
+                <input type="hidden" name="adults" value="<?php echo $_GET['adults'];?>" />
+                <input type="hidden" name="sessionid" value="<?php echo $_GET['sessionid']; ?>" />
+                <input type="hidden" name="hotel" value="<?php echo $_GET['hotel']; ?>" />
+                <input type="hidden" name="hotelname" value="<?php echo $HotelSummary['name'];?>" />
+                <input type="hidden" name="hotelstars" value="<?php echo $hotelStars;?>" />
+                <input type="hidden" name="location" value="<?php echo $HotelSummary['city'];?>" />
+                <input type="hidden" name="thumbnail" value="<?php echo $HotelImages['HotelImage'][0]['url']; ?>" />
+                <input type="hidden" name="roomname" value="<?php echo $roomname; ?>" />
+                <input type="hidden" name="roomtotal" value="<?php echo $roomtotal; ?>" />
+                <input type="hidden" name="checkin" value="<?php echo $_GET['checkin']; ?>" />
+                <input type="hidden" name="checkout" value="<?php echo $_GET['checkout']; ?>" />
+                <input type="hidden" name="roomtype" value="<?php echo $_GET['roomtype']; ?>" />
+                <input type="hidden" name="ratecode" value="<?php echo $_GET['ratecode']; ?>" />
+                <input type="hidden" name="currency" value="<?php echo $currency; ?>" />
+                <input type="hidden" name="affiliateConfirmationId" value="<?php echo $eanlib->cid.$affiliateConfirmationId; ?>" />
+                <input type="hidden" name="total" value="<?php echo $total; ?>" />
+                <input type="hidden" name="tax" value="<?php echo $tax; ?>" />
+                <input type="hidden" name="nights" value="<?php echo $nights; ?>" />
                 <div class="clearfix"></div>
-                <div class="col-md-12  go-right">
-                  <div class="form-group ">
-                    <label  class="required go-right"><?php echo trans('098');?></label>
-                    <textarea class="form-control form" placeholder="<?php echo trans('098');?>" rows="4"  name="address"><?php echo @$profile[0]->ai_address_1; ?></textarea>
+                <div class="panel-body">
+                  <div class="col-md-6  go-right">
+                    <div class="form-group ">
+                      <label  class="required go-right"><?php echo trans('0330');?></label>
+                      <select class="form-control" name="cardtype" id="cardtype">
+                        <option value="">Select Card</option>
+                        <?php foreach($payment as $pay){ ?>
+                        <option value="<?php echo $pay['code'];?>"> <?php echo $pay['name'];?> </option>
+                        <?php  } ?>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6  go-left">
+                    <div class="form-group ">
+                      <label  class="required go-right"><?php echo trans('0316');?></label>
+                      <input type="text" class="form-control" name="cardno" id="card-number" pattern=".{12,}" required title="12 characters minimum" placeholder="Credit Card Number" onkeypress="return isNumeric(event)" value="<?php echo set_value('cardno');?>" >
+                    </div>
+                  </div>
+                  <div class="col-md-3 go-right">
+                    <div class="form-group ">
+                      <label  class="required  go-right"><?php echo trans('0329');?></label>
+                      <select class="form-control" name="expMonth" id="expiry-month">
+                        <option value="01"><?php echo trans('0317');?> (01)</option>
+                        <option value="02"><?php echo trans('0318');?> (02)</option>
+                        <option value="03"><?php echo trans('0319');?> (03)</option>
+                        <option value="04"><?php echo trans('0320');?> (04)</option>
+                        <option value="05"><?php echo trans('0321');?> (05)</option>
+                        <option value="06"><?php echo trans('0322');?> (06)</option>
+                        <option value="07"><?php echo trans('0323');?> (07)</option>
+                        <option value="08"><?php echo trans('0324');?> (08)</option>
+                        <option value="09"><?php echo trans('0325');?> (09)</option>
+                        <option value="10"><?php echo trans('0326');?> (10)</option>
+                        <option value="11"><?php echo trans('0327');?> (11)</option>
+                        <option value="12"><?php echo trans('0328');?> (12)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-3 go-left">
+                    <div class="form-group">
+                      <label  class="required go-right">&nbsp;</label>
+                      <select class="form-control" name="expYear" id="expiry-year">
+                        <?php for($y = date("Y");$y <= date("Y") + 10;$y++){?>
+                        <option value="<?php echo $y?>"><?php echo $y; ?></option>
+                        <?php } ?>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-3 go-left">
+                    <div class="form-group">
+                      <label  class="required go-right"><?php echo trans('0331');?></label>
+                      <input type="text" class="form-control" name="cvv" id="cvv" placeholder="<?php echo trans('0331');?>" value="<?php echo set_value('cvv');?>">
+                    </div>
+                  </div>
+                  <div class="col-md-3 go-left">
+                    <label  class="required go-right">&nbsp;</label>
+                    <img src="<?php echo base_url(); ?>assets/img/cc.png" class="img-responsive" />
+                  </div>
+                  <div class="clearfix"></div>
+                    <div class="col-md-6 go-right">
+                      <div class="form-group ">
+                        <label  class="required go-right"><?php echo trans('0173');?></label>
+                        <input class="form-control form" type="text" placeholder="<?php echo trans('0414');?>" name="phone"  value="<?php echo set_value('phone');?>">
+                      </div>
+                    </div>
+                    <div class="col-md-6 go-right">
+                      <div class="form-group ">
+                        <label  class="required go-right"><?php echo trans('098');?></label>
+                        <input class="form-control form" type="text" placeholder="<?php echo trans('098');?>" name="address"  value="<?php echo set_value('address');?>">
+                      </div>
+                    </div>
+                  <div class="clearfix"></div>
+                  
+                  <hr>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <p style="padding:10px;"><input type="checkbox" name="" id="policy" value="1">
+                        <?php echo trans('0416');?>  <br>
+                        <a href="http://travel.ian.com/index.jsp?pageName=userAgreement&locale=en_US&cid=<?php echo $eanlib->cid; ?>" target="_blank"><?php echo trans('057'); ?></a>
+                      </p>
+                      <div class="form-group">
+                        <div class="alert alert-danger submitresult"></div>
+                        <span id="waiting"></span>
+                        <div class="col-md-12"><button type="submit" class="btn btn-success btn-lg btn-block paynowbtn" onclick="return expcheck();" name="<?php if(empty($usersession)){ echo "guest";}else{ echo "logged"; } ?>" ><?php echo trans('0306');?></button></div>
+                     <div class="clearfix"></div><hr>
+                        <div class="panel-body">
+                         <p style="font-size:12px" class="go-right RTL"> <?php echo $checkInInstructions; ?></p>
+                      </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="clearfix"></div>
-              </div>
-            </div>
-            <!--End step -->
-            <script type="text/javascript">
-              $(function(){
-              $('.popz').popover({ trigger: "hover" });
-              });
-            </script>
-            <!-- Complete This booking button only starting -->
-            <div class="panel panel-default btn_section" style="display:none;">
-              <div class="panel-body">
-                <center>
-              </div>
-            </div>
-            <!-- End Complete This booking button only -->
-            <input type="hidden" name="pay" value="1" />
-            <input type="hidden" name="adults" value="<?php echo $_GET['adults'];?>" />
-            <input type="hidden" name="sessionid" value="<?php echo $_GET['sessionid']; ?>" />
-            <input type="hidden" name="hotel" value="<?php echo $_GET['hotel']; ?>" />
-            <input type="hidden" name="hotelname" value="<?php echo $HotelSummary['name'];?>" />
-            <input type="hidden" name="hotelstars" value="<?php echo $hotelStars;?>" />
-            <input type="hidden" name="location" value="<?php echo $HotelSummary['city'];?>" />
-            <input type="hidden" name="thumbnail" value="<?php echo $HotelImages['HotelImage'][0]['url']; ?>" />
-            <input type="hidden" name="roomname" value="<?php echo $roomname; ?>" />
-            <input type="hidden" name="roomtotal" value="<?php echo $roomtotal; ?>" />
-            <input type="hidden" name="checkin" value="<?php echo $_GET['checkin']; ?>" />
-            <input type="hidden" name="checkout" value="<?php echo $_GET['checkout']; ?>" />
-            <input type="hidden" name="roomtype" value="<?php echo $_GET['roomtype']; ?>" />
-            <input type="hidden" name="ratecode" value="<?php echo $_GET['ratecode']; ?>" />
-            <input type="hidden" name="currency" value="<?php echo $currency; ?>" />
-            <input type="hidden" name="affiliateConfirmationId" value="<?php echo $eanlib->cid.$affiliateConfirmationId; ?>" />
-            <input type="hidden" name="total" value="<?php echo $total; ?>" />
-            <input type="hidden" name="tax" value="<?php echo $tax; ?>" />
-            <input type="hidden" name="nights" value="<?php echo $nights; ?>" />
-            <div class="clearfix"></div>
-            <div class="panel-body">
-              <div class="col-md-6  go-right">
-                <div class="form-group ">
-                  <label  class="required go-right"><?php echo trans('0330');?></label>
-                  <select class="form-control" name="cardtype" id="cardtype">
-                    <option value="">Select Card</option>
-                    <?php foreach($payment as $pay){ ?>
-                    <option value="<?php echo $pay['code'];?>"> <?php echo $pay['name'];?> </option>
-                    <?php  } ?>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-6  go-left">
-                <div class="form-group ">
-                  <label  class="required go-right"><?php echo trans('0316');?></label>
-                  <input type="text" class="form-control" name="cardno" id="card-number" pattern=".{12,}" required title="12 characters minimum" placeholder="Credit Card Number" onkeypress="return isNumeric(event)" value="<?php echo set_value('cardno');?>" >
-                </div>
-              </div>
-              <div class="col-md-3 go-right">
-                <div class="form-group ">
-                  <label  class="required  go-right"><?php echo trans('0329');?></label>
-                  <select class="form-control" name="expMonth" id="expiry-month">
-                    <option value="01"><?php echo trans('0317');?> (01)</option>
-                    <option value="02"><?php echo trans('0318');?> (02)</option>
-                    <option value="03"><?php echo trans('0319');?> (03)</option>
-                    <option value="04"><?php echo trans('0320');?> (04)</option>
-                    <option value="05"><?php echo trans('0321');?> (05)</option>
-                    <option value="06"><?php echo trans('0322');?> (06)</option>
-                    <option value="07"><?php echo trans('0323');?> (07)</option>
-                    <option value="08"><?php echo trans('0324');?> (08)</option>
-                    <option value="09"><?php echo trans('0325');?> (09)</option>
-                    <option value="10"><?php echo trans('0326');?> (10)</option>
-                    <option value="11"><?php echo trans('0327');?> (11)</option>
-                    <option value="12"><?php echo trans('0328');?> (12)</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-3 go-left">
-                <div class="form-group">
-                  <label  class="required go-right">&nbsp;</label>
-                  <select class="form-control" name="expYear" id="expiry-year">
-                    <?php for($y = date("Y");$y <= date("Y") + 10;$y++){?>
-                    <option value="<?php echo $y?>"><?php echo $y; ?></option>
-                    <?php } ?>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-3 go-left">
-                <div class="form-group">
-                  <label  class="required go-right"><?php echo trans('0331');?></label>
-                  <input type="text" class="form-control" name="cvv" id="cvv" placeholder="<?php echo trans('0331');?>" value="<?php echo set_value('cvv');?>">
-                </div>
-              </div>
-              <div class="col-md-3 go-left">
-                <label  class="required go-right">&nbsp;</label>
-                <img src="<?php echo base_url(); ?>assets/img/cc.png" class="img-responsive" />
-              </div>
-              <div class="clearfix"></div>
-                <div class="col-md-6 go-right">
-                  <div class="form-group ">
-                    <label  class="required go-right"><?php echo trans('0173');?></label>
-                    <input class="form-control form" type="text" placeholder="<?php echo trans('0414');?>" name="phone"  value="<?php echo set_value('phone');?>">
-                  </div>
-                </div>
-                <div class="col-md-6 go-right">
-                  <div class="form-group ">
-                    <label  class="required go-right"><?php echo trans('098');?></label>
-                    <input class="form-control form" type="text" placeholder="<?php echo trans('098');?>" name="address"  value="<?php echo set_value('address');?>">
-                  </div>
-                </div>
-              <div class="clearfix"></div>
-              
-              <hr>
-              <div class="row">
-                <div class="col-md-12">
-                  <p style="padding:10px;"><input type="checkbox" name="" id="policy" value="1">
-                    <?php echo trans('0416');?>  <br>
-                    <a href="http://travel.ian.com/index.jsp?pageName=userAgreement&locale=en_US&cid=<?php echo $eanlib->cid; ?>" target="_blank"><?php echo trans('057'); ?></a>
-                  </p>
-                  <div class="form-group">
-                    <div class="alert alert-danger submitresult"></div>
-                    <span id="waiting"></span>
-                    <div class="col-md-12"><button type="submit" class="btn btn-success btn-lg btn-block paynowbtn" onclick="return expcheck();" name="<?php if(empty($usersession)){ echo "guest";}else{ echo "logged"; } ?>" ><?php echo trans('0306');?></button></div>
-                 <div class="clearfix"></div><hr>
-                    <div class="panel-body">
-                     <p style="font-size:12px" class="go-right RTL"> <?php echo $checkInInstructions; ?></p>
-                  </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            </form>
+                </form>
             <!-- End Expedia Booking Form -->
             <?php } ?>
 
@@ -1395,10 +1752,13 @@ if($result == "success" && $appModule == "ean"){ ?>
 <!-- END OF CONTENT -->
 
 <?php } ?>
+
 <?php if($appModule == "ean"){ ?>
 <!-- Start JS for Expedia -->
 <script type="text/javascript">
   $(function(){
+      
+             
 
         $(".submitresult").hide();
 

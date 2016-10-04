@@ -22,11 +22,11 @@
     <div class="container">
     <div class="col-sm-8">
       <div class="footer-logo">
-        <a href=""><img src="img/home_logo.png"></a>
+        <a href=""><img src="img/logo.png"></a>
       </div>
       <div class="footer-contact">
-        <a style="color: #1ec1fb;font-size: 16px;margin-bottom: 5px;" href="tel:4156803008" title="Call Us"> <?php echo $phone; ?></a><br>
-        <a style="color: #1ec1fb;font-size: 16px; margin-bottom: 5px;" href="mailto:hello@tarzango.com" title="Email Us"><?php echo $contactemail; ?></a>
+        <a style="" href="tel:4156803008" title="Call Us"> <?php echo $phone; ?></a><br>
+        <a style="" href="mailto:hello@tarzango.com" title="Email Us"><?php echo $contactemail; ?></a>
       </div>
       <div class="social-address">
         <div class="social">
@@ -56,19 +56,19 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-2 footerlink1" >
       <div class="footer-menu-1">
         <p>About Us</p>
         <ul>
          <li><a href="<?php echo base_url().'how_to_book'; ?>" title="How to Book"> How to Book</a></li>
           <li><a href="<?php echo base_url().'booking_tips'; ?>" title="Booking Tips">Booking Tips</a></li>
-          <li><a href="#" title="About Us">About Us</a></li>
+          <li><a href="<?php echo base_url().'About_us'; ?>" title="About Us">About Us</a></li>
           <li><a href="<?php echo base_url().'become-a-supplier'; ?>" title="Become Supplier">Become Supplier</a></li>
-          <li><a href="<?php echo base_url().'Price-Guarantee' ?>" title="Price Guarantee">Price Guarantee</a></li>
+          <li><a href="<?php echo base_url().'services' ?>" title="Services">Services</a></li>
         </ul>
       </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-2 footerlink2">
       <div class="footer-menu-2">
         <p>Support</p>
         <ul>
@@ -76,7 +76,11 @@
           <li><a href="<?php echo base_url().'faq'; ?>" title="FAQ and Help">FAQ &amp; Help</a></li>
           <li><a href="<?php echo base_url().'terms-condition'; ?>" >Terms & Conditions</a></li>
           <li><a href="<?php echo base_url().'supplier'; ?>" title="Supplier Login">Supplier Login</a></li>
-          <li><a href="#" title="My Account">My Account</a></li>
+          <?php  if(!empty($customerloggedin)){ ?>
+          <li><a href="<?php echo base_url().'account'; ?>" title="My Account">My Account</a></li>
+          <?php }else{ ?>
+          <li><a href="<?php echo base_url().'login'; ?>" title="My Account">My Account</a></li>
+          <?php } ?>
         </ul>
       </div>
     </div>
@@ -85,8 +89,8 @@
   <div class="footer-bottom">
     <div class="container">
     <div class="col-sm-3">
-      <a href="">TERMS</a>
-      <a href="">PRIVACY</a>
+      <a href="<?php echo base_url().'Terms-Conditions'; ?>">TERMS</a>
+      <a href="<?php echo base_url().'Terms-Conditions'; ?>">PRIVACY</a>
     </div>
     <div class="col-sm-6 text-center">
       <p>@ 2016 Tarzango, LLC All Rights Reserved</p>
@@ -120,7 +124,7 @@
       });
    // });
   window.intercomSettings = {
-    app_id: "r8jzxiyp"
+   // app_id: "r8jzxiyp"
   };
 </script>
 <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/r8jzxiyp';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>

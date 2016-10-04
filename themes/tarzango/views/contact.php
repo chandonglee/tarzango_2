@@ -1,7 +1,7 @@
 </div>
 </div>
 <!-- WRAP -->
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+
 <script>
 window.onload = function () {
   var styles = [
@@ -61,6 +61,12 @@ map.mapTypes.set('Styled', styledMapType);
 </script>
 
 <style type="text/css">
+.container-main.main_header.new input.search-box{
+    border: none !important;
+    width: 60%;
+    box-shadow: none;
+  }
+ 
 .inner-page-nav{
   display: none;
 }  
@@ -83,18 +89,19 @@ map.mapTypes.set('Styled', styledMapType);
    font-family: 'Apercu-Regular';
 }
 
-
 </style>
 
 <body>
+
 <div class="contact">
-  <div class="container-main main_header">
+<?php include 'new_header.php';?> 
+  <div class="container-main main_header" style="padding-top:110px">
      <div class="container">
       <div class="row">
        
-      <?php include 'menu_header.php';?>
-            <center style="margin-left: 88px; z-index: 999;
-    margin-top: 20px;"><a  href="<?php echo base_url(); ?>"><img class="" style="" src="images/contact-logo.png"></a></center>
+      
+            <center class="center" style="margin-left: 88px; z-index: 999;
+    margin-top: 20px;"></center>
           
          
      
@@ -131,12 +138,21 @@ map.mapTypes.set('Styled', styledMapType);
                 </div>
                 </br>
                 <?php } ?>
+          <?php  if(!empty($customerloggedin)){ ?>
             <div class="col-sm-6 form-group">
-              <input type="text" name="contact_name" id="name" value="" class="form-control" placeholder="Enter Your Name">
+              <input type="text" name="contact_name" id="name" class="form-control" value="<?php echo $profile->ai_first_name ?>" placeholder="Enter Your Name">
+            </div>
+            <div class="col-sm-6 form-group">
+              <input type="email"  name="contact_email" id="email" value="<?php echo $profile->accounts_email ?>" class="form-control" placeholder="Enter Your Email">
+            </div>
+          <?php }else{ ?>
+            <div class="col-sm-6 form-group">
+              <input type="text" name="contact_name" id="name" class="form-control" value="" placeholder="Enter Your Name">
             </div>
             <div class="col-sm-6 form-group">
               <input type="email"  name="contact_email" id="email" value="" class="form-control" placeholder="Enter Your Email">
             </div>
+          <?php } ?>
             <div class="col-sm-12 form-group">
               <textarea class="form-control" name="contact_message" value="" rows="8" id="comment" placeholder="Enter Your Comment"></textarea>
             </div>
@@ -247,32 +263,6 @@ map.mapTypes.set('Styled', styledMapType);
   </div>
 </div>
 
-<script type="text/javascript">
-  
-  $( document ).ready(function() {
-  $( function() {
-    $( "#datepicker1" ).datepicker();
-  } );
-  
-  $( function() {
-    $( "#datepicker2" ).datepicker();
-  } );
-
-  $(".sign.1").click(function(){
-    $(".map-address.1").slideToggle(300);
-    $(this).toggleClass('minus', 0);
-  });
-  $(".sign.2").click(function(){
-    $(".map-address.2").slideToggle(300);
-    $(this).toggleClass('minus', 0);
-  });
-  $(".sign.3").click(function(){
-    $(".map-address.3").slideToggle(300);
-    $(this).toggleClass('minus', 0);
-  });
-});
-
-</script>
 </body>
 
 

@@ -77,20 +77,20 @@ class Accounts_model extends CI_Model {
         if (!empty ($password)) {
             $this->change_password($id);
         }
-//hotels assignment
+        //hotels assignment
         $hotelsmod = $this->ptmodules->is_mod_available_enabled("hotels");
         if ($hotelsmod) {
             $this->load->model('hotels/hotels_model');
             $this->hotels_model->assignHotels($this->input->post('hotels'), $id);
         }
 
-//tours assignment
+        //tours assignment
         $toursmod = $this->ptmodules->is_mod_available_enabled("tours");
         if ($toursmod) {
             $this->load->model('tours/tours_model');
             $this->tours_model->assignTours($this->input->post('tours'), $id);
         }
-//cars assignment
+        //cars assignment
         $carsmod = $this->ptmodules->is_mod_available_enabled("cars");
         if ($carsmod) {
             $this->load->model('cars/cars_model');
@@ -106,12 +106,27 @@ class Accounts_model extends CI_Model {
 //update customer profile
     function update_profile_customer($id) {
         $now = date("Y-m-d H:i:s");
-        $data = array('ai_title' => $this->input->post('title'), 'ai_first_name' => $this->input->post('firstname'), 'ai_last_name' => $this->input->post('lastname'), 'ai_city' => $this->input->post('city'), 'ai_state' => $this->input->post('state'), 'ai_country' => $this->input->post('country'), 'ai_address_1' => $this->input->post('address1'), 'ai_address_2' => $this->input->post('address2'), 'ai_mobile' => $this->input->post('phone'), 'ai_fax' => $this->input->post('fax'), 'ai_postal_code' => $this->input->post('zip'), 'accounts_updated_at' => $now);
+        $data = array('ai_title' => $this->input->post('title'), 
+                    'ai_first_name' => $this->input->post('firstname'), 
+                    'ai_last_name' => $this->input->post('lastname'),
+                    'ai_city' => $this->input->post('city'),
+                    'ai_state' => $this->input->post('state'),
+                    'ai_country' => $this->input->post('country'),
+                    'ai_address_1' => $this->input->post('address1'),
+                    'ai_address_2' => $this->input->post('address2'),
+                    'ai_mobile' => $this->input->post('phone'),
+                    'ai_fax' => $this->input->post('fax'),
+                    'ai_postal_code' => $this->input->post('zip'),
+                    'accounts_updated_at' => $now);
         $this->db->where('accounts_id', $id);
         $this->db->update('pt_accounts', $data);
         $password = $this->input->post('password');
         if (!empty ($password)) {
             $this->change_password($id);
+            /*error_reporting(-1);*/
+             $this->load->model('emails_model');
+             $this->emails_model->change_userAccount_password($this->input->post('email'));
+
         }
     }
 
@@ -561,11 +576,12 @@ class Accounts_model extends CI_Model {
 
         $this->db->insert('pt_accounts', $data);
         $id = $this->db->insert_id();
+        $this->session->set_userdata('pt_logged_customer', $id);
+        $this->session->set_userdata('fname', $this->input->post('firstname'));
+        $this->session->set_userdata('pt_role', $type);  
         if ($type == "customers") {
             if($status == "yes"){
-                $this->session->set_userdata('pt_logged_customer', $id);
-                $this->session->set_userdata('fname', $this->input->post('firstname'));
-                $this->session->set_userdata('pt_role', $type);  
+               
             }
             
         }
@@ -598,12 +614,39 @@ class Accounts_model extends CI_Model {
         $this->load->helper('invoice');
         $data = array();
         $this->db->select('pt_bookings.booking_id,pt_bookings.booking_ref_no,pt_bookings.booking_cancellation_request,
-   pt_bookings.booking_expiry,pt_reviews.review_overall,pt_reviews.review_date,pt_reviews.review_comment,pt_reviews.review_itemid');
+        pt_bookings.booking_expiry,pt_reviews.review_overall,pt_reviews.review_date,pt_reviews.review_comment,pt_reviews.review_itemid');    
         $this->db->where('pt_bookings.booking_user', $id);
         $this->db->join('pt_reviews', 'pt_bookings.booking_id = pt_reviews.review_booking_id', 'left');
         $this->db->order_by('pt_bookings.booking_id', 'desc');
         $query = $this->db->get('pt_bookings');
         $data = $query->result();
+        if (!empty ($data)) {
+            foreach ($data as $b) {
+                $reviewGiven = "no";
+                if (!empty ($b->review_comment)) {
+                    $reviewGiven = "yes";
+                }else{
+                  $reviewGiven = "no";  
+                }
+                $reviews = array('reviewDate' => $b->review_date, "reviewComment" => $b->review_comment, "overall" => $b->review_overall, 'reviewGiven' => $reviewGiven);
+                $result[] = invoiceDetails($b->booking_id, $b->booking_ref_no, $reviews);
+            }
+        }
+        return $result;
+    }
+
+    function get_last_bookings() {
+        $this->load->helper('invoice');
+        $data = array();
+        $this->db->select('pt_bookings.booking_id,pt_bookings.booking_ref_no,pt_bookings.booking_cancellation_request,
+        pt_bookings.booking_expiry,pt_reviews.review_overall,pt_reviews.review_date,pt_reviews.review_comment,pt_reviews.review_itemid');    
+        $this->db->join('pt_reviews', 'pt_bookings.booking_id = pt_reviews.review_booking_id', 'left');
+        $this->db->order_by('pt_bookings.booking_date', 'desc');
+        $this->db->limit(3, 0);
+        $query = $this->db->get('pt_bookings');
+        $data = $query->result();
+       /* echo $this->db->last_query();
+        exit();*/
         if (!empty ($data)) {
             foreach ($data as $b) {
                 $reviewGiven = "no";

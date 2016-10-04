@@ -17,6 +17,10 @@
   footer .row .col-sm-12{
     padding-top: 50px;
   }
+  .nav-tabs > li{
+    margin-top: 10px;
+  }
+   
   .data-img{
     background: rgba(248,80,50,0); 
     background: -moz-linear-gradient(top, rgba(248,80,50,0) 0%, rgba(12,19,79,1) 100%);
@@ -33,13 +37,12 @@
 
 
 <div class="blog">
-  <div class="container-main main_header">
+       <?php include $themeurl.'views/new_header.php';?>
+  <div class="container-main main_header" style="padding-top:110px">
     <div class="container">
       <div class="row">
        
-      <?php include 'menu_header.php';?>
-            <center style="margin-left: 88px; z-index: 999;
-    margin-top: 20px;"><a  href="<?php echo base_url(); ?>"><img class="" style="z-index:999" src="images/contact-logo.png"></a></center>
+            
           
          
      
@@ -71,11 +74,15 @@
         <li></li>
          <li class="col-sm-3"><a href="<?php echo base_url().'blog'; ?>">All</a></li>
         <?php  foreach($categories as $cat):
-        $count = pt_posts_count($cat->id);
-        if($count > 0){
+        if($cat->cat_name == "Things to see"){
+
+          }else{
+            $count = pt_posts_count($cat->id);  
+          
+       if($count > 0){
         ?> 
           <li class="col-sm-3"> <a href="<?php echo base_url().'blog/category?cat='.$cat->slug; ?>" class="list-group-item"><?php echo $cat->name;?> </a></li>
-           <?php  } endforeach; ?>
+           <?php } } endforeach; ?>
         </ul>
       </div>
        <?php  } ?>
@@ -89,10 +96,13 @@
             $b = 1;
 
             foreach($allposts['all'] as $post):
-           /* echo json_encode($post);
+            /*echo json_encode($post);
             exit();*/
+              if($post->post_category == "Things to see"){
+
+          }else{
              $bloglib->set_id($post->post_id);
-            $bloglib->post_short_details();
+             $bloglib->post_short_details();
 
              $date = date_create($bloglib->date); 
             $date_new = date_format($date,"F m, Y");
@@ -113,7 +123,7 @@
                 </div>
                 <div class="col-sm-12 banner-text">
                   <h2><?php echo $bloglib->title;?></h2>
-                   <a href="<?php echo base_url().'blog/'.$post->post_slug;?>"><img src="images/arrow-left.png"></a>
+                   <a style="padding:30px;" href="<?php echo base_url().'blog/'.$post->post_slug;?>"><img src="images/arrow-left.png"></a>
                 </div>
               </div>
             </div>
@@ -133,13 +143,13 @@
                 </div>
                 <div class="col-sm-12 banner-text">
                   <h2><?php echo $bloglib->title;?></h2>
-                  <a href="<?php echo base_url().'blog/'.$post->post_slug;?>"> <img style="margin: 25px 0px 0px 10%;" src="images/arrow-left.png"></a>
+                  <a style="padding:30px;" href="<?php echo base_url().'blog/'.$post->post_slug;?>"> <img style="margin: 25px 0px 0px 10%;" src="images/arrow-left.png"></a>
                 </div>
               </div>
             </div>
             <?php $b = $a; ?>
             <?php } $a++;?>
-               <?php  endforeach; }else{ echo '<h1 class="text-center">' . trans("066") . '</h1>'; } ?>
+               <?php } endforeach; }else{ echo '<h1 class="text-center">' . trans("066") . '</h1>'; } ?>
         </div>
       </div>
    </div>

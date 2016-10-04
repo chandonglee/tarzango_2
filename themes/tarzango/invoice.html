@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Tarzango</title>
+
+<!-- Google fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+
+<!-- font awesome -->
+<link href="css/font-awesome.min.css" rel="stylesheet">
+
+</head>
+<body style=" background-color: #ffffff;color: #2c3e50;font-family: 'Roboto', sans-serif;font-size: 15px;line-height: 1.42857; padding:0; margin:0;">
+<div class="email" style="background-color: #f3f3f3;float: left; width: 100%;">
+  <div class="container-main main_header" style="background: rgba(0, 0, 0, 0) none repeat scroll 0 0;padding:15px 0;width:100%">
+    <div class="container" style="max-width: 1210px; width:100%; margin-left: auto;margin-right: auto;padding-left: 15px;padding-right: 15px;box-sizing: border-box;">
+          <div class="row" style=" margin-left: -15px;margin-right: -15px;">
+        <div class="col-sm-12" style="box-sizing: border-box; min-height: 1px; padding-left: 15px;padding-right: 15px;position: relative; float:left; width:100%;">
+          <div class="col-sm-12 email_logo" style="margin-left:-190px;  margin-top: 15px;text-align: center; float:left; width:90%">
+            <a href="#"><img class="" src="{email_temp_img}email-page-logo2.png"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="email_body" style=" background-color: rgba(0, 0, 0, 0); float: left;padding: 0; position: relative;width: 100%;">
+      <div class="container" style="margin-left: auto;margin-right: auto;padding-left: 15px; padding-right: 15px;max-width: 1210px;width: 100%;box-sizing: border-box;">
+        <div class="col-sm-12" style="float: left; box-sizing: border-box;min-height: 1px; padding-left: 15px;padding-right: 15px;position: relative;width:100%;">
+          <div class="col-sm-2" style="width: 16.6667%;float: left;  box-sizing: border-box;min-height: 1px;padding-left: 15px;padding-right: 15px;position: relative;">          
+          </div>
+          <div class="col-sm-8" style=" padding: 0 5%;  box-sizing: border-box;min-height: 1px;position: relative; width: 80.6667%;">
+            <div class="col-sm-12 main-section" style="margin: 20px 0 0;padding: 0;width: 100%; box-sizing: border-box;min-height: 1px;position: relative;">
+              
+                          <div style="float:left; width:100%; position:relative;">
+                            <img style="float:left; width:100%;" src="{email_temp_img}booking_confirmed.png">
+                            
+                          </div>
+                          <div style="float:left; width:100%; background:#fff; box-sizing:border-box; border-bottom:2px solid #ebebf4; ">
+                            <h6 style="position:absolute; left:0;margin: 20px; right:0; top:65%; text-align:center;font-size:16px; margin-top:-10px; color:#0c134f; line-height:36px;">Confirmation Number: {code}</h6>
+                              <div style="text-align: center; " class="stars">
+                               {aaa}
+                              </div>
+                              <h1 style="text-align:center;font-size:42px; padding:40px;color: #0c134f;margin:0px;margin-top: -50px;">{hotel_name}</h1>
+                              <p class="left" style="width: 50%;float: left;padding-left: 40px;text-align:center;"><img src="{email_temp_img}checkin.png"> {location}</p>
+                               <p class="right"  style="text-align: left; width: 36%;color: #0c134f;  float: left; padding-left: 25px;"><img src="{email_temp_img}email-call.png"> (702) 388-2400 </p> 
+                              <img height="350px" class="img-responsive" style="float:left; width: 100%;height: 300px;max-height: 300px; " src="{thumbnail}">
+                            </div>   
+
+                            <div class="col-sm-12" style="float: left; background-color: #fff; width:100%">
+                              <div class="details" style="float: left; width: 100%; background-color: #4d2d7f;  text-align: left;">
+                                <div class=""  style="width: 33%;text-align: center; font-size: 11px; color: #24c4fc;float:left;">
+                                  <h6 style="padding-top:50px;margin: 0px;font-size: 12px;">CONFIRMATION #</h6>
+                                  <h5 style="padding-bottom:50px;font-size: 20px; color: #fff;margin: 0px;">{code} </h5>
+                                </div>
+                                <div style="width: 33%;text-align: center; font-size: 11px; color: #24c4fc;float:left;">
+                                  <h6 style="padding-top:50px; margin: 0px;font-size: 12px;">ROOM RATE</h6>
+                                  <h5 style="padding-bottom:50px;font-size: 20px; color: #fff;margin: 0px;">$ {deposit_amount}</h5>
+                                </div>
+                                <div  style="width: 33%;text-align: center; font-size: 11px; color: #24c4fc;float:left;">
+                                  <h6 style="padding-top:50px; margin: 0px;font-size: 12px;">TOTAL AMOUNT</h6>
+                                  <h5 style="padding-bottom:50px;font-size: 20px; color: #fff;margin: 0px;">$ {total_amount}</h5>
+                                </div>                            
+                              </div>
+                               <div class="boxes" style="float: left;width: 100%; background-color: #d0d1dd;   text-align: left;">
+                                <div class="box" style="margin-left: 6%;margin-bottom: 10px; margin-top: 5%; float: left; width: 20%; margin-right: 5%; text-align: left; background-color: #fff;padding: 20px;">
+                                  <img src="{email_temp_img}/paynow_icon2.png">
+                                  <h6 style="font-size: 11px;color: #24c4fc;">BOARD TYPE</h6>
+                                  <h5 style="font-size: 14px; color: #0c134f;">All Inclusive</h5>
+                                </div>
+                                 <div class="box" style="margin-bottom: 10px; margin-top: 5%; float: left; width: 20%; margin-right: 5%; text-align: left; background-color: #fff;padding: 20px;">
+                                  <img src="{email_temp_img}/paynow_icon3.png">
+                                  <h6 style="font-size: 11px;color: #24c4fc;">ROOMS</h6>
+                                  <h5 style="font-size: 14px; color: #0c134f;">{quantity}</h5>
+                                </div>
+                                <div class="box" style="margin-bottom: 5%; margin-top: 5%; float: left; width: 20%;  text-align: left; background-color: #fff;padding: 20px;">
+                                  <img src="{email_temp_img}/paynow_icon4.png">
+                                  <h6 style="font-size: 11px;color: #24c4fc;">TYPE</h6>
+                                  <h5 style="font-size: 14px; color: #0c134f;">{hotel_title}</h5>
+                                </div>
+                               
+                               
+                                <div class="box" style="    margin-left: 6%;margin-bottom: 5%;  float: left; width: 20%; margin-right: 5%; text-align: left; background-color: #fff;padding: 20px;">
+                                  <img src="{email_temp_img}/paynow_icon2.png">
+                                  <h6 style="font-size: 11px;color: #24c4fc;">CHECK IN</h6>
+                                  <h5 style="font-size: 14px; color: #0c134f;">{checkin}</h5>
+                                </div>
+                                 <div class="box" style="margin-bottom: 5%;  float: left; width: 20%; margin-right: 5%; text-align: left; background-color: #fff;padding: 20px;">
+                                  <img src="{email_temp_img}/paynow_icon3.png">
+                                  <h6 style="font-size: 11px;color: #24c4fc;">CHECK OUT</h6>
+                                  <h5 style="font-size: 14px; color: #0c134f;">{checkout}</h5>
+                                </div>
+                                <div class="box" style="margin-bottom: 5%;  float: left; width: 20%;  text-align: left; background-color: #fff;padding: 20px;">
+                                  <img src="{email_temp_img}/paynow_icon4.png">
+                                  <h6 style="font-size: 11px;color: #24c4fc;">YOU SAVED</h6>
+                                  <h5 style="font-size: 14px; color: #0c134f;">$ {save}</h5>
+                                </div>
+                                </div>
+                           </div>
+
+                            <div style="float: left; width: 100%; background-color: #fff;">
+                               <h6 style="margin-bottom: 0px;font-size: 11px;color: #24c4fc;float: left;width: 92%;padding:20px;padding-bottom: 0px;">GUEST NAMES<span style="float: right;
+    color: #0c134f;">{booking_adults} ADULTS   {child} CHILD </span></h6>
+                                <ul style="float: left;width: 88%; margin-left: -29px;">
+                              {no_top_hotel}
+                              </ul>
+                            </div>
+                            <div>
+                              {map}
+                            </div>
+
+
+                            <div style="float:left; width:100%; background:#fff; box-sizing:border-box; border-bottom:2px solid #ebebf4; ">
+                               <h6 style="font-size: 18px;color: #24c4fc; float: left; width: 100%; padding-left: 50px;">The cancellation policy</h6>
+
+                            <p style="font-size:16px; color:#0c134f; float:left; width:85%; padding-left: 40px; line-height:25px; margin-top:0;">Here at Tarzango, we offer a hassle free Cancellation Option. Last Minute change of plans? No problem mate! We allow 7 days prior to you arrival for cancellations, without any fees or penalties.</p>
+
+                             <p style="font-size:16px; color:#0c134f; float:left; width:85%; padding-top: 20px;padding-left: 50px; line-height:25px; margin-top:0;">For Cancellation Requests within 7 days of check in, any associated fees are at the hotels discretion. If applicable, we will refund 50% back to the cardholders card. Refunds will be issued between 24 to 48 hours after an email for cancellation has been sent and approved. Policy may vary for reservations consisting of 10 rooms or more.</p>
+
+                            <p style="font-size:16px; color:#0c134f; float:left; width:85%; padding-top: 20px;padding-left: 50px; line-height:25px; margin-top:0;">To make a change to your reservation, please email: <span style="color: #24c4fc;">booking@tarzango.com</span>.</p>
+
+                             <p style="font-size:16px; color:#0c134f; float:left; width:85%; margin-bottom:30px;padding-top: 20px;padding-left: 50px; line-height:25px; margin-top:0;">Be sure to check your email within 24 hours for confirmation of your change.</p>
+
+                            <p style="font-size:16px; color:#0c134f; float:left; width:85%; margin-bottom:30px;padding-top: 20px;padding-left: 50px; line-height:25px; margin-top:0;">To cancel your entire reservation, please email cancel@tarzango.com. Please note: We can only accept cancellation via writing to: <span style="color: #24c4fc;">cancel@tarzango.com</span>. Cancelations will not be submitted via phone or chat, only through written email to <span style="color: #24c4fc;">cancel@tarzango.com</span>.</p>
+                          
+                          </div>
+
+                             <div style="float: left; width: 100%; background-color: #fff;padding-bottom: 30px;">
+                              <h1 style="width:100%;font-size: 16px; color: #0c134f;  float: left;text-align: center; margin: 25px 0px;">Similar Hotels</h1>
+                              {top_hotel}
+                           </div>
+
+                           </div>
+                          <div style="float:left; width:100%; box-sizing:border-box; background:#fafafc;">
+                              <h3 style="font-size:28px;padding-top: 50px; color:#352068; float:left; width:100%; text-align:center; font-weight:700; margin:0;">Need Assistance?</h3>
+                                <h4 style="font-size:24px;padding-top: 25px; color:#352068; float:left; width:100%; text-align:center; font-weight:400; margin:0; line-height:26px; margin-bottom:40px;">We are here to help.</h4>
+                                <p style="float:none; margin:0 auto;padding: 25px; display:table;">
+                                  <a href="tel:4156803008" style="text-decoration: none"><img style="float:left; margin-right:20px;" src="{email_temp_img}call2.png"></a>
+                                    <a href="mailto:hello@tarzango.com" style="text-decoration: none"><img style="float:left; margin-top:3px;" src="{email_temp_img}email2.png"></a>
+                                </p>
+                                 <a href="tel:4156803008" style="text-decoration: none"><h3 style="font-size:21px; color:#352068; float:left; width:100%; text-align:center; font-weight:500; margin:0; margin-top:40px;letter-spacing: 2px;">1-415-680-3008</h3></a>
+                                  <a href="mailto:hello@tarzango.com" style="text-decoration: none"><h3 style="font-size:21px; color:#352068; float:left; padding-bottom: 50px;width:100%; text-align:center; font-weight:500; margin:0; margin-top:7px;letter-spacing: 2px;">hello@tarzango.com</h3></a>
+                          </div>
+                          <div style="float:left; width:100%; padding:15px 0; border-bottom:1px solid #e5e5ee">
+                            <p style="float:left; opacity:0.7; font-size:13px; color:#4d4d4d; line-height:12px;">28 2nd Street, Suite #3173 San Francisco, CA 94105 </p>
+                            <img style="float:right;" src="{email_temp_img}email-footer-logo.png">
+                          </div>
+                          <div style="float:left; width:100%; padding:15px 0;">
+                            <p style="float:left; width:100%; font-size:12px; color:#4d4d4d; opacity:0.7; line-height:12px; letter-spacing:0px; font-weight:300; margin:">You are recieving this email because you signed up for an account at tarzango.com</p>
+                           
+                          </div>  
+                            
+          </div>
+          <div class="col-sm-2" style="width: 16.6667%;float: left;  box-sizing: border-box;min-height: 1px;padding-left: 15px;padding-right: 15px;position: relative;">
+          
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+</body>
+</html>
+

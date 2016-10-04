@@ -64,6 +64,8 @@ class Blog extends MX_Controller {
                 }
         if (!empty ($slug)) {
             $this->blog_lib->set_blogid($slug);
+            $this->data['blogid'] = $this->blog_lib->get_id();
+            $this->data['comment_data'] = $this->blog_lib->get_comment();
             $this->data['details'] = $this->blog_lib->post_details();
             $this->data['title'] = $this->blog_lib->title;
             $this->data['desc'] = $this->blog_lib->desc;
@@ -131,5 +133,26 @@ class Blog extends MX_Controller {
         
         $this->theme->view('blog/index', $this->data);
     }
+
+
+    public function add_new_comment($data_to_store,$data_to_list)
+        {
+            /*echo json_encode($this->input->post());
+            exit();*/
+            $data_to_store = array(
+                'post_id'=>$this->input->post('blog_id'),  
+                'accounts_id'=>$this->input->post('user_id'),  
+                'comment_body'=>$this->input->post('comment_body'),
+                'ai_first_name'=>$this->input->post('ai_first_name'),
+            );
+          
+             $data = $this->blog_model->storeComment($data_to_store);
+
+            /*if($data == true){
+               $this->theme->view('blog/index', $this->data);
+            }*/
+        }
+       
+    
 
 }

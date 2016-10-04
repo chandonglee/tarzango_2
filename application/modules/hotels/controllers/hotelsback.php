@@ -9,6 +9,7 @@ class hotelsback extends MX_Controller {
         public  $editpermission = true;
         public  $deletepermission = true;
 		function __construct() {
+
 				$seturl = $this->uri->segment(3);
 				if ($seturl != "settings") {
 						$chk = modules :: run('home/is_main_module_enabled', 'hotels');
@@ -71,10 +72,11 @@ class hotelsback extends MX_Controller {
 				$this->load->model('admin/accounts_model');
 				$this->data['isadmin'] = $this->session->userdata('pt_logged_admin');
 				$this->data['isSuperAdmin'] = $this->session->userdata('pt_logged_super_admin');
-				
+
 		}
 
 		function index() {
+
 				if(!$this->data['addpermission'] && !$this->editpermission && !$this->deletepermission){
                 	backError_404($this->data);
                 	

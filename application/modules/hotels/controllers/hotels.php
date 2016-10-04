@@ -16,6 +16,7 @@ class Hotels extends MX_Controller {
 			  	modules :: load('home');
                 $this->load->library('hotels/hotels_lib');
                 $this->load->model('hotels/hotels_model');
+                $this->load->model('admin/accounts_model');
 				$this->data['phone'] = $this->load->get_var('phone');
 				$this->data['contactemail'] = $this->load->get_var('contactemail');
 				$this->data['contact_address'] = $this->load->get_var('contact_address');
@@ -23,7 +24,9 @@ class Hotels extends MX_Controller {
 				$this->data['usersession'] = $this->session->userdata('pt_logged_customer');
 				$this->data['appModule'] = "hotels";
 
-			
+				$this->data['profile'] = $this->accounts_model->get_profile_details($this->data['usersession']);
+				/*print_r($this->data['profile']);
+				exit();*/
                 $languageid = $this->uri->segment(2);
                 $this->validlang = pt_isValid_language($languageid);
 
@@ -49,7 +52,8 @@ class Hotels extends MX_Controller {
 		}
 
 		public function index() {
-			
+				/*echo "dfgdf";
+				exit();*/
 				$this->load->library('hotels/hotels_calendar_lib');
 				$this->data['calendar'] = $this->hotels_calendar_lib;
 				$settings = $this->settings_model->get_front_settings('hotels');
@@ -129,6 +133,12 @@ class Hotels extends MX_Controller {
 
 		              $this->data['reviews'] = json_decode($reviews_data->reviews);
 		              $this->data['tripadvisor'] = json_decode($reviews_data);
+		              $location = explode(',', $this->data['module']->location);
+		              
+		              if ( $location[0] != ""){
+		              	$this->data['terminal'] = $this->hotels_lib->hotel_terminal($location[0]);
+		              }
+		              
 
 					  $this->theme->view('details', $this->data);
 				}
@@ -137,6 +147,97 @@ class Hotels extends MX_Controller {
 				}
 		}
 
+		public function ajax_call_vip_booking() {
+				/*echo "dfgdf";
+				exit();*/
+				$this->load->library('hotels/hotels_calendar_lib');
+				$this->data['calendar'] = $this->hotels_calendar_lib;
+				$settings = $this->settings_model->get_front_settings('hotels');
+				$this->data['minprice'] = $settings[0]->front_search_min_price;
+				$this->data['maxprice'] = $settings[0]->front_search_max_price;
+                if($this->validlang){
+
+					//$countryName = $this->uri->segment(3);
+					//$cityName = $this->uri->segment(4);
+                    $hotelname = $this->uri->segment(6);
+
+                }else{
+
+                   // $countryName = $this->uri->segment(2);
+                   // $cityName = $this->uri->segment(3);
+                    $hotelname = $this->uri->segment(5);
+                }
+                /*echo $hotelname;
+                exit();*/
+				$check = $this->hotels_model->hotel_exists($hotelname);
+  				if ($check && !empty($hotelname)) {
+
+                      $this->hotels_lib->set_hotelid($hotelname);
+                      $data['module'] = $this->hotels_lib->hotel_details();
+                      $checkin = @$_GET['checkin'];
+                	  $checkout = @$_GET['checkOut'];
+
+				      $data['hasRooms'] = $this->hotels_lib->totalRooms($this->data['module']->id);
+				      $data['rooms'] = $this->hotels_lib->hotel_rooms($this->data['module']->id,$checkin,$checkout);
+				     /* echo json_encode($this->data['rooms']);
+				      exit();*/
+				      // Availability Calender settings variables
+				      $this->data['from1'] = date("F Y"); 
+				      $this->data['to1'] = date("F Y", strtotime('+5 months')); 
+				      $this->data['from2'] = date("F Y",strtotime('+6 months')); 
+				      $this->data['to2'] = date("F Y",strtotime('+11 months')); 
+				      $this->data['from3'] = date("F Y",strtotime('+12 months')); 
+				      $this->data['to3'] = date("F Y",strtotime('+17 months')); 
+				      $this->data['from4'] = date("F Y",strtotime('+18 months')); 
+				      $this->data['to4'] = date("F Y",strtotime('+23 months'));
+				      $this->data['first'] = date("m").",".date("Y"); 
+				      $this->data['second'] = date("m", strtotime('+6 months')).",".date("Y", strtotime('+6 months')); 
+				      $this->data['third'] = date("m", strtotime('+12 months')).",".date("Y", strtotime('+12 months')); 
+				      $this->data['fourth'] = date("m", strtotime('+18 months')).",".date("Y", strtotime('+18 months'));  
+				       // End Availability Calender settings variables	
+                      $this->data['tripadvisorinfo'] = tripAdvisorInfo($this->data['module']->tripadvisorid);
+                      if (pt_is_module_enabled('reviews')) {
+								$this->data['reviews'] = $this->hotels_lib->hotelReviews($this->data['module']->id);
+								$this->data['avgReviews'] = $this->hotels_lib->hotelReviewsAvg($this->data['module']->id);
+						}
+
+					// Split date for new date desing on hotel single page	
+					$checkin = explode("/",$this->hotels_lib->checkin);
+					$this->data['d1first'] = $checkin[0];		
+					$this->data['d1second'] = $checkin[1];		
+					$this->data['d1third'] = $checkin[2];
+
+					$checkout = explode("/",$this->hotels_lib->checkout);
+					$this->data['d2first'] = $checkout[0];		
+					$this->data['d2second'] = $checkout[1];		
+					$this->data['d2third'] = $checkout[2];
+
+					// end Split date for new date desing on hotel single page	
+					  $this->lang->load("front", $this->data['lang_set']);
+
+					  $this->data['currencySign'] = $this->hotels_lib->currencysign;
+					  $this->data['lowestPrice'] = $this->hotels_lib->bestPrice($this->data['module']->id);
+					  $this->data['allowreg'] = $this->data['app_settings'][0]->allow_registration;	
+                      $this->data['page_title'] =  $this->data['module']->title;
+                      $this->data['metakey'] = $this->data['module']->keywords;
+					  $this->data['metadesc'] = $this->data['module']->metadesc;
+					  $this->data['langurl'] = base_url()."hotels/{langid}/".$this->data['module']->slug;
+					  
+					  $reviews_data = $this->hb_lib->tripadvisor_review($this->data['module']->latitude,$this->data['module']->longitude,$this->data['module']->title);
+              
+					  /*exit();*/
+		              $api_Data = json_decode($api_Data);
+
+		              $this->data['reviews'] = json_decode($reviews_data->reviews);
+		              $this->data['tripadvisor'] = json_decode($reviews_data);
+
+					  $final_data =  $data;
+				}
+                else {
+						$final_data = "";
+				}
+				echo json_encode($final_data);
+		}
 		function listing($offset = null){
 
 			    $this->lang->load("front", $this->data['lang_set']);

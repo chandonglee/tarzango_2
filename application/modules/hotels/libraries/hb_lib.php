@@ -55,7 +55,6 @@ class Hb_lib {
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
             curl_setopt( $ch, CURLOPT_URL, $url );
             curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-            //$response = json_decode(curl_exec($ch),true);
             $response = curl_exec($ch);
 
             $curlinfo = curl_getinfo($ch);

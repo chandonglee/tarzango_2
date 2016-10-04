@@ -14,7 +14,7 @@ class Ean extends MX_Controller {
     protected $db; //database instatnce instance
 
     function __construct() {
-// $this->session->sess_destroy();
+                    // $this->session->sess_destroy();
                     parent :: __construct();
                     $chk = modules :: run('home/is_main_module_enabled', 'ean');
                     if (!$chk) {
@@ -29,10 +29,13 @@ class Ean extends MX_Controller {
                     $this->load->model("ean_model");
                     $this->load->model("hb_model");
                     $this->load->helper("ean_front");
+                     $this->load->model('admin/accounts_model');
                     $this->data['modulelib'] = $this->ean_lib;
                     $this->data['app_settings'] = $this->settings_model->get_settings_data();
                     $this->data['lang_set'] = $this->session->userdata('set_lang');
                     $this->data['user'] = $this->session->userdata('pt_logged_customer');
+                    $this->data['usersession'] = $this->session->userdata('pt_logged_customer');
+                    $this->data['profile'] = $this->accounts_model->get_profile_details($this->data['usersession']);
                     $this->data['appModule'] = "ean";
                     $this->city = $citydef;
                     $languageid = $this->uri->segment(2);
@@ -54,6 +57,9 @@ class Ean extends MX_Controller {
                     $this->db = $this->ci->db;
                     $this->appSettings = $this->ci->settings_model->get_settings_data();
                     $this->ci->load->model('hotels/hotels_model');
+
+                    $this->load->model('admin/countries_model');
+
     }
 
     public function index() {
@@ -185,311 +191,31 @@ class Ean extends MX_Controller {
     }
 
     function search($offset = null) {
-            /*error_reporting(E_ALL);
-            print_r($_GET);
-            exit();*/
-                    $search = $this->input->get('search');
-                    $rating = $this->input->get('rating');
-                    $room = $this->input->get('room');
+        //error_reporting(E_ALL);
+        /*
+        print_r($_GET);
+        exit();*/
+        $search = $this->input->get('search');
+        $rating = $this->input->get('rating');
+        $room = $this->input->get('room');
 
-                    //echo $this->input->get('child');
-                    for ($child_age=0; $child_age < $this->input->get('child') ; $child_age++) { 
-                            $c_ages[] = rand(0,15);
-                    }
-                    $final_child_Ages = implode(",", $c_ages);
-                    if (!empty ($search)) {
-                                    $this->data['checkin'] = trim($_GET['checkIn']);
-                                    $this->data['checkout'] = trim($_GET['checkOut']);
-                                    $this->data['room'] = $room;
-                                    $this->data['minprice'] = $this->settings[0]->front_search_min_price;
-                            $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
-                            $this->data['rating'] = $rating;
-
-
-                                    if (empty ($offset)) {
-                                                    // print_r($_POST);
-                                                    $arrayInfo["city"] = trim($_GET['city']);
-                                                    $tempCity[] = strtok($arrayInfo["city"], " ,-");
-                                                    $arrayInfo["destinationId"] = trim($_GET['destinationId']);
-                                                    $arrayInfo["city"] = $tempCity[0];
-                                                            // $arrayInfo['countryCode'] = 'IN';
-                                                    $arrayInfo['checkIn'] = trim($_GET['checkIn']);
-                                                            // $arrayInfo['checkIn'] = "18-08-2014";
-                                                    $arrayInfo['checkOut'] = trim($_GET['checkOut']);
-                                                    //$childAges = $this->input->get('childages');
-                                                    $childAges = $final_child_Ages;
-                                                    //$childCount = 0;
-                                                    $childAgesStr = "";
-                                                    if(!empty($childAges)){
-                                                    //$childCount =  count(explode(",",$childAges));
-                                                    $childAgesStr = ",".$child;
-                                                    }
-
-                                                    $adults = $this->input->get("adults");
-                                                    $this->data['propertyCategory'] = $_GET['propertyCategory'];
-                                                    $adultString = $adults.$childAgesStr;
-
-                                                    $this->data['adults'] = $adults;
-                                                    //$this->data['child'] = $childCount;
-                                                    $this->data['child'] = $this->input->get('child');
-                                                    $this->data['childAges'] = $childAges;
-                                                    if($this->data['child'] > 0){
-                                                            $this->data['agesApendUrl'] = '&ages='.$childAges;
-                                                    }else{
-                                                            $this->data['agesApendUrl'] = '';
-                                                    }
-
-                                                    $arrayinfo1['adults'] = $adults;
-                                                    $arrayinfo1['child'] = $this->input->get('child');
-                                                    $arrayinfo1['room'] = $room;
-                                                    /*$arrayinfo1['childAges'] = $childAges;*/
-                                                    $arrayinfo1['childAges'] = $final_child_Ages;
-
-                                                    $arrayInfo['rooms'] = "room1=$adultString";
-                                                    $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
-                                                    if(!empty($this->data['propertyCategory'])){
-                                                            $propertyCat = implode(",",$this->data['propertyCategory']);
-                                                            $arrayInfo['propertyCategory'] = $propertyCat;
-
-                                                    }
-
-                                                    $arrayInfo['maxStarRating']= $this->input->get('stars');
-                                                    $arrayInfo['minStarRating']= $this->input->get('stars');
-                                                    $arrayInfo['lat']= $this->input->get('lat');
-                                                    $arrayInfo['long']= $this->input->get('long');
-                                                    $sprice = $this->input->get('price');
-                                                    if (!empty ($sprice)) {
-                                                                    $sprice = str_replace(";", ",", $sprice);
-                                                                    $sprice = explode(",", $sprice);
-                                                                    $minp = $sprice[0];
-                                                                    $maxp = $sprice[1];
-                                                                    $arrayInfo['minRate'] = $minp;
-                                                                    $arrayInfo['maxRate'] = $maxp;
-                                                    }
-
-                                                    $is_hb = 1;
-                                                    /*
-                                                    echo "asdas";
-                                                    exit();*/
-                                                    $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo+$arrayinfo1);
-                                                    /*echo json_encode($local_hotels);
-                                                     exit();*/
-                                                    if($is_hb == 1){
-
-                                                            $resultData1 = $this->hb_lib->HotelLists($arrayInfo+$arrayinfo1);
-
-                                                            /*echo $resultData1;
-                                                            exit();*/
-                                                            $resultData2 = json_decode($resultData1);
-
-                                                            $final_hb_data['hotels'] = array();
-
-                                                            $hb_hotel_code = array();
+        //echo $this->input->get('child');
+        for ($child_age=0; $child_age < $this->input->get('child') ; $child_age++) { 
+                $c_ages[] = rand(0,15);
+        }
+        $final_child_Ages = implode(",", $c_ages);
+        if (!empty ($search)) {
+            $this->data['checkin'] = trim($_GET['checkIn']);
+            $this->data['checkout'] = trim($_GET['checkOut']);
+            $this->data['room'] = $room;
+            $this->data['minprice'] = $this->settings[0]->front_search_min_price;
+            $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
+            $this->data['rating'] = $rating;
 
 
-
-                                                       $key_val = 0;
-                                                            for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
-
-                                                                    $checkIn = date("m/d/Y", strtotime($arrayInfo['checkIn'])) ;
-                                                                    $checkOut = date("m/d/Y", strtotime($arrayInfo['checkOut'])) ;
-                                                                     $date1 = new DateTime($checkIn);
-                                                          $date2 = new DateTime($checkOut);
-
-                                                          $diff = $date2->diff($date1)->format("%a");
-                                                            $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
-
-
-                                                            $is_valid_hotel = 0;
-                                                            for ($hb_room=0; $hb_room < count($resultData2->hotels->hotels[$hb_r]->rooms) ; $hb_room++) { 
-                                                                    if(isset($resultData2->hotels->hotels[$hb_r]->rooms[$hb_room]->rates[0]->net)){
-                                                                            $is_valid_hotel = 1;
-                                                                    }
-                                                            }
-                                                            if($is_valid_hotel == 1 && $stars >= $rating){
-                                                                            $code = $resultData2->hotels->hotels[$hb_r]->code;
-                                                                            $final_hb_data['hotels'][$key_val]->id = $code;
-                                                                            $hb_hotel_code[$hb_r] = $resultData2->hotels->hotels[$hb_r]->code;
-                                                                            $final_hb_data['hotels'][$key_val]->title = $resultData2->hotels->hotels[$hb_r]->name;
-                                                                            $final_hb_data['hotels'][$key_val]->thumbnail = '';
-
-                                                                            $slug = $this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&checkin='.$checkIn.'&checkOut='.$checkOut.$this->data['agesApendUrl'].'&room='.$room;
-                                                                            $final_hb_data['hotels'][$key_val]->slug = $slug;
-                                                                            /*$final_hb_data['hotels'][$key_val]->currCode = $resultData2->hotels->hotels[$hb_r]->currency;*/
-                                                                            $final_hb_data['hotels'][$key_val]->currCode = '$';
-                                                                            $final_hb_data['hotels'][$key_val]->price = number_format($resultData2->hotels->hotels[$hb_r]->minRate / $diff,1);
-                                                                            $final_hb_data['hotels'][$key_val]->location = $resultData2->hotels->hotels[$hb_r]->destinationName;
-
-                                                                            $hotel_longitude = $resultData2->hotels->hotels[$hb_r]->longitude;
-                                                                            $hotel_latitude = $resultData2->hotels->hotels[$hb_r]->latitude;
-                                                                            $final_hb_data['hotels'][$key_val]->longitude = $hotel_longitude;
-                                                                            $final_hb_data['hotels'][$key_val]->latitude = $hotel_latitude;
-
-                                                                            $final_hb_data['hotels'][$key_val]->distance = $this->distance($arrayInfo['lat'],$arrayInfo['long'],$hotel_latitude,$hotel_longitude,'K');
-
-                                                                            $final_hb_data['hotels'][$key_val]->desc = '';
-                                                                            $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
-                                                                            $final_Star = '';
-                                                                            for ($star_i=0; $star_i < 5 ; $star_i++) { 
-                                                                                    if($star_i < $stars){
-                                                                                            $final_Star .= '<i class="price-text-color fa fa-star"></i>';
-                                                                                    }else{
-                                                                                            $final_Star .= '<i class="fa fa-star"></i>';
-                                                                                    }
-                                                                            }
-                                                                            $final_hb_data['hotels'][$key_val]->stars = $final_Star;
-                                                                            $final_hb_data['hotels'][$key_val]->tripAdvisorRatingImg = null;
-                                                                            $final_hb_data['hotels'][$key_val]->tripAdvisorRating = 0;
-                                                                            $final_hb_data['hotels'][$key_val]->room_Data = $resultData2->hotels->hotels[$hb_r]->rooms;
-                                                                            $key_val++;
-                                                                    }
-                                                            }
-                                                            /*  echo '<pre>'.json_encode( $final_hb_data).'</pre>';
-                                                            exit();*/
-
-                                                            if(count($final_hb_data['hotels']) > 0){
-                                                                    $hb_image_data = $this->hb_lib->HotelImage_list($hb_hotel_code);
-                                                                    /*echo json_encode($hb_image_data);
-                                                                    exit();*/
-                                                                    $img_main_url = 'http://photos.hotelbeds.com/giata/bigger/';
-
-
-                                                                    if(count($hb_image_data->hotels) > 0 && $hb_image_data != false){
-
-                                                                            for ($hb_i=0; $hb_i < count($hb_image_data->hotels) ; $hb_i++) { 
-
-
-                                                                                    for ($hb_h=0; $hb_h < count($final_hb_data['hotels']) ; $hb_h++) { 
-
-
-                                                                                            if($final_hb_data['hotels'][$hb_h]->id == $hb_image_data->hotels[$hb_i]->code){
-
-                                                                                                    $thumbnail = $img_main_url.$hb_image_data->hotels[$hb_i]->images[0]->path;
-                                                                                                    $thumbnail1 = $hb_image_data->hotels[$hb_i]->images;
-                                                                                                    /*echo json_encode($hb_image_data->hotels[$hb_i]);
-                                                                                                    exit();*/
-                                                                                                    $final_hb_data['hotels'][$hb_h]->thumbnail = $thumbnail;
-                                                                                                    $final_hb_data['hotels'][$hb_h]->all_img = $thumbnail1;
-                                                                                                    $old_location = $final_hb_data['hotels'][$hb_h]->location;
-                                                                                                    $location = $hb_image_data->hotels[$hb_i]->address->content." ".$old_location;
-                                                                                                    $final_hb_data['hotels'][$hb_h]->location = $location." ".$hb_image_data->hotels[$hb_i]->postalCode;
-
-
-                                                                                            }
-
-                                                                                    }
-
-                                                                            }
-
-                                                                    }else{
-                                                                            //echo "else";
-                                                                    }
-
-                                                            //echo json_encode($hb_image_data);
-                                                            }else{
-                                                                    //echo "no hotel found";
-                                                            }
-
-                                                            /*echo '<pre>'.json_encode($local_hotels).'</pre>';*/
-                                                            /*echo count($local_hotels['hotels']);
-                                                            exit();*/
-                                                            /*error_reporting(E_ALL);*/
-                                                            /*$abc = array_merge($final_hb_data['hotels'] , $local_hotels['hotels']);*/
-                                                            if(count($local_hotels['hotels']) > 0){
-
-                                                                    $abc = array_merge($local_hotels['hotels'],$final_hb_data['hotels']);
-                                                            }else{
-
-                                                                    $abc = $final_hb_data['hotels'];
-                                                            }
-
-                                                             function custom_sort($a,$b) {
-                                                            return $a->distance > $b ->distance;
-                                                       }
-
-                                                            /*print_r($abc);
-                                                            exit();*/
-                                                            $sort_Data = usort($abc, "custom_sort");
-                                                            /*echo print_r($abc);
-                                                            exit();
-                                                            echo "<br>";
-                                                            echo "<br>";
-                                                            echo json_encode($sort_Data);
-
-                                                            echo "<br>";*/
-
-                                                            $this->data['module'] = $abc;
-
-                                                    }else{
-                                                            $resultData = $this->ean_lib->HotelLists($arrayInfo);
-
-                                                            $result = $this->getResultInObjects($resultData,$this->data['checkin'],$this->data['checkout'],$adultString,$this->data['agesApendUrl']);
-                                                            $this->data['module'] = $result->hotels;
-                                                    }	
-                                            /*error_reporting(E_ALL);	
-                                                            echo '<pre>'.json_encode( $abc).'</pre>';
-                                                            exit();*/
-                                                    $this->data['multipleLocations'] = $result->multipleLocations;
-                                                    $this->data['locationInfo'] = $result->locationInfo;
-                                                    $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
-                                                    $this->data['cacheKey'] = $result->cacheKey;
-                                                    $this->data['cacheLocation'] = $result->cacheLocation;
-                                                    $this->data['lat'] = $arrayInfo['lat'];
-                                                    $this->data['long'] = $arrayInfo['long'];
-
-                                                    $cachedata = array(
-                                                                                            'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
-                                                                                             'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
-                                                                                             'cachekey' => $cachekey,
-                                                                                             'cacheloc' => $cacheloc);
-                                                    /*echo json_encode($cachedata);
-                                                    exit();*/
-                                                    $this->session->set_userdata($cachedata);
-
-                                    }
-
-                    }
-                    else {
-                                    $this->data['result'] = array();
-                    }
-                    $this->lang->load("front", $this->data['lang_set']);
-                    $this->data['page_title'] = 'Search';
-                    $this->data['currSign'] = $this->ean_lib->currency;
-
-                    $this->theme->view('listing', $this->data);
-    }
-
-    function ajax_call(){
-            /*error_reporting(E_ALL);*/
-            $this->load->model("admin/locations_model");
-            /*
-            print_r($_GET);
-            exit();*/
-
-            $search = $this->input->get('search');
-            $rating = $this->input->get('rating');
-            $room = $this->input->get('room');
-
-            //echo $this->input->get('child');
-            for ($child_age=0; $child_age < $this->input->get('child') ; $child_age++) { 
-                    $c_ages[] = rand(0,15);
-            }
-            $final_child_Ages = implode(",", $c_ages);
-            if (!empty ($search)) {
-                    $this->data['checkin'] = trim($_GET['checkIn']);
-                    $this->data['checkout'] = trim($_GET['checkOut']);
-                    $this->data['room'] = $room;
-                    $this->data['minprice'] = $this->settings[0]->front_search_min_price;
-                    $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
-                    $this->data['rating'] = $rating;
-
-
-                if (empty ($offset)) {
-                                // print_r($_POST);
+            if (empty ($offset)) {
+                            // print_r($_POST);
                     $arrayInfo["city"] = trim($_GET['city']);
-
-                    $location_img =  $this->locations_model->get_location_img_by_city($arrayInfo["city"]);
-                    
                     $tempCity[] = strtok($arrayInfo["city"], " ,-");
                     $arrayInfo["destinationId"] = trim($_GET['destinationId']);
                     $arrayInfo["city"] = $tempCity[0];
@@ -549,32 +275,39 @@ class Ean extends MX_Controller {
                     }
 
                     $is_hb = 1;
-
+                    /*
+                    echo "asdas";
+                    exit();*/
+                    /*error_reporting(-1);*/
                     $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo+$arrayinfo1);
-
+                   /* echo json_encode($local_hotels);
+                     exit();*/
                     if($is_hb == 1){
 
                             $resultData1 = $this->hb_lib->HotelLists($arrayInfo+$arrayinfo1);
 
-
+                            /*echo $resultData1;
+                            exit();*/
                             $resultData2 = json_decode($resultData1);
 
                             $final_hb_data['hotels'] = array();
 
                             $hb_hotel_code = array();
 
-                             function custom_sort($a,$b) {
-                            return $a->distance > $b ->distance;
-                       }
 
-                       $key_val = 0;
-                            for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
 
-                                $checkIn = date("Y-m-d", strtotime($arrayInfo['checkIn'])) ;
-                                $checkOut = date("Y-m-d", strtotime($arrayInfo['checkOut'])) ;
+                            $key_val = 0;
+                            //for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
+                            for ($hb_r=0; $hb_r < 10 ; $hb_r++) { 
+
+                                $checkIn = date("m/d/Y", strtotime($arrayInfo['checkIn'])) ;
+                                $checkOut = date("m/d/Y", strtotime($arrayInfo['checkOut'])) ;
+                                $date1 = new DateTime($checkIn);
+                                $date2 = new DateTime($checkOut);
+
+                                $diff = $date2->diff($date1)->format("%a");
                                 $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
-                                /*echo json_encode( $resultData2->hotels->hotels[$hb_r]);
-                                exit();*/
+
 
                                 $is_valid_hotel = 0;
                                 for ($hb_room=0; $hb_room < count($resultData2->hotels->hotels[$hb_r]->rooms) ; $hb_room++) { 
@@ -583,50 +316,53 @@ class Ean extends MX_Controller {
                                         }
                                 }
                                 if($is_valid_hotel == 1 && $stars >= $rating){
-                                    $code = $resultData2->hotels->hotels[$hb_r]->code;
-                                    $final_hb_data['hotels'][$key_val]->id = $code;
-                                    $hb_hotel_code[$hb_r] = $resultData2->hotels->hotels[$hb_r]->code;
-                                    $final_hb_data['hotels'][$key_val]->title = $resultData2->hotels->hotels[$hb_r]->name;
-                                    $final_hb_data['hotels'][$key_val]->thumbnail = '';
+                                        $code = $resultData2->hotels->hotels[$hb_r]->code;
+                                        $final_hb_data['hotels'][$key_val]->id = $code;
+                                        $hb_hotel_code[$hb_r] = $resultData2->hotels->hotels[$hb_r]->code;
+                                        $final_hb_data['hotels'][$key_val]->title = $resultData2->hotels->hotels[$hb_r]->name;
+                                        $final_hb_data['hotels'][$key_val]->thumbnail = '';
 
-                                    $slug = $this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&checkin='.$checkIn.'&checkout='.$checkOut.$this->data['agesApendUrl'];
-                                    $final_hb_data['hotels'][$key_val]->slug = $slug;
-                                    $final_hb_data['hotels'][$key_val]->currCode = $resultData2->hotels->hotels[$hb_r]->currency;
-                                    $final_hb_data['hotels'][$key_val]->price = $resultData2->hotels->hotels[$hb_r]->minRate;
-                                    $final_hb_data['hotels'][$key_val]->location = $resultData2->hotels->hotels[$hb_r]->destinationName;
+                                        $slug = $this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&child='.$this->input->get('child').'&checkin='.$checkIn.'&checkOut='.$checkOut.$this->data['agesApendUrl'].'&room='.$room;
+                                        $final_hb_data['hotels'][$key_val]->slug = $slug;
+                                        /*$final_hb_data['hotels'][$key_val]->currCode = $resultData2->hotels->hotels[$hb_r]->currency;*/
+                                        $final_hb_data['hotels'][$key_val]->currCode = '$';
+                                        $final_hb_data['hotels'][$key_val]->price = number_format($resultData2->hotels->hotels[$hb_r]->minRate / $diff,1);
+                                        $final_hb_data['hotels'][$key_val]->location = $resultData2->hotels->hotels[$hb_r]->destinationName;
 
-                                    $hotel_longitude = $resultData2->hotels->hotels[$hb_r]->longitude;
-                                    $hotel_latitude = $resultData2->hotels->hotels[$hb_r]->latitude;
-                                    $final_hb_data['hotels'][$key_val]->longitude = $hotel_longitude;
-                                    $final_hb_data['hotels'][$key_val]->latitude = $hotel_latitude;
+                                        $hotel_longitude = $resultData2->hotels->hotels[$hb_r]->longitude;
+                                        $hotel_latitude = $resultData2->hotels->hotels[$hb_r]->latitude;
+                                        $final_hb_data['hotels'][$key_val]->longitude = $hotel_longitude;
+                                        $final_hb_data['hotels'][$key_val]->latitude = $hotel_latitude;
 
-                                    $final_hb_data['hotels'][$key_val]->distance = $this->distance($arrayInfo['lat'],$arrayInfo['long'],$hotel_latitude,$hotel_longitude,'K');
+                                        $final_hb_data['hotels'][$key_val]->distance = $this->distance($arrayInfo['lat'],$arrayInfo['long'],$hotel_latitude,$hotel_longitude,'K');
 
-                                    $final_hb_data['hotels'][$key_val]->desc = '';
-                                    $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
-                                    $final_Star = '';
-                                    for ($star_i=0; $star_i < 5 ; $star_i++) { 
-                                            if($star_i < $stars){
-                                                    $final_Star .= '<i class="price-text-color fa fa-star"></i>';
-                                            }else{
-                                                    $final_Star .= '<i class="fa fa-star"></i>';
-                                            }
-                                    }
-                                    $final_hb_data['hotels'][$key_val]->stars = $final_Star;
-                                    $final_hb_data['hotels'][$key_val]->tripAdvisorRatingImg = null;
-                                    $final_hb_data['hotels'][$key_val]->tripAdvisorRating = 0;
-                                    $final_hb_data['hotels'][$key_val]->room_Data = $resultData2->hotels->hotels[$hb_r]->rooms;
-                                    $key_val++;
+                                        $final_hb_data['hotels'][$key_val]->desc = '';
+                                        $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
+                                        $final_Star = '';
+                                        for ($star_i=0; $star_i < 5 ; $star_i++) { 
+                                                if($star_i < $stars){
+                                                        $final_Star .= '<i class="price-text-color fa fa-star"></i>';
+                                                }else{
+                                                        $final_Star .= '<i class="fa fa-star"></i>';
+                                                }
+                                        }
+                                        $final_hb_data['hotels'][$key_val]->stars = $final_Star;
+                                        $final_hb_data['hotels'][$key_val]->tripAdvisorRatingImg = null;
+                                        $final_hb_data['hotels'][$key_val]->tripAdvisorRating = 0;
+                                        $final_hb_data['hotels'][$key_val]->room_Data = $resultData2->hotels->hotels[$hb_r]->rooms;
+                                        $key_val++;
                                 }
                             }
-
+                            /*  echo '<pre>'.json_encode( $final_hb_data).'</pre>';
+                            exit();*/
 
                             if(count($final_hb_data['hotels']) > 0){
                                     $hb_image_data = $this->hb_lib->HotelImage_list($hb_hotel_code);
-
+                                   /* echo json_encode($hb_image_data);
+                                    exit();*/
                                     $img_main_url = 'http://photos.hotelbeds.com/giata/bigger/';
 
-
+                                    /*error_reporting(-1);*/
                                     if(count($hb_image_data->hotels) > 0 && $hb_image_data != false){
 
                                             for ($hb_i=0; $hb_i < count($hb_image_data->hotels) ; $hb_i++) { 
@@ -641,6 +377,1442 @@ class Ean extends MX_Controller {
                                                                     $thumbnail1 = $hb_image_data->hotels[$hb_i]->images;
                                                                     /*echo json_encode($hb_image_data->hotels[$hb_i]);
                                                                     exit();*/
+                                                                    $description = $hb_image_data->hotels[$hb_i]->description->content;
+                                                                    $final_hb_data['hotels'][$hb_h]->desc = $description;
+                                                                    $final_hb_data['hotels'][$hb_h]->thumbnail = $thumbnail;
+                                                                    $final_hb_data['hotels'][$hb_h]->all_img = $thumbnail1;
+                                                                    $old_location = $final_hb_data['hotels'][$hb_h]->location;
+                                                                    $location = $hb_image_data->hotels[$hb_i]->address->content." ".$old_location;
+                                                                    $final_hb_data['hotels'][$hb_h]->location = $location." ".$hb_image_data->hotels[$hb_i]->postalCode;
+
+
+                                                            }
+
+                                                    }
+
+                                            }
+
+                                    }else{
+                                            //echo "else";
+                                    }
+
+                            //echo json_encode($hb_image_data);
+                            }else{
+                                    //echo "no hotel found";
+                            }
+
+                            
+                            if(count($local_hotels['hotels']) > 0){
+
+                                    $abc = array_merge($local_hotels['hotels'],$final_hb_data['hotels']);
+                            }else{
+
+                                    $abc = $final_hb_data['hotels'];
+                            }
+                                    /*echo json_encode($abc);
+                                    exit();*/
+                            function custom_sort($a,$b) {
+                                return $a->distance > $b ->distance;
+                            }
+
+                                    /*print_r($abc);
+                                    exit();*/
+                                    $sort_Data = usort($abc, "custom_sort");
+                                    
+
+                                    $this->data['module'] = $abc;
+
+                            }else{
+                                    $resultData = $this->ean_lib->HotelLists($arrayInfo);
+
+                                    $result = $this->getResultInObjects($resultData,$this->data['checkin'],$this->data['checkout'],$adultString,$this->data['agesApendUrl']);
+                                    $this->data['module'] = $result->hotels;
+                            }	
+                                    /*error_reporting(E_ALL);	
+                                    echo '<pre>'.json_encode( $abc).'</pre>';
+                                    exit();*/
+                            $this->data['multipleLocations'] = $result->multipleLocations;
+                            $this->data['locationInfo'] = $result->locationInfo;
+                            $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
+                            $this->data['cacheKey'] = $result->cacheKey;
+                            $this->data['cacheLocation'] = $result->cacheLocation;
+                            $this->data['lat'] = $arrayInfo['lat'];
+                            $this->data['long'] = $arrayInfo['long'];
+
+                            $cachedata = array(
+                                            'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
+                                             'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
+                                             'cachekey' => $cachekey,
+                                             'cacheloc' => $cacheloc);
+                            /*echo json_encode($cachedata);
+                            exit();*/
+                            $this->session->set_userdata($cachedata);
+
+            }
+
+        }
+        else {
+            $this->data['result'] = array();
+        }
+
+        //Get the list of hb hotel based on hb hotel ID and title name. STP
+        /*error_reporting(-1);
+       /* exit();*/
+       /* echo "asdas";
+        exit();*/
+       /* echo json_encode($hb_hotel_code);
+        error_reporting(-1);*/
+        $hb_hotels_img = $this->hotels_model->hb_hotel_detail_all($hb_hotel_code);
+        /*exit();*/
+    
+        $final_hb_img = array();
+        $kk = 0;
+        foreach ($hb_hotels_img as $key => $value) {
+            $final_hb_img[$value->iHbHotelID]['sThumbnail'] = $value->sThumbnail;
+        }
+        
+        $this->data['final_hb_img'] = $final_hb_img;
+        /*echo "Asdsa-------------";
+        exit();*/
+        $this->lang->load("front", $this->data['lang_set']);
+        $this->data['page_title'] = 'Search';
+        $this->data['currSign'] = $this->ean_lib->currency;
+
+        $this->theme->view('grid-listing', $this->data);
+    }
+
+    function ajax_call(){
+        /*error_reporting(E_ALL);*/
+        $this->load->model("admin/locations_model");
+
+        $search = $this->input->get('search');
+        $rating = $this->input->get('rating');
+        $room = $this->input->get('room');
+
+        $c_ages = array();
+        for ($child_age=0; $child_age < $this->input->get('child') ; $child_age++) { 
+                $c_ages[] = rand(0,15);
+        }
+        $final_child_Ages = implode(",", $c_ages);
+        if (!empty ($search)) {
+            $this->data['checkin'] = trim($_GET['checkIn']);
+            $this->data['checkout'] = trim($_GET['checkOut']);
+            $this->data['room'] = $room;
+            $this->data['minprice'] = $this->settings[0]->front_search_min_price;
+            $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
+            $this->data['rating'] = $rating;
+
+            if (empty ($offset)) {
+                            
+                $arrayInfo["city"] = trim($_GET['city']);
+
+                $location_img =  $this->locations_model->get_location_img_by_city($arrayInfo["city"]);
+                
+                $tempCity[] = strtok($arrayInfo["city"], " ,-");
+                $arrayInfo["destinationId"] = isset($_GET['destinationId']) ? trim($_GET['destinationId']) : '';
+                $arrayInfo["city"] = $tempCity[0];
+                $arrayInfo['checkIn'] = trim($_GET['checkIn']);
+                $arrayInfo['checkOut'] = trim($_GET['checkOut']);
+                $childAges = $final_child_Ages;
+                $childAgesStr = "";
+                if(!empty($childAges)){
+                    $childAgesStr = ",".$child;
+                }
+
+                $adults = $this->input->get("adults");
+                $this->data['propertyCategory'] = isset($_GET['propertyCategory']) ? $_GET['propertyCategory'] : '';
+                $adultString = $adults.$childAgesStr;
+
+                $this->data['adults'] = $adults;
+                $this->data['child'] = $this->input->get('child');
+                $this->data['childAges'] = $childAges;
+                if($this->data['child'] > 0){
+                    $this->data['agesApendUrl'] = '&ages='.$childAges;
+                }else{
+                    $this->data['agesApendUrl'] = '';
+                }
+
+                $arrayinfo1['adults'] = $adults;
+                $arrayinfo1['child'] = $this->input->get('child');
+                $arrayinfo1['room'] = $room;
+                /*$arrayinfo1['childAges'] = $childAges;*/
+                $arrayinfo1['childAges'] = $final_child_Ages;
+
+                $arrayInfo['rooms'] = "room1=$adultString";
+                $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
+                if(!empty($this->data['propertyCategory'])){
+                        $propertyCat = implode(",",$this->data['propertyCategory']);
+                        $arrayInfo['propertyCategory'] = $propertyCat;
+
+                }
+
+                $arrayInfo['maxStarRating']= $this->input->get('stars');
+                $arrayInfo['minStarRating']= $this->input->get('stars');
+                $arrayInfo['lat']= $this->input->get('lat');
+                $arrayInfo['long']= $this->input->get('long');
+                $sprice = $this->input->get('price');
+                if (!empty ($sprice)) {
+                    $sprice = str_replace(";", ",", $sprice);
+                    $sprice = explode(",", $sprice);
+                    $minp = $sprice[0];
+                    $maxp = $sprice[1];
+                    $arrayInfo['minRate'] = $minp;
+                    $arrayInfo['maxRate'] = $maxp;
+                }
+
+                $is_hb = 1;
+
+                $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo+$arrayinfo1);
+
+                if($is_hb == 1){
+
+                        $resultData1 = $this->hb_lib->HotelLists($arrayInfo+$arrayinfo1);
+
+                        $resultData2 = json_decode($resultData1);
+
+                        $final_hb_data['hotels'] = array();
+
+                        $hb_hotel_code = array();
+
+                         function custom_sort($a,$b) {
+                                return $a->distance < $b ->distance;
+                        }
+
+                        $key_val = 0;
+                       // for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
+                        for ($hb_r=0; $hb_r < 20 ; $hb_r++) { 
+
+                            $checkIn = date("Y-m-d", strtotime($arrayInfo['checkIn'])) ;
+                            $checkOut = date("Y-m-d", strtotime($arrayInfo['checkOut'])) ;
+                            $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
+                            /*echo json_encode( $resultData2->hotels->hotels[$hb_r]);
+                            exit();*/
+
+                            $is_valid_hotel = 0;
+                            for ($hb_room=0; $hb_room < count($resultData2->hotels->hotels[$hb_r]->rooms) ; $hb_room++) { 
+                                    if(isset($resultData2->hotels->hotels[$hb_r]->rooms[$hb_room]->rates[0]->net)){
+                                            $is_valid_hotel = 1;
+                                    }
+                            }
+                            if($is_valid_hotel == 1 && $stars >= $rating){
+                                $code = $resultData2->hotels->hotels[$hb_r]->code;
+                                $final_hb_data['hotels'][$key_val]->id = $code;
+                                $hb_hotel_code[$hb_r] = $resultData2->hotels->hotels[$hb_r]->code;
+                                $final_hb_data['hotels'][$key_val]->title = $resultData2->hotels->hotels[$hb_r]->name;
+                                $final_hb_data['hotels'][$key_val]->thumbnail = '';
+
+                                $slug = $this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&checkin='.$checkIn.'&checkout='.$checkOut.$this->data['agesApendUrl'];
+                                $final_hb_data['hotels'][$key_val]->slug = $slug;
+                                $final_hb_data['hotels'][$key_val]->currCode = '$';
+                                $final_hb_data['hotels'][$key_val]->price = number_format($resultData2->hotels->hotels[$hb_r]->minRate,0);
+                                $final_hb_data['hotels'][$key_val]->location = $resultData2->hotels->hotels[$hb_r]->destinationName;
+
+                                $hotel_longitude = $resultData2->hotels->hotels[$hb_r]->longitude;
+                                $hotel_latitude = $resultData2->hotels->hotels[$hb_r]->latitude;
+                                $final_hb_data['hotels'][$key_val]->longitude = $hotel_longitude;
+                                $final_hb_data['hotels'][$key_val]->latitude = $hotel_latitude;
+
+                                $final_hb_data['hotels'][$key_val]->distance = number_format($this->distance($arrayInfo['lat'],$arrayInfo['long'],$hotel_latitude,$hotel_longitude,'K'),2);
+
+                                $final_hb_data['hotels'][$key_val]->desc = '';
+                                $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
+                                $final_Star = '';
+                                for ($star_i=0; $star_i < 5 ; $star_i++) { 
+                                        if($star_i < $stars){
+                                                $final_Star .= '<i class="price-text-color fa fa-star"></i>';
+                                        }else{
+                                                $final_Star .= '<i class="fa fa-star"></i>';
+                                        }
+                                }
+                                $final_hb_data['hotels'][$key_val]->stars = $final_Star;
+                                $final_hb_data['hotels'][$key_val]->tripAdvisorRatingImg = null;
+                                $final_hb_data['hotels'][$key_val]->tripAdvisorRating = 0;
+                                $final_hb_data['hotels'][$key_val]->room_Data = $resultData2->hotels->hotels[$hb_r]->rooms;
+                                $key_val++;
+                            }
+                        }
+
+
+                        if(count($final_hb_data['hotels']) > 0){
+                                $hb_image_data = $this->hb_lib->HotelImage_list($hb_hotel_code);
+
+                                $img_main_url = 'http://photos.hotelbeds.com/giata/';
+
+
+                                if(count($hb_image_data->hotels) > 0 && $hb_image_data != false){
+
+                                        for ($hb_i=0; $hb_i < count($hb_image_data->hotels) ; $hb_i++) { 
+
+
+                                                for ($hb_h=0; $hb_h < count($final_hb_data['hotels']) ; $hb_h++) { 
+
+
+                                                        if($final_hb_data['hotels'][$hb_h]->id == $hb_image_data->hotels[$hb_i]->code){
+
+                                                                $thumbnail = $img_main_url.$hb_image_data->hotels[$hb_i]->images[0]->path;
+                                                                $thumbnail1 = $hb_image_data->hotels[$hb_i]->images;
+                                                                /*echo json_encode($hb_image_data->hotels[$hb_i]);
+                                                                exit();*/
+                                                                $final_hb_data['hotels'][$hb_h]->thumbnail = $thumbnail;
+                                                                $final_hb_data['hotels'][$hb_h]->all_img = $thumbnail1;
+                                                                $old_location = $final_hb_data['hotels'][$hb_h]->location;
+                                                                $location = $hb_image_data->hotels[$hb_i]->address->content." ".$old_location;
+                                                                $final_hb_data['hotels'][$hb_h]->location = $location." ".$hb_image_data->hotels[$hb_i]->postalCode;
+
+
+                                                        }
+
+                                                }
+
+                                        }
+
+                                }else{
+                                        //echo "else";
+                                }
+
+                        //echo json_encode($hb_image_data);
+                        }else{
+                                //echo "no hotel found";
+                        }
+
+                        if(count($local_hotels['hotels']) > 0){
+
+                                $abc = array_merge($local_hotels['hotels'],$final_hb_data['hotels']);
+                        }else{
+
+                                $abc = $final_hb_data['hotels'];
+                        }
+                        //$abc = $final_hb_data['hotels'] + $local_hotels['hotels'];
+
+                        
+                        $sort_Data = usort($abc, "custom_sort");
+                        $final_data = $abc;
+
+                }else{
+                        $resultData = $this->ean_lib->HotelLists($arrayInfo);
+
+                        $result = $this->getResultInObjects($resultData,$this->data['checkin'],$this->data['checkout'],$adultString,$this->data['agesApendUrl']);
+                        $final_data = $result->hotels;
+                }	
+            }
+
+        }else {
+            $final_data = array();
+        }
+
+        $final_data_1['location_img']  = $location_img;
+        $final_data_1['hotel']  = $final_data;
+        echo  json_encode($final_data_1);
+
+    }
+
+    function ajax_call_car_list(){
+       
+
+      $allcountries = $this->countries_model->get_all_countries();
+
+      $BookType = $this->input->get("BookType");
+
+      $pickup_date  = date('Ymd',strtotime($this->input->get("pickup_date")));
+
+      $fulladdress = explode(',', $this->input->get("fulladdress"));
+      $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
+    
+        for($i = 0; $i<count($allcountries);$i++) {
+            if ($allcountries[$i]->short_name == $fulladdress[3]) {
+                $ccode = $allcountries[$i]->iso2;
+                exit();
+            }
+        }
+
+      $pickup_time_hour = $this->input->get("pickup_time_hour");
+      $pickup_time_min = $this->input->get("pickup_time_min");
+      $pickup_country = $this->input->get("pickup_country");
+      $pickup_terminal = $this->input->get("pickup_terminal");
+
+      $drop_terminal = $this->input->get("drop_terminal");
+     
+      $dropoff_date = date('Ymd',strtotime($this->input->get("dropoff_date")));
+      
+      $drp_time_hour = $this->input->get("drp_time_hour");
+      $drp_time_min = $this->input->get("drp_time_min");
+
+      $drop_country = $this->input->get("drop_country");
+      $drop_dest = $this->input->get("drop_dest");
+      $drop_zone = $this->input->get("drop_zone");
+      $drop_acco = $this->input->get("drop_acco");
+
+      $child = $this->input->get("child");
+      $adult = $this->input->get("adult");
+      $location_latitude = $this->input->get("location_latitude");
+      $location_longitude = $this->input->get("location_longitude");
+
+      $address = $this->input->get("address");
+      $hoteltitle = $this->input->get("hoteltitle");
+      $hotellocaion = $this->input->get("hotellocaion");
+
+      $hoteltitle = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%-]/s', '', $hoteltitle);
+
+      $username = "TESTCHAINS";
+      $password = "TESTCHAINS";
+      
+      if ( $BookType == "oneway") {
+
+            $request = '<TransferValuedAvailRQ echoToken="DummyEchoToken"
+    sessionId="134132121"
+    xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages TransferValuedAvailRQ.xsd"
+    version="2013/12">
+    <Language>ENG</Language>
+    <Credentials>
+        <User>'.$username.'</User>
+        <Password>'.$password.'</Password>
+    </Credentials>
+    <AvailData type="IN">
+        <ServiceDate date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'" />
+        <Occupancy>
+            <AdultCount>'.$adult.'</AdultCount>
+            <ChildCount>'.$child.'</ChildCount>
+            <GuestList>';
+
+        
+        if ( $adult > 0){
+
+            for($ad=0; $ad < $adult; $ad++){
+                $request .= '<Customer type="AD">30</Customer>';
+            }
+        }
+
+        if ( $child > 0){
+            for($ch = 0; $ch < $child; $ch ++){
+                $request .= '<Customer type="CH"></Customer>';
+            }
+        }
+
+    $request .='</GuestList>
+        </Occupancy>
+        <PickupLocation xsi:type="ProductTransferTerminal">
+            <Code>'.$pickup_terminal.'</Code>
+            <DateTime date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'" />
+        </PickupLocation>
+        <DestinationLocation xsi:type="ProductTransferGPSPoint">
+            <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
+            <Description>'.$hoteltitle.'</Description>
+            <Address>'.$address.'</Address>
+            <City>'.$hotellocaion.'</City>
+            <ZipCode>'.$zipcode.'</ZipCode>
+            <Country>'.$ccode.'</Country>
+        </DestinationLocation>
+    </AvailData>
+    <ReturnContents>Y</ReturnContents>
+</TransferValuedAvailRQ>';
+
+            $ch2=curl_init();
+
+            $httpHeader2 = array(
+                                "Content-Type: text/xml; charset=UTF-8",
+                                "Content-Encoding: UTF-8",
+                                "Accept-Encoding: gzip,deflate"
+                                );
+
+            //echo $request;
+            $post_url='http://testapi.interface-xml.com/appservices/http/FrontendService';
+
+            curl_setopt($ch2, CURLOPT_URL, $post_url);
+            curl_setopt($ch2, CURLOPT_HEADER, 0);
+            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch2, CURLOPT_POST, 1);
+            curl_setopt($ch2, CURLOPT_POSTFIELDS, "$request");
+
+
+            curl_setopt($ch2, CURLOPT_HTTPHEADER, $httpHeader2);
+            curl_setopt ($ch2, CURLOPT_ENCODING, "gzip,deflate");
+            // Execute request, store response and HTTP response code
+            $contents = curl_exec($ch2);
+
+            if ($contents === FALSE) {
+                //die('Curl failed: ' . curl_error($ch2));
+                $_SESSION['cart_Data'] = 'invalid3';
+            }else{
+
+                $final_data = simplexml_load_string($contents);
+            }
+        curl_close($ch2);
+
+        
+        echo str_replace('@', '', json_encode($final_data));
+
+      } else{
+
+
+        if (!empty ($pickup_date)) {
+
+         
+            $request = '<TransferValuedAvailRQ xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages ../xsd/TransferValuedAvailRQ.xsd"
+    xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  sessionId="sldfghliadghla" echoToken="TransferValuedAvailRQ" version="2013/12" >
+    <Language>ENG</Language>
+    <Credentials>
+        <User>'.$username.'</User>
+        <Password>'.$password.'</Password>
+    </Credentials>
+    <ExtraParamList />
+    <AvailData type="IN">
+        <ServiceDate date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'"/>
+        <Occupancy>
+            <AdultCount>'.$adult.'</AdultCount>
+            <ChildCount>'.$child.'</ChildCount>            
+            <GuestList>';
+
+        
+        if ( $adult > 0){
+
+            for($ad=0; $ad<$adult;$ad++){
+                $request .= '<Customer type="AD"></Customer>';
+            }
+        }
+
+        if ( $child > 0){
+            for($ch = 0; $ch < $child; $ch ++){
+                $request .= '<Customer type="CH"></Customer>';
+            }
+        }
+
+    $request .='</GuestList>
+        </Occupancy>
+        <PickupLocation xsi:type="ProductTransferTerminal">
+            <Code>'.$pickup_terminal.'</Code>
+            <DateTime date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'"/>
+        </PickupLocation>
+        <DestinationLocation xsi:type="ProductTransferGPSPoint">
+            <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
+            <Description>'.$hoteltitle.'</Description>
+            <Address>'.$address.'</Address>
+            <City>'.$hotellocaion.'</City>
+            <ZipCode>'.$zipcode.'</ZipCode>
+            <Country>'.$ccode.'</Country>
+        </DestinationLocation>
+    </AvailData>
+    <AvailData type="OUT">
+        <ServiceDate date="'.$dropoff_date.'" time="'.$drp_time_hour.$drp_time_min.'"/>
+        <Occupancy>
+            <AdultCount>'.$adult.'</AdultCount>
+            <ChildCount>'.$child.'</ChildCount>
+            <GuestList>';
+
+        
+        if ( $adult > 0){
+
+            for($ad=0; $ad<$adult;$ad++){
+                $request .= '<Customer type="AD"></Customer>';
+            }
+        }
+
+        if ( $child > 0){
+            for($ch = 0; $ch < $child; $ch ++){
+                $request .= '<Customer type="CH"></Customer>';
+            }
+        }
+
+    $request .='</GuestList>
+        </Occupancy>
+        <PickupLocation xsi:type="ProductTransferGPSPoint">
+            <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
+            <Description>'.$hoteltitle.'</Description>
+            <Address>'.$address.'</Address>
+            <City>'.$hotellocaion.'</City>
+            <ZipCode>'.$zipcode.'</ZipCode>
+            <Country>'.$ccode.'</Country>
+        </PickupLocation>
+        <DestinationLocation xsi:type="ProductTransferTerminal">
+            <Code>'.$drop_terminal.'</Code>
+            <DateTime date="'.$dropoff_date.'" time="'.$drp_time_hour.$drp_time_min.'"/>
+        </DestinationLocation>
+    </AvailData>
+    <ReturnContents>Y</ReturnContents>
+</TransferValuedAvailRQ>';
+
+            $ch2=curl_init();
+
+            $httpHeader2 = array(
+                                "Content-Type: text/xml; charset=UTF-8",
+                                "Content-Encoding: UTF-8",
+                                "Accept-Encoding: gzip,deflate"
+                                );
+
+            //echo $request;
+            $post_url='http://testapi.interface-xml.com/appservices/http/FrontendService';
+
+            curl_setopt($ch2, CURLOPT_URL, $post_url);
+            curl_setopt($ch2, CURLOPT_HEADER, 0);
+            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch2, CURLOPT_POST, 1);
+            curl_setopt($ch2, CURLOPT_POSTFIELDS, "$request");
+
+
+            curl_setopt($ch2, CURLOPT_HTTPHEADER, $httpHeader2);
+            curl_setopt ($ch2, CURLOPT_ENCODING, "gzip,deflate");
+            // Execute request, store response and HTTP response code
+            $contents = curl_exec($ch2);
+
+            if ($contents === FALSE) {
+                //die('Curl failed: ' . curl_error($ch2));
+                $_SESSION['cart_Data'] = 'invalid3';
+            }else{
+
+                $final_data = simplexml_load_string($contents);
+            }
+        curl_close($ch2);
+
+        }
+
+        echo str_replace('@', '', json_encode($final_data));
+    }
+
+    }
+
+    function ajax_call_car_services_in(){
+       
+      $allcountries = $this->countries_model->get_all_countries();
+
+      $BookType = $this->input->get("BookType");
+
+      $pickup_date  = date('Ymd',strtotime($this->input->get("pickup_date")));
+
+      $fulladdress = explode(',', $this->input->get("fulladdress"));
+      $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
+    
+        for($i = 0; $i<count($allcountries);$i++) {
+            if ($allcountries[$i]->short_name == $fulladdress[3]) {
+                $ccode = $allcountries[$i]->iso2;
+                exit();
+            }
+        }
+
+      $pickup_time_hour = $this->input->get("pickup_time_hour");
+      $pickup_time_min = $this->input->get("pickup_time_min");
+      $pickup_country = $this->input->get("pickup_country");
+      $pickup_terminal = $this->input->get("pickup_terminal");
+
+      $drop_terminal = $this->input->get("drop_terminal");
+     
+      $dropoff_date = date('Ymd',strtotime($this->input->get("dropoff_date")));
+      
+      $drp_time_hour = $this->input->get("drp_time_hour");
+      $drp_time_min = $this->input->get("drp_time_min");
+
+      $drop_country = $this->input->get("drop_country");
+      $drop_dest = $this->input->get("drop_dest");
+      $drop_zone = $this->input->get("drop_zone");
+      $drop_acco = $this->input->get("drop_acco");
+
+      $child = $this->input->get("child");
+      $adult = $this->input->get("adult");
+      $location_latitude = $this->input->get("location_latitude");
+      $location_longitude = $this->input->get("location_longitude");
+
+      $address = $this->input->get("address");
+      $hoteltitle = $this->input->get("hoteltitle");
+      $hotellocaion = $this->input->get("hotellocaion");
+
+      $hoteltitle = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%-]/s', '', $hoteltitle);
+
+      $username = "TESTCHAINS";
+      $password = "TESTCHAINS";
+
+
+      $contract = $this->input->get("contract");
+      $contractcode = $this->input->get("contractcode");
+      $availtotken = $this->input->get("availtotken");
+      
+      $tranCode = $this->input->get("tranCode");
+      $tranType = $this->input->get("tranType");
+      $tranVehicleType = $this->input->get("tranVehicleType");
+
+        if (!empty ($pickup_date)) {
+
+
+            $request = '<ServiceAddRQ echoToken="DummyEchoToken"
+    xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages ../xsd/ServiceAddRQ.xsd" version="2013/12" >
+    <Language>ENG</Language>
+    <Credentials>
+        <User>'.$username.'</User>
+        <Password>'.$password.'</Password>
+    </Credentials>
+    <Service availToken="'.$availtotken.'" transferType="IN" xsi:type="ServiceTransfer">
+        <ContractList>
+            <Contract>
+                <Name>'.$contract.'</Name>
+                <IncomingOffice code="'.$contractcode.'"/>
+            </Contract>
+        </ContractList>
+        <DateFrom date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'"/>
+        <TransferInfo xsi:type="ProductTransfer">
+            <Code>'.$tranCode.'</Code>
+            <Type code="'.$tranType.'"></Type>
+            <VehicleType code="'.$tranVehicleType.'"></VehicleType>
+        </TransferInfo>
+        <Paxes>
+            <AdultCount>'.$adult.'</AdultCount>
+            <ChildCount>'.$child.'</ChildCount>
+            <GuestList>';
+
+        
+        if ( $adult > 0){
+
+            for($ad=0; $ad<$adult;$ad++){
+                $request .= '<Customer type="AD"></Customer>';
+            }
+        }
+
+        if ( $child > 0){
+            for($ch = 0; $ch < $child; $ch ++){
+                $request .= '<Customer type="CH"></Customer>';
+            }
+        }
+
+    $request .='</GuestList>
+        </Paxes>
+        <PickupLocation xsi:type="ProductTransferTerminal">
+            <Code>'.$pickup_terminal.'</Code>
+        </PickupLocation>
+        <DestinationLocation xsi:type="ProductTransferGPSPoint">
+            <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
+            <Description>'.$hoteltitle.'</Description>
+            <Address>'.$address.'</Address>
+            <City>'.$hotellocaion.'</City>
+            <ZipCode>'.$zipcode.'</ZipCode>
+            <Country>'.$ccode.'</Country>
+        </DestinationLocation>
+    </Service>
+</ServiceAddRQ>';
+
+            $ch2=curl_init();
+
+            $httpHeader2 = array(
+                                "Content-Type: text/xml; charset=UTF-8",
+                                "Content-Encoding: UTF-8",
+                                "Accept-Encoding: gzip,deflate"
+                                );
+
+            //echo $request;
+            $post_url='http://testapi.interface-xml.com/appservices/http/FrontendService';
+
+            curl_setopt($ch2, CURLOPT_URL, $post_url);
+            curl_setopt($ch2, CURLOPT_HEADER, 0);
+            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch2, CURLOPT_POST, 1);
+            curl_setopt($ch2, CURLOPT_POSTFIELDS, "$request");
+
+
+            curl_setopt($ch2, CURLOPT_HTTPHEADER, $httpHeader2);
+            curl_setopt ($ch2, CURLOPT_ENCODING, "gzip,deflate");
+            // Execute request, store response and HTTP response code
+            $contents = curl_exec($ch2);
+
+            if ($contents === FALSE) {
+                //die('Curl failed: ' . curl_error($ch2));
+                $_SESSION['cart_Data'] = 'invalid3';
+            }else{
+
+                $final_data = simplexml_load_string($contents);
+            }
+        curl_close($ch2);
+
+        }
+
+        echo str_replace('@', '', json_encode($final_data));
+
+    }
+
+    function ajax_call_car_services_out(){
+       
+      $allcountries = $this->countries_model->get_all_countries();
+
+      $BookType = $this->input->get("BookType");
+
+      $pickup_date  = date('Ymd',strtotime($this->input->get("pickup_date")));
+
+      $fulladdress = explode(',', $this->input->get("fulladdress"));
+      $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
+    
+        for($i = 0; $i<count($allcountries);$i++) {
+            if ($allcountries[$i]->short_name == $fulladdress[3]) {
+                $ccode = $allcountries[$i]->iso2;
+                exit();
+            }
+        }
+
+      $pickup_time_hour = $this->input->get("pickup_time_hour");
+      $pickup_time_min = $this->input->get("pickup_time_min");
+      $pickup_country = $this->input->get("pickup_country");
+      $pickup_terminal = $this->input->get("pickup_terminal");
+
+      $drop_terminal = $this->input->get("drop_terminal");
+     
+      $dropoff_date = date('Ymd',strtotime($this->input->get("dropoff_date")));
+      
+      $drp_time_hour = $this->input->get("drp_time_hour");
+      $drp_time_min = $this->input->get("drp_time_min");
+
+      $drop_country = $this->input->get("drop_country");
+      $drop_dest = $this->input->get("drop_dest");
+      $drop_zone = $this->input->get("drop_zone");
+      $drop_acco = $this->input->get("drop_acco");
+
+      $child = $this->input->get("child");
+      $adult = $this->input->get("adult");
+      $location_latitude = $this->input->get("location_latitude");
+      $location_longitude = $this->input->get("location_longitude");
+
+      $address = $this->input->get("address");
+      $hoteltitle = $this->input->get("hoteltitle");
+      $hotellocaion = $this->input->get("hotellocaion");
+
+      $hoteltitle = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%-]/s', '', $hoteltitle);
+
+      $username = "TESTCHAINS";
+      $password = "TESTCHAINS";
+
+
+      $contract = $this->input->get("contract");
+      $contractcode = $this->input->get("contractcode");
+      $availtotken = $this->input->get("availtotken");
+      
+      $tranCode = $this->input->get("tranCode");
+      $tranType = $this->input->get("tranType");
+      $tranVehicleType = $this->input->get("tranVehicleType");
+
+        if (!empty ($pickup_date)) {
+
+
+            $request = '<ServiceAddRQ echoToken="DummyEchoToken"
+    xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages ../xsd/ServiceAddRQ.xsd" purchaseToken="O4280643426" version="2013/12" >
+    <Language>ENG</Language>
+    <Credentials>
+        <User>'.$username.'</User>
+        <Password>'.$password.'</Password>
+    </Credentials>
+    <Service availToken="'.$availtotken.'" transferType="OUT" xsi:type="ServiceTransfer">
+        <ContractList>
+            <Contract>
+                <Name>'.$contract.'</Name>
+                <IncomingOffice code="'.$contractcode.'"/>
+            </Contract>
+        </ContractList>
+        <DateFrom date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'" />
+        <TransferInfo xsi:type="ProductTransfer">
+            <Code>'.$tranCode.'</Code>
+            <Type code="'.$tranType.'"></Type>
+            <VehicleType code="'.$tranVehicleType.'"></VehicleType>
+        </TransferInfo>
+        <Paxes>
+            <AdultCount>'.$adult.'</AdultCount>
+            <ChildCount>'.$child.'</ChildCount>
+            <GuestList>';
+
+        
+        if ( $adult > 0){
+
+            for($ad=0; $ad<$adult;$ad++){
+                $request .= '<Customer type="AD"></Customer>';
+            }
+        }
+
+        if ( $child > 0){
+            for($ch = 0; $ch < $child; $ch ++){
+                $request .= '<Customer type="CH"></Customer>';
+            }
+        }
+
+    $request .='</GuestList>
+        </Paxes>
+        <PickupLocation xsi:type="ProductTransferGPSPoint">
+            <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
+            <Description>'.$hoteltitle.'</Description>
+            <Address>'.$address.'</Address>
+            <City>'.$hotellocaion.'</City>
+            <ZipCode>'.$zipcode.'</ZipCode>
+            <Country>'.$ccode.'</Country>
+        </PickupLocation>
+        <DestinationLocation xsi:type="ProductTransferTerminal">
+            <Code>'.$drop_terminal.'</Code>
+        </DestinationLocation>
+    </Service>
+</ServiceAddRQ>';
+
+            $ch2=curl_init();
+
+            $httpHeader2 = array(
+                                "Content-Type: text/xml; charset=UTF-8",
+                                "Content-Encoding: UTF-8",
+                                "Accept-Encoding: gzip,deflate"
+                                );
+
+            //echo $request;
+            $post_url='http://testapi.interface-xml.com/appservices/http/FrontendService';
+
+            curl_setopt($ch2, CURLOPT_URL, $post_url);
+            curl_setopt($ch2, CURLOPT_HEADER, 0);
+            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch2, CURLOPT_POST, 1);
+            curl_setopt($ch2, CURLOPT_POSTFIELDS, "$request");
+
+
+            curl_setopt($ch2, CURLOPT_HTTPHEADER, $httpHeader2);
+            curl_setopt ($ch2, CURLOPT_ENCODING, "gzip,deflate");
+            // Execute request, store response and HTTP response code
+            $contents = curl_exec($ch2);
+
+            if ($contents === FALSE) {
+                //die('Curl failed: ' . curl_error($ch2));
+                $_SESSION['cart_Data'] = 'invalid3';
+            }else{
+
+                $final_data = simplexml_load_string($contents);
+            }
+        curl_close($ch2);
+
+        }
+
+        echo str_replace('@', '', json_encode($final_data));
+
+    }
+
+    function ajax_call_car_save(){
+       
+      $BookType = $this->input->get("BookType");
+
+      $pickup_date  = date('Ymd',strtotime($this->input->get("pickup_date")));
+
+      $pickup_time_hour = $this->input->get("pickup_time_hour");
+      $pickup_time_min = $this->input->get("pickup_time_min");
+      $pickup_country = $this->input->get("pickup_country");
+      $pickup_terminal = $this->input->get("pickup_terminal");
+     
+      $dropoff_date = date('Ymd',strtotime($this->input->get("dropoff_date")));
+      
+      $drp_time_hour = $this->input->get("drp_time_hour");
+      $drp_time_min = $this->input->get("drp_time_min");
+
+      $drop_country = $this->input->get("drop_country");
+      $drop_dest = $this->input->get("drop_dest");
+      $drop_zone = $this->input->get("drop_zone");
+      $drop_acco = $this->input->get("drop_acco");
+
+      $child = $this->input->get("child");
+      $adult = $this->input->get("adult");
+      $location_latitude = $this->input->get("location_latitude");
+      $location_longitude = $this->input->get("location_longitude");
+
+      $username = "TESTCHAINS";
+      $password = "TESTCHAINS";
+
+
+      $contract = $this->input->get("contract");
+      $contractcode = $this->input->get("contractcode");
+      $availtotken = $this->input->get("availtotken");
+      
+      $tranCode = $this->input->get("tranCode");
+      $tranType = $this->input->get("tranType");
+      $tranVehicleType = $this->input->get("tranVehicleType");
+
+      $ptocken = $this->input->get("ptocken");
+      $psui = $this->input->get("psui");
+
+        if (!empty ($pickup_date)) {
+
+
+            $request = '<PurchaseConfirmRQ
+    xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages PurchaseConfirmRQ.xsd" echoToken="DummyEchoToken" version="2013/12" >
+    <Language>ENG</Language>
+    <Credentials>
+        <User>'.$username.'</User>
+        <Password>'.$password.'</Password>
+    </Credentials>
+    <ConfirmationData purchaseToken="O4280643426">
+        <Holder type="AD">
+            <CustomerId>1</CustomerId>
+            <Age>30</Age>
+            <Name>Name</Name>
+            <LastName>Lastname</LastName>
+        </Holder>
+        <AgencyReference>Test Agency Ref</AgencyReference>
+        <ConfirmationServiceDataList>
+            <ServiceData SPUI="51#T#1" xsi:type="ConfirmationServiceDataTransfer">
+                <CustomerList>
+                    <Customer type="AD">
+                        <CustomerId>1</CustomerId>
+                        <Age>30</Age>
+                        <Name>Name</Name>
+                        <LastName>Lastname</LastName>
+                    </Customer>
+                </CustomerList>
+                <ArrivalTravelInfo>
+                    <ArrivalInfo xsi:type="ProductTransferTerminal">
+                        <Code>AGP</Code>
+                        <DateTime date="20161016" time="0950" />
+                    </ArrivalInfo>
+                    <TravelNumber>TN1111</TravelNumber>
+                </ArrivalTravelInfo >
+                <DestinationLocationDescription>Med Playa Hotel Riviera</DestinationLocationDescription>
+            </ServiceData>
+            <ServiceData SPUI="51#T#2" xsi:type="ConfirmationServiceDataTransfer">
+                <CustomerList>
+                    <Customer type="AD">
+                        <CustomerId>2</CustomerId>
+                        <Age>30</Age>
+                        <Name>Name</Name>
+                        <LastName>Lastname</LastName>
+                    </Customer>
+                </CustomerList>
+                <PickupLocationDescription>Med Playa Hotel Riviera</PickupLocationDescription>
+                <DepartureTravelInfo>
+                    <DepartInfo xsi:type="ProductTransferTerminal">
+                        <Code>AGP</Code>
+                        <DateTime date="20161023" time="0950" />
+                    </DepartInfo>
+                    <TravelNumber>TN1111</TravelNumber>
+                </DepartureTravelInfo>
+            </ServiceData>
+        </ConfirmationServiceDataList>
+    </ConfirmationData>
+</PurchaseConfirmRQ>';
+
+            $ch2=curl_init();
+
+            $httpHeader2 = array(
+                                "Content-Type: text/xml; charset=UTF-8",
+                                "Content-Encoding: UTF-8",
+                                "Accept-Encoding: gzip,deflate"
+                                );
+
+            //echo $request;
+            $post_url='http://testapi.interface-xml.com/appservices/http/FrontendService';
+
+            curl_setopt($ch2, CURLOPT_URL, $post_url);
+            curl_setopt($ch2, CURLOPT_HEADER, 0);
+            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch2, CURLOPT_POST, 1);
+            curl_setopt($ch2, CURLOPT_POSTFIELDS, "$request");
+
+
+            curl_setopt($ch2, CURLOPT_HTTPHEADER, $httpHeader2);
+            curl_setopt ($ch2, CURLOPT_ENCODING, "gzip,deflate");
+            // Execute request, store response and HTTP response code
+            $contents = curl_exec($ch2);
+
+            if ($contents === FALSE) {
+                //die('Curl failed: ' . curl_error($ch2));
+                $_SESSION['cart_Data'] = 'invalid3';
+            }else{
+
+                $final_data = simplexml_load_string($contents);
+            }
+        curl_close($ch2);
+
+        }
+
+        echo str_replace('@', '', json_encode($final_data));
+
+    }
+
+    function ajax_call_attr($city,$checkIn,$checkOut,$adults,$lat,$long,$room,$childages,$child){
+        /*error_reporting(E_ALL);*/
+        /*return "----AsdSA";
+        exit();*/
+        $this->load->model("admin/locations_model");
+
+        $rating = '3';
+        
+        $c_ages = array();
+        for ($child_age=0; $child_age < $child; $child_age++) { 
+            $c_ages[] = rand(0,15);
+        }
+        $final_child_Ages = implode(",", $c_ages);
+        
+                                       
+        $arrayInfo["city"] = $city;
+
+        $location_img =  $this->locations_model->get_location_img_by_city($arrayInfo["city"]);
+        
+        $tempCity[] = strtok($arrayInfo["city"], " ,-");
+        $arrayInfo["destinationId"] = isset($_GET['destinationId']) ? trim($_GET['destinationId']) : '';
+        $arrayInfo["city"] = $tempCity[0];
+        $arrayInfo['checkIn'] = $checkIn;
+        $arrayInfo['checkOut'] = $checkOut;
+        $childAges = $final_child_Ages;
+        $childAgesStr = "";
+        if(!empty($childAges)){
+            $childAgesStr = ",".$child;
+        }
+
+        $this->data['propertyCategory'] = isset($_GET['propertyCategory']) ? $_GET['propertyCategory'] : '';
+        $adultString = $adults.$childAgesStr;
+
+        $arrayinfo1['adults'] = $adults;
+        $arrayinfo1['child'] = $child;
+        $arrayinfo1['room'] = $room;
+        /*$arrayinfo1['childAges'] = $childAges;*/
+        $arrayinfo1['childAges'] = $final_child_Ages;
+
+        $arrayInfo['rooms'] = "room1=$adultString";
+        $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
+        if(!empty($this->data['propertyCategory'])){
+                $propertyCat = implode(",",$this->data['propertyCategory']);
+                $arrayInfo['propertyCategory'] = $propertyCat;
+        }
+
+        $arrayInfo['maxStarRating'] = $this->input->get('stars');
+        $arrayInfo['minStarRating'] = $this->input->get('stars');
+        $arrayInfo['lat']= $lat;
+        $arrayInfo['long']= $long;
+        $sprice = '';
+        if (!empty ($sprice)) {
+            $sprice = str_replace(";", ",", $sprice);
+            $sprice = explode(",", $sprice);
+            $minp = $sprice[0];
+            $maxp = $sprice[1];
+            $arrayInfo['minRate'] = $minp;
+            $arrayInfo['maxRate'] = $maxp;
+        }
+
+        $is_hb = 1;
+
+        $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo+$arrayinfo1);
+
+        if($is_hb == 1){
+
+                $resultData1 = $this->hb_lib->HotelLists($arrayInfo+$arrayinfo1);
+
+                $resultData2 = json_decode($resultData1);
+
+                $final_hb_data['hotels'] = array();
+
+                $hb_hotel_code = array();
+
+                 function custom_sort($a,$b) {
+                    return $a->distance > $b->distance;
+                }
+
+                $key_val = 0;
+               // for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
+                for ($hb_r=0; $hb_r < 20 ; $hb_r++) { 
+
+                    $checkIn = date("m/d/Y", strtotime($arrayInfo['checkIn'])) ;
+                    $checkOut = date("m/d/Y", strtotime($arrayInfo['checkOut'])) ;
+                    $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
+                    /*echo json_encode( $resultData2->hotels->hotels[$hb_r]);
+                    exit();*/
+
+                    $is_valid_hotel = 0;
+                    for ($hb_room=0; $hb_room < count($resultData2->hotels->hotels[$hb_r]->rooms) ; $hb_room++) { 
+                            if(isset($resultData2->hotels->hotels[$hb_r]->rooms[$hb_room]->rates[0]->net)){
+                                    $is_valid_hotel = 1;
+                            }
+                    }
+                    if($is_valid_hotel == 1 && $stars >= $rating){
+                        $code = $resultData2->hotels->hotels[$hb_r]->code;
+                        $final_hb_data['hotels'][$key_val]->id = $code;
+                        $hb_hotel_code[$hb_r] = $resultData2->hotels->hotels[$hb_r]->code;
+                        $final_hb_data['hotels'][$key_val]->title = $resultData2->hotels->hotels[$hb_r]->name;
+                        $final_hb_data['hotels'][$key_val]->thumbnail = '';
+
+                        $slug = $this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&child=&checkin='.$checkIn.'&checkOut='.$checkOut.'&room='.$room;
+                        $final_hb_data['hotels'][$key_val]->slug = $slug;
+                        $final_hb_data['hotels'][$key_val]->currCode = '$';
+                        $final_hb_data['hotels'][$key_val]->price = number_format($resultData2->hotels->hotels[$hb_r]->minRate,0);
+                        $final_hb_data['hotels'][$key_val]->location = $resultData2->hotels->hotels[$hb_r]->destinationName;
+
+                        $hotel_longitude = $resultData2->hotels->hotels[$hb_r]->longitude;
+                        $hotel_latitude = $resultData2->hotels->hotels[$hb_r]->latitude;
+                        $final_hb_data['hotels'][$key_val]->longitude = $hotel_longitude;
+                        $final_hb_data['hotels'][$key_val]->latitude = $hotel_latitude;
+
+                        $final_hb_data['hotels'][$key_val]->distance = number_format($this->distance($arrayInfo['lat'],$arrayInfo['long'],$hotel_latitude,$hotel_longitude,'K'),2);
+
+                        $final_hb_data['hotels'][$key_val]->desc = '';
+                        $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
+                        $final_Star = '';
+                        for ($star_i=0; $star_i < 5 ; $star_i++) { 
+                                if($star_i < $stars){
+                                        $final_Star .= '<i class="price-text-color fa fa-star"></i>';
+                                }else{
+                                        $final_Star .= '<i class="fa fa-star"></i>';
+                                }
+                        }
+                        $final_hb_data['hotels'][$key_val]->stars = $final_Star;
+                        $final_hb_data['hotels'][$key_val]->tripAdvisorRatingImg = null;
+                        $final_hb_data['hotels'][$key_val]->tripAdvisorRating = 0;
+                        $final_hb_data['hotels'][$key_val]->room_Data = $resultData2->hotels->hotels[$hb_r]->rooms;
+                        $key_val++;
+                    }
+                }
+
+
+                if(count($final_hb_data['hotels']) > 0){
+                        $hb_image_data = $this->hb_lib->HotelImage_list($hb_hotel_code);
+
+                        $img_main_url = 'http://photos.hotelbeds.com/giata/bigger/';
+
+
+                        if(count($hb_image_data->hotels) > 0 && $hb_image_data != false){
+
+                                for ($hb_i=0; $hb_i < count($hb_image_data->hotels) ; $hb_i++) { 
+
+
+                                        for ($hb_h=0; $hb_h < count($final_hb_data['hotels']) ; $hb_h++) { 
+
+
+                                                if($final_hb_data['hotels'][$hb_h]->id == $hb_image_data->hotels[$hb_i]->code){
+
+                                                        $thumbnail = $img_main_url.$hb_image_data->hotels[$hb_i]->images[0]->path;
+                                                        $thumbnail1 = $hb_image_data->hotels[$hb_i]->images;
+                                                        /*echo json_encode($hb_image_data->hotels[$hb_i]);
+                                                        exit();*/
+                                                        $final_hb_data['hotels'][$hb_h]->thumbnail = $thumbnail;
+                                                        $final_hb_data['hotels'][$hb_h]->all_img = $thumbnail1;
+                                                        $old_location = $final_hb_data['hotels'][$hb_h]->location;
+                                                        $location = $hb_image_data->hotels[$hb_i]->address->content." ".$old_location;
+                                                        $final_hb_data['hotels'][$hb_h]->location = $location." ".$hb_image_data->hotels[$hb_i]->postalCode;
+
+
+                                                }
+
+                                        }
+
+                                }
+
+                        }else{
+                                //echo "else";
+                        }
+
+                //echo json_encode($hb_image_data);
+                }else{
+                        //echo "no hotel found";
+                }
+
+                if(count($local_hotels['hotels']) > 0){
+
+                        $abc = array_merge($local_hotels['hotels'],$final_hb_data['hotels']);
+                }else{
+
+                        $abc = $final_hb_data['hotels'];
+                }
+                //$abc = $final_hb_data['hotels'] + $local_hotels['hotels'];
+
+                
+                $sort_Data = usort($abc, "custom_sort");
+                $final_data = $abc;
+
+        }else{
+            $resultData = $this->ean_lib->HotelLists($arrayInfo);
+
+            $result = $this->getResultInObjects($resultData,$this->data['checkin'],$this->data['checkout'],$adultString,$this->data['agesApendUrl']);
+            $final_data = $result->hotels;
+        }   
+            
+        
+
+        $final_data_1['location_img']  = $location_img;
+        $final_data_1['hotel']  = $local_hotels;
+        return $final_data;
+
+    }
+
+    function search1($offset = null) {
+        //error_reporting(E_ALL);
+        /*
+        print_r($_GET);
+        exit();*/
+        $search = $this->input->get('search');
+        $rating = $this->input->get('rating');
+        $room = $this->input->get('room');
+
+        //echo $this->input->get('child');
+        for ($child_age=0; $child_age < $this->input->get('child') ; $child_age++) { 
+                $c_ages[] = rand(0,15);
+        }
+        $final_child_Ages = implode(",", $c_ages);
+        if (!empty ($search)) {
+            $this->data['checkin'] = trim($_GET['checkIn']);
+            $this->data['checkout'] = trim($_GET['checkOut']);
+            $this->data['room'] = $room;
+            $this->data['minprice'] = $this->settings[0]->front_search_min_price;
+            $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
+            $this->data['rating'] = $rating;
+
+
+            if (empty ($offset)) {
+                            // print_r($_POST);
+                    $arrayInfo["city"] = trim($_GET['city']);
+                    $tempCity[] = strtok($arrayInfo["city"], " ,-");
+                    $arrayInfo["destinationId"] = trim($_GET['destinationId']);
+                    $arrayInfo["city"] = $tempCity[0];
+                            // $arrayInfo['countryCode'] = 'IN';
+                    $arrayInfo['checkIn'] = trim($_GET['checkIn']);
+                            // $arrayInfo['checkIn'] = "18-08-2014";
+                    $arrayInfo['checkOut'] = trim($_GET['checkOut']);
+                    //$childAges = $this->input->get('childages');
+                    $childAges = $final_child_Ages;
+                    //$childCount = 0;
+                    $childAgesStr = "";
+                    if(!empty($childAges)){
+                    //$childCount =  count(explode(",",$childAges));
+                    $childAgesStr = ",".$child;
+                    }
+
+                    $adults = $this->input->get("adults");
+                    $this->data['propertyCategory'] = $_GET['propertyCategory'];
+                    $adultString = $adults.$childAgesStr;
+
+                    $this->data['adults'] = $adults;
+                    //$this->data['child'] = $childCount;
+                    $this->data['child'] = $this->input->get('child');
+                    $this->data['childAges'] = $childAges;
+                    if($this->data['child'] > 0){
+                            $this->data['agesApendUrl'] = '&ages='.$childAges;
+                    }else{
+                            $this->data['agesApendUrl'] = '';
+                    }
+
+                    $arrayinfo1['adults'] = $adults;
+                    $arrayinfo1['child'] = $this->input->get('child');
+                    $arrayinfo1['room'] = $room;
+                    /*$arrayinfo1['childAges'] = $childAges;*/
+                    $arrayinfo1['childAges'] = $final_child_Ages;
+
+                    $arrayInfo['rooms'] = "room1=$adultString";
+                    $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
+                    if(!empty($this->data['propertyCategory'])){
+                            $propertyCat = implode(",",$this->data['propertyCategory']);
+                            $arrayInfo['propertyCategory'] = $propertyCat;
+
+                    }
+
+                    $arrayInfo['maxStarRating']= $this->input->get('stars');
+                    $arrayInfo['minStarRating']= $this->input->get('stars');
+                    $arrayInfo['lat']= $this->input->get('lat');
+                    $arrayInfo['long']= $this->input->get('long');
+                    $sprice = $this->input->get('price');
+                    if (!empty ($sprice)) {
+                                    $sprice = str_replace(";", ",", $sprice);
+                                    $sprice = explode(",", $sprice);
+                                    $minp = $sprice[0];
+                                    $maxp = $sprice[1];
+                                    $arrayInfo['minRate'] = $minp;
+                                    $arrayInfo['maxRate'] = $maxp;
+                    }
+
+                    $is_hb = 1;
+                    /*
+                    echo "asdas";
+                    exit();*/
+                    /*error_reporting(-1);*/
+                    $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo+$arrayinfo1);
+                   /* echo json_encode($local_hotels);
+                     exit();*/
+                    if($is_hb == 1){
+
+                            $resultData1 = $this->hb_lib->HotelLists($arrayInfo+$arrayinfo1);
+
+                            /*echo $resultData1;
+                            exit();*/
+                            $resultData2 = json_decode($resultData1);
+
+                            $final_hb_data['hotels'] = array();
+
+                            $hb_hotel_code = array();
+
+
+
+                            $key_val = 0;
+                            //for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
+                            for ($hb_r=0; $hb_r < 10 ; $hb_r++) { 
+
+                                $checkIn = date("m/d/Y", strtotime($arrayInfo['checkIn'])) ;
+                                $checkOut = date("m/d/Y", strtotime($arrayInfo['checkOut'])) ;
+                                $date1 = new DateTime($checkIn);
+                                $date2 = new DateTime($checkOut);
+
+                                $diff = $date2->diff($date1)->format("%a");
+                                $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
+
+
+                                $is_valid_hotel = 0;
+                                for ($hb_room=0; $hb_room < count($resultData2->hotels->hotels[$hb_r]->rooms) ; $hb_room++) { 
+                                        if(isset($resultData2->hotels->hotels[$hb_r]->rooms[$hb_room]->rates[0]->net)){
+                                                $is_valid_hotel = 1;
+                                        }
+                                }
+                                if($is_valid_hotel == 1 && $stars >= $rating){
+                                        $code = $resultData2->hotels->hotels[$hb_r]->code;
+                                        $final_hb_data['hotels'][$key_val]->id = $code;
+                                        $hb_hotel_code[$hb_r] = $resultData2->hotels->hotels[$hb_r]->code;
+                                        $final_hb_data['hotels'][$key_val]->title = $resultData2->hotels->hotels[$hb_r]->name;
+                                        $final_hb_data['hotels'][$key_val]->thumbnail = '';
+
+                                        $slug = $this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&child='.$this->input->get('child').'&checkin='.$checkIn.'&checkOut='.$checkOut.$this->data['agesApendUrl'].'&room='.$room;
+                                        $final_hb_data['hotels'][$key_val]->slug = $slug;
+                                        /*$final_hb_data['hotels'][$key_val]->currCode = $resultData2->hotels->hotels[$hb_r]->currency;*/
+                                        $final_hb_data['hotels'][$key_val]->currCode = '$';
+                                        $final_hb_data['hotels'][$key_val]->price = number_format($resultData2->hotels->hotels[$hb_r]->minRate / $diff,1);
+                                        $final_hb_data['hotels'][$key_val]->location = $resultData2->hotels->hotels[$hb_r]->destinationName;
+
+                                        $hotel_longitude = $resultData2->hotels->hotels[$hb_r]->longitude;
+                                        $hotel_latitude = $resultData2->hotels->hotels[$hb_r]->latitude;
+                                        $final_hb_data['hotels'][$key_val]->longitude = $hotel_longitude;
+                                        $final_hb_data['hotels'][$key_val]->latitude = $hotel_latitude;
+
+                                        $final_hb_data['hotels'][$key_val]->distance = $this->distance($arrayInfo['lat'],$arrayInfo['long'],$hotel_latitude,$hotel_longitude,'K');
+
+                                        $final_hb_data['hotels'][$key_val]->desc = '';
+                                        $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
+                                        $final_Star = '';
+                                        for ($star_i=0; $star_i < 5 ; $star_i++) { 
+                                                if($star_i < $stars){
+                                                        $final_Star .= '<i class="price-text-color fa fa-star"></i>';
+                                                }else{
+                                                        $final_Star .= '<i class="fa fa-star"></i>';
+                                                }
+                                        }
+                                        $final_hb_data['hotels'][$key_val]->stars = $final_Star;
+                                        $final_hb_data['hotels'][$key_val]->tripAdvisorRatingImg = null;
+                                        $final_hb_data['hotels'][$key_val]->tripAdvisorRating = 0;
+                                        $final_hb_data['hotels'][$key_val]->room_Data = $resultData2->hotels->hotels[$hb_r]->rooms;
+                                        $key_val++;
+                                }
+                            }
+                            /*  echo '<pre>'.json_encode( $final_hb_data).'</pre>';
+                            exit();*/
+
+                            if(count($final_hb_data['hotels']) > 0){
+                                    $hb_image_data = $this->hb_lib->HotelImage_list($hb_hotel_code);
+                                   /* echo json_encode($hb_image_data);
+                                    exit();*/
+                                    $img_main_url = 'http://photos.hotelbeds.com/giata/bigger/';
+
+                                    /*error_reporting(-1);*/
+                                    if(count($hb_image_data->hotels) > 0 && $hb_image_data != false){
+
+                                            for ($hb_i=0; $hb_i < count($hb_image_data->hotels) ; $hb_i++) { 
+
+
+                                                    for ($hb_h=0; $hb_h < count($final_hb_data['hotels']) ; $hb_h++) { 
+
+
+                                                            if($final_hb_data['hotels'][$hb_h]->id == $hb_image_data->hotels[$hb_i]->code){
+
+                                                                    $thumbnail = $img_main_url.$hb_image_data->hotels[$hb_i]->images[0]->path;
+                                                                    $thumbnail1 = $hb_image_data->hotels[$hb_i]->images;
+                                                                    /*echo json_encode($hb_image_data->hotels[$hb_i]);
+                                                                    exit();*/
+                                                                    $description = $hb_image_data->hotels[$hb_i]->description->content;
+                                                                    $final_hb_data['hotels'][$hb_h]->desc = $description;
                                                                     $final_hb_data['hotels'][$hb_h]->thumbnail = $thumbnail;
                                                                     $final_hb_data['hotels'][$hb_h]->all_img = $thumbnail1;
                                                                     $old_location = $final_hb_data['hotels'][$hb_h]->location;
@@ -664,790 +1836,621 @@ class Ean extends MX_Controller {
                             }
 
                             /*echo '<pre>'.json_encode($local_hotels).'</pre>';*/
-                            /*exit();*/
+                            /*echo count($local_hotels['hotels']);
+                            exit();*/
                             /*error_reporting(E_ALL);*/
                             /*$abc = array_merge($final_hb_data['hotels'] , $local_hotels['hotels']);*/
-                            $abc = $final_hb_data['hotels'] + $local_hotels['hotels'];
+                            if(count($local_hotels['hotels']) > 0){
 
-                            /*echo json_encode($abc);
-                            exit();*/
-                            $sort_Data = usort($abc, "custom_sort");
-                            $final_data = $abc;
+                                    $abc = array_merge($local_hotels['hotels'],$final_hb_data['hotels']);
+                            }else{
+
+                                    $abc = $final_hb_data['hotels'];
+                            }
+                                    /*echo json_encode($abc);
+                                    exit();*/
+                            function custom_sort($a,$b) {
+                                return $a->distance > $b ->distance;
+                            }
+                                   $sort_Data = usort($abc, "custom_sort");
+                                    
+                                    $this->data['module'] = $abc;
 
                     }else{
                             $resultData = $this->ean_lib->HotelLists($arrayInfo);
 
                             $result = $this->getResultInObjects($resultData,$this->data['checkin'],$this->data['checkout'],$adultString,$this->data['agesApendUrl']);
-                            $final_data = $result->hotels;
-                    }	
+                            $this->data['module'] = $result->hotels;
+                    }   
+                            /*error_reporting(E_ALL);   
+                            echo '<pre>'.json_encode( $abc).'</pre>';
+                            exit();*/
+                    $this->data['multipleLocations'] = $result->multipleLocations;
+                    $this->data['locationInfo'] = $result->locationInfo;
+                    $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
+                    $this->data['cacheKey'] = $result->cacheKey;
+                    $this->data['cacheLocation'] = $result->cacheLocation;
+                    $this->data['lat'] = $arrayInfo['lat'];
+                    $this->data['long'] = $arrayInfo['long'];
 
-
-                }
+                    $cachedata = array(
+                                    'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
+                                     'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
+                                     'cachekey' => $cachekey,
+                                     'cacheloc' => $cacheloc);
+                    /*echo json_encode($cachedata);
+                    exit();*/
+                    $this->session->set_userdata($cachedata);
 
             }
-            else {
-                $final_data = array();
-            }
-            $final_data_1['location_img']  = $location_img;
-            $final_data_1['hotel']  = $final_data;
-            echo  json_encode($final_data_1);
 
+        }
+        else {
+            $this->data['result'] = array();
+        }
+
+        $hb_hotels_img = $this->hotels_model->hb_hotel_detail_all($hb_hotel_code);
+    
+        $final_hb_img = array();
+        $kk = 0;
+        foreach ($hb_hotels_img as $key => $value) {
+            $final_hb_img[$value->iHbHotelID]['sThumbnail'] = $value->sThumbnail;
+        }
+        
+        $this->data['final_hb_img'] = $final_hb_img;
+
+        $this->lang->load("front", $this->data['lang_set']);
+        $this->data['page_title'] = 'Search';
+        $this->data['currSign'] = $this->ean_lib->currency;
+
+        $this->theme->view('box-listing', $this->data);
     }
-
-    function search1($offset = null) {
-            /*error_reporting(E_ALL);
-            print_r($_GET);
-            exit();*/
-                    $search = $this->input->get('search');
-                    $rating = $this->input->get('rating');
-                    $room = $this->input->get('room');
-
-                    //echo $this->input->get('child');
-                    for ($child_age=0; $child_age < $this->input->get('child') ; $child_age++) { 
-                            $c_ages[] = rand(0,15);
-                    }
-                    $final_child_Ages = implode(",", $c_ages);
-                    if (!empty ($search)) {
-                                    $this->data['checkin'] = trim($_GET['checkIn']);
-                                    $this->data['checkout'] = trim($_GET['checkOut']);
-                                    $this->data['room'] = $room;
-                                    $this->data['minprice'] = $this->settings[0]->front_search_min_price;
-                            $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
-                            $this->data['rating'] = $rating;
-
-
-                                    if (empty ($offset)) {
-                                                    // print_r($_POST);
-                                                    $arrayInfo["city"] = trim($_GET['city']);
-                                                    $tempCity[] = strtok($arrayInfo["city"], " ,-");
-                                                    $arrayInfo["destinationId"] = trim($_GET['destinationId']);
-                                                    $arrayInfo["city"] = $tempCity[0];
-                                                            // $arrayInfo['countryCode'] = 'IN';
-                                                    $arrayInfo['checkIn'] = trim($_GET['checkIn']);
-                                                            // $arrayInfo['checkIn'] = "18-08-2014";
-                                                    $arrayInfo['checkOut'] = trim($_GET['checkOut']);
-                                                    //$childAges = $this->input->get('childages');
-                                                    $childAges = $final_child_Ages;
-                                                    //$childCount = 0;
-                                                    $childAgesStr = "";
-                                                    if(!empty($childAges)){
-                                                    //$childCount =  count(explode(",",$childAges));
-                                                    $childAgesStr = ",".$child;
-                                                    }
-
-                                                    $adults = $this->input->get("adults");
-                                                    $this->data['propertyCategory'] = $_GET['propertyCategory'];
-                                                    $adultString = $adults.$childAgesStr;
-
-                                                    $this->data['adults'] = $adults;
-                                                    //$this->data['child'] = $childCount;
-                                                    $this->data['child'] = $this->input->get('child');
-                                                    $this->data['childAges'] = $childAges;
-                                                    if($this->data['child'] > 0){
-                                                            $this->data['agesApendUrl'] = '&ages='.$childAges;
-                                                    }else{
-                                                            $this->data['agesApendUrl'] = '';
-                                                    }
-
-                                                    $arrayinfo1['adults'] = $adults;
-                                                    $arrayinfo1['child'] = $this->input->get('child');
-                                                    $arrayinfo1['room'] = $room;
-                                                    /*$arrayinfo1['childAges'] = $childAges;*/
-                                                    $arrayinfo1['childAges'] = $final_child_Ages;
-
-                                                    $arrayInfo['rooms'] = "room1=$adultString";
-                                                    $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
-                                                    if(!empty($this->data['propertyCategory'])){
-                                                            $propertyCat = implode(",",$this->data['propertyCategory']);
-                                                            $arrayInfo['propertyCategory'] = $propertyCat;
-
-                                                    }
-
-                                                    $arrayInfo['maxStarRating']= $this->input->get('stars');
-                                                    $arrayInfo['minStarRating']= $this->input->get('stars');
-                                                    $arrayInfo['lat']= $this->input->get('lat');
-                                                    $arrayInfo['long']= $this->input->get('long');
-                                                    $sprice = $this->input->get('price');
-                                                    if (!empty ($sprice)) {
-                                                                    $sprice = str_replace(";", ",", $sprice);
-                                                                    $sprice = explode(",", $sprice);
-                                                                    $minp = $sprice[0];
-                                                                    $maxp = $sprice[1];
-                                                                    $arrayInfo['minRate'] = $minp;
-                                                                    $arrayInfo['maxRate'] = $maxp;
-                                                    }
-
-                                                    $is_hb = 1;
-                                                    /*
-                                                    echo "asdas";
-                                                    exit();*/
-                                                    $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo+$arrayinfo1);
-                                                    /*echo json_encode($local_hotels);
-                                                     exit();*/
-                                                    if($is_hb == 1){
-
-                                                            $resultData1 = $this->hb_lib->HotelLists($arrayInfo+$arrayinfo1);
-
-                                                            /*echo $resultData1;
-                                                            exit();*/
-                                                            $resultData2 = json_decode($resultData1);
-
-                                                            $final_hb_data['hotels'] = array();
-
-                                                            $hb_hotel_code = array();
-
-                                                             function custom_sort($a,$b) {
-                                                            return $a->distance > $b ->distance;
-                                                       }
-
-                                                       $key_val = 0;
-                                                            for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
-
-                                                                    $checkIn = date("Y-m-d", strtotime($arrayInfo['checkIn'])) ;
-                                                                    $checkOut = date("Y-m-d", strtotime($arrayInfo['checkOut'])) ;
-                                                            $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
-                                                            /*echo json_encode( $resultData2->hotels->hotels[$hb_r]);
-                                                            exit();*/
-
-                                                            $is_valid_hotel = 0;
-                                                            for ($hb_room=0; $hb_room < count($resultData2->hotels->hotels[$hb_r]->rooms) ; $hb_room++) { 
-                                                                    if(isset($resultData2->hotels->hotels[$hb_r]->rooms[$hb_room]->rates[0]->net)){
-                                                                            $is_valid_hotel = 1;
-                                                                    }
-                                                            }
-                                                            if($is_valid_hotel == 1 && $stars >= $rating){
-                                                                            $code = $resultData2->hotels->hotels[$hb_r]->code;
-                                                                            $final_hb_data['hotels'][$key_val]->id = $code;
-                                                                            $hb_hotel_code[$hb_r] = $resultData2->hotels->hotels[$hb_r]->code;
-                                                                            $final_hb_data['hotels'][$key_val]->title = $resultData2->hotels->hotels[$hb_r]->name;
-                                                                            $final_hb_data['hotels'][$key_val]->thumbnail = '';
-
-                                                                            $slug = $this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&checkin='.$checkIn.'&checkout='.$checkOut.$this->data['agesApendUrl'];
-                                                                            $final_hb_data['hotels'][$key_val]->slug = $slug;
-                                                                            $final_hb_data['hotels'][$key_val]->currCode = $resultData2->hotels->hotels[$hb_r]->currency;
-                                                                            $final_hb_data['hotels'][$key_val]->price = $resultData2->hotels->hotels[$hb_r]->minRate;
-                                                                            $final_hb_data['hotels'][$key_val]->location = $resultData2->hotels->hotels[$hb_r]->destinationName;
-
-                                                                            $hotel_longitude = $resultData2->hotels->hotels[$hb_r]->longitude;
-                                                                            $hotel_latitude = $resultData2->hotels->hotels[$hb_r]->latitude;
-                                                                            $final_hb_data['hotels'][$key_val]->longitude = $hotel_longitude;
-                                                                            $final_hb_data['hotels'][$key_val]->latitude = $hotel_latitude;
-
-                                                                            $final_hb_data['hotels'][$key_val]->distance = $this->distance($arrayInfo['lat'],$arrayInfo['long'],$hotel_latitude,$hotel_longitude,'K');
-
-                                                                            $final_hb_data['hotels'][$key_val]->desc = '';
-                                                                            $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
-                                                                            $final_Star = '';
-                                                                            for ($star_i=0; $star_i < 5 ; $star_i++) { 
-                                                                                    if($star_i < $stars){
-                                                                                            $final_Star .= '<i class="price-text-color fa fa-star"></i>';
-                                                                                    }else{
-                                                                                            $final_Star .= '<i class="fa fa-star"></i>';
-                                                                                    }
-                                                                            }
-                                                                            $final_hb_data['hotels'][$key_val]->stars = $final_Star;
-                                                                            $final_hb_data['hotels'][$key_val]->tripAdvisorRatingImg = null;
-                                                                            $final_hb_data['hotels'][$key_val]->tripAdvisorRating = 0;
-                                                                            $final_hb_data['hotels'][$key_val]->room_Data = $resultData2->hotels->hotels[$hb_r]->rooms;
-                                                                            $key_val++;
-                                                                    }
-                                                            }
-
-
-                                                            if(count($final_hb_data['hotels']) > 0){
-                                                                    $hb_image_data = $this->hb_lib->HotelImage_list($hb_hotel_code);
-
-                                                                    $img_main_url = 'http://photos.hotelbeds.com/giata/bigger/';
-
-
-                                                                    if(count($hb_image_data->hotels) > 0 && $hb_image_data != false){
-
-                                                                            for ($hb_i=0; $hb_i < count($hb_image_data->hotels) ; $hb_i++) { 
-
-
-                                                                                    for ($hb_h=0; $hb_h < count($final_hb_data['hotels']) ; $hb_h++) { 
-
-
-                                                                                            if($final_hb_data['hotels'][$hb_h]->id == $hb_image_data->hotels[$hb_i]->code){
-
-                                                                                                    $thumbnail = $img_main_url.$hb_image_data->hotels[$hb_i]->images[0]->path;
-                                                                                                    $thumbnail1 = $hb_image_data->hotels[$hb_i]->images;
-                                                                                                    /*echo json_encode($hb_image_data->hotels[$hb_i]);
-                                                                                                    exit();*/
-                                                                                                    $final_hb_data['hotels'][$hb_h]->thumbnail = $thumbnail;
-                                                                                                    $final_hb_data['hotels'][$hb_h]->all_img = $thumbnail1;
-                                                                                                    $old_location = $final_hb_data['hotels'][$hb_h]->location;
-                                                                                                    $location = $hb_image_data->hotels[$hb_i]->address->content." ".$old_location;
-                                                                                                    $final_hb_data['hotels'][$hb_h]->location = $location." ".$hb_image_data->hotels[$hb_i]->postalCode;
-
-
-                                                                                            }
-
-                                                                                    }
-
-                                                                            }
-
-                                                                    }else{
-                                                                            //echo "else";
-                                                                    }
-
-                                                            //echo json_encode($hb_image_data);
-                                                            }else{
-                                                                    //echo "no hotel found";
-                                                            }
-
-                                                            /*echo '<pre>'.json_encode($local_hotels).'</pre>';*/
-                                                            /*exit();*/
-                                                            /*error_reporting(E_ALL);*/
-                                                            /*$abc = array_merge($final_hb_data['hotels'] , $local_hotels['hotels']);*/
-                                                            $abc = $final_hb_data['hotels'] + $local_hotels['hotels'];
-
-                                                            /*echo json_encode($abc);
-                                                            exit();*/
-                                                            $sort_Data = usort($abc, "custom_sort");
-                                                            $this->data['module'] = $abc;
-
-                                                    }else{
-                                                            $resultData = $this->ean_lib->HotelLists($arrayInfo);
-
-                                                            $result = $this->getResultInObjects($resultData,$this->data['checkin'],$this->data['checkout'],$adultString,$this->data['agesApendUrl']);
-                                                            $this->data['module'] = $result->hotels;
-                                                    }	
-
-
-                                                    $this->data['multipleLocations'] = $result->multipleLocations;
-                                                    $this->data['locationInfo'] = $result->locationInfo;
-                                                    $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
-                                                    $this->data['cacheKey'] = $result->cacheKey;
-                                                    $this->data['cacheLocation'] = $result->cacheLocation;
-                                                    $this->data['lat'] = $arrayInfo['lat'];
-                                                    $this->data['long'] = $arrayInfo['long'];
-
-                                                    $cachedata = array(
-                                                                                            'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
-                                                                                             'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
-                                                                                             'cachekey' => $cachekey,
-                                                                                             'cacheloc' => $cacheloc);
-                                                    /*echo json_encode($cachedata);
-                                                    exit();*/
-                                                    $this->session->set_userdata($cachedata);
-
-
-                                    }
-
-                    }
-                    else {
-                                    $this->data['result'] = array();
-                    }
-                    $this->lang->load("front", $this->data['lang_set']);
-                    $this->data['page_title'] = 'Search';
-                    $this->data['currSign'] = $this->ean_lib->currency;
-
-                    $this->theme->view('box-listing', $this->data);
-    }
-
     function search2($offset = null) {
-            /*error_reporting(E_ALL);
-            print_r($_GET);
-            exit();*/
-                    $search = $this->input->get('search');
-                    $rating = $this->input->get('rating');
-                    $room = $this->input->get('room');
+        //error_reporting(E_ALL);
+        /*
+        print_r($_GET);
+        exit();*/
+        $search = $this->input->get('search');
+        $rating = $this->input->get('rating');
+        $room = $this->input->get('room');
 
-                    //echo $this->input->get('child');
-                    for ($child_age=0; $child_age < $this->input->get('child') ; $child_age++) { 
-                            $c_ages[] = rand(0,15);
+        //echo $this->input->get('child');
+        for ($child_age=0; $child_age < $this->input->get('child') ; $child_age++) { 
+                $c_ages[] = rand(0,15);
+        }
+        $final_child_Ages = implode(",", $c_ages);
+        if (!empty ($search)) {
+            $this->data['checkin'] = trim($_GET['checkIn']);
+            $this->data['checkout'] = trim($_GET['checkOut']);
+            $this->data['room'] = $room;
+            $this->data['minprice'] = $this->settings[0]->front_search_min_price;
+            $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
+            $this->data['rating'] = $rating;
+
+
+            if (empty ($offset)) {
+                            // print_r($_POST);
+                    $arrayInfo["city"] = trim($_GET['city']);
+                    $tempCity[] = strtok($arrayInfo["city"], " ,-");
+                    $arrayInfo["destinationId"] = trim($_GET['destinationId']);
+                    $arrayInfo["city"] = $tempCity[0];
+                            // $arrayInfo['countryCode'] = 'IN';
+                    $arrayInfo['checkIn'] = trim($_GET['checkIn']);
+                            // $arrayInfo['checkIn'] = "18-08-2014";
+                    $arrayInfo['checkOut'] = trim($_GET['checkOut']);
+                    //$childAges = $this->input->get('childages');
+                    $childAges = $final_child_Ages;
+                    //$childCount = 0;
+                    $childAgesStr = "";
+                    if(!empty($childAges)){
+                    //$childCount =  count(explode(",",$childAges));
+                    $childAgesStr = ",".$child;
                     }
-                    $final_child_Ages = implode(",", $c_ages);
-                    if (!empty ($search)) {
-                                    $this->data['checkin'] = trim($_GET['checkIn']);
-                                    $this->data['checkout'] = trim($_GET['checkOut']);
-                                    $this->data['room'] = $room;
-                                    $this->data['minprice'] = $this->settings[0]->front_search_min_price;
-                            $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
-                            $this->data['rating'] = $rating;
+
+                    $adults = $this->input->get("adults");
+                    $this->data['propertyCategory'] = $_GET['propertyCategory'];
+                    $adultString = $adults.$childAgesStr;
+
+                    $this->data['adults'] = $adults;
+                    //$this->data['child'] = $childCount;
+                    $this->data['child'] = $this->input->get('child');
+                    $this->data['childAges'] = $childAges;
+                    if($this->data['child'] > 0){
+                            $this->data['agesApendUrl'] = '&ages='.$childAges;
+                    }else{
+                            $this->data['agesApendUrl'] = '';
+                    }
+
+                    $arrayinfo1['adults'] = $adults;
+                    $arrayinfo1['child'] = $this->input->get('child');
+                    $arrayinfo1['room'] = $room;
+                    /*$arrayinfo1['childAges'] = $childAges;*/
+                    $arrayinfo1['childAges'] = $final_child_Ages;
+
+                    $arrayInfo['rooms'] = "room1=$adultString";
+                    $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
+                    if(!empty($this->data['propertyCategory'])){
+                            $propertyCat = implode(",",$this->data['propertyCategory']);
+                            $arrayInfo['propertyCategory'] = $propertyCat;
+
+                    }
+
+                    $arrayInfo['maxStarRating']= $this->input->get('stars');
+                    $arrayInfo['minStarRating']= $this->input->get('stars');
+                    $arrayInfo['lat']= $this->input->get('lat');
+                    $arrayInfo['long']= $this->input->get('long');
+                    $sprice = $this->input->get('price');
+                    if (!empty ($sprice)) {
+                                    $sprice = str_replace(";", ",", $sprice);
+                                    $sprice = explode(",", $sprice);
+                                    $minp = $sprice[0];
+                                    $maxp = $sprice[1];
+                                    $arrayInfo['minRate'] = $minp;
+                                    $arrayInfo['maxRate'] = $maxp;
+                    }
+
+                    $is_hb = 1;
+                    /*
+                    echo "asdas";
+                    exit();*/
+                    /*error_reporting(-1);*/
+                    $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo+$arrayinfo1);
+                   /* echo json_encode($local_hotels);
+                     exit();*/
+                    if($is_hb == 1){
+
+                            $resultData1 = $this->hb_lib->HotelLists($arrayInfo+$arrayinfo1);
+
+                            /*echo $resultData1;
+                            exit();*/
+                            $resultData2 = json_decode($resultData1);
+
+                            $final_hb_data['hotels'] = array();
+
+                            $hb_hotel_code = array();
 
 
-                                    if (empty ($offset)) {
-                                                    // print_r($_POST);
-                                                    $arrayInfo["city"] = trim($_GET['city']);
-                                                    $tempCity[] = strtok($arrayInfo["city"], " ,-");
-                                                    $arrayInfo["destinationId"] = trim($_GET['destinationId']);
-                                                    $arrayInfo["city"] = $tempCity[0];
-                                                            // $arrayInfo['countryCode'] = 'IN';
-                                                    $arrayInfo['checkIn'] = trim($_GET['checkIn']);
-                                                            // $arrayInfo['checkIn'] = "18-08-2014";
-                                                    $arrayInfo['checkOut'] = trim($_GET['checkOut']);
-                                                    //$childAges = $this->input->get('childages');
-                                                    $childAges = $final_child_Ages;
-                                                    //$childCount = 0;
-                                                    $childAgesStr = "";
-                                                    if(!empty($childAges)){
-                                                    //$childCount =  count(explode(",",$childAges));
-                                                    $childAgesStr = ",".$child;
-                                                    }
 
-                                                    $adults = $this->input->get("adults");
-                                                    $this->data['propertyCategory'] = $_GET['propertyCategory'];
-                                                    $adultString = $adults.$childAgesStr;
+                            $key_val = 0;
+                            //for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
+                            for ($hb_r=0; $hb_r < 10 ; $hb_r++) { 
 
-                                                    $this->data['adults'] = $adults;
-                                                    //$this->data['child'] = $childCount;
-                                                    $this->data['child'] = $this->input->get('child');
-                                                    $this->data['childAges'] = $childAges;
-                                                    if($this->data['child'] > 0){
-                                                            $this->data['agesApendUrl'] = '&ages='.$childAges;
-                                                    }else{
-                                                            $this->data['agesApendUrl'] = '';
-                                                    }
+                                $checkIn = date("m/d/Y", strtotime($arrayInfo['checkIn'])) ;
+                                $checkOut = date("m/d/Y", strtotime($arrayInfo['checkOut'])) ;
+                                $date1 = new DateTime($checkIn);
+                                $date2 = new DateTime($checkOut);
 
-                                                    $arrayinfo1['adults'] = $adults;
-                                                    $arrayinfo1['child'] = $this->input->get('child');
-                                                    $arrayinfo1['room'] = $room;
-                                                    /*$arrayinfo1['childAges'] = $childAges;*/
-                                                    $arrayinfo1['childAges'] = $final_child_Ages;
-
-                                                    $arrayInfo['rooms'] = "room1=$adultString";
-                                                    $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
-                                                    if(!empty($this->data['propertyCategory'])){
-                                                            $propertyCat = implode(",",$this->data['propertyCategory']);
-                                                            $arrayInfo['propertyCategory'] = $propertyCat;
-
-                                                    }
-
-                                                    $arrayInfo['maxStarRating']= $this->input->get('stars');
-                                                    $arrayInfo['minStarRating']= $this->input->get('stars');
-                                                    $arrayInfo['lat']= $this->input->get('lat');
-                                                    $arrayInfo['long']= $this->input->get('long');
-                                                    $sprice = $this->input->get('price');
-                                                    if (!empty ($sprice)) {
-                                                                    $sprice = str_replace(";", ",", $sprice);
-                                                                    $sprice = explode(",", $sprice);
-                                                                    $minp = $sprice[0];
-                                                                    $maxp = $sprice[1];
-                                                                    $arrayInfo['minRate'] = $minp;
-                                                                    $arrayInfo['maxRate'] = $maxp;
-                                                    }
-
-                                                    $is_hb = 1;
-                                                    /*
-                                                    echo "asdas";
-                                                    exit();*/
-                                                    $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo+$arrayinfo1);
-                                                    /*echo json_encode($local_hotels);
-                                                     exit();*/
-                                                    if($is_hb == 1){
-
-                                                            $resultData1 = $this->hb_lib->HotelLists($arrayInfo+$arrayinfo1);
-
-                                                            /*echo $resultData1;
-                                                            exit();*/
-                                                            $resultData2 = json_decode($resultData1);
-
-                                                            $final_hb_data['hotels'] = array();
-
-                                                            $hb_hotel_code = array();
-
-                                                             function custom_sort($a,$b) {
-                                                            return $a->distance > $b ->distance;
-                                                       }
-
-                                                       $key_val = 0;
-                                                            for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
-
-                                                                    $checkIn = date("Y-m-d", strtotime($arrayInfo['checkIn'])) ;
-                                                                    $checkOut = date("Y-m-d", strtotime($arrayInfo['checkOut'])) ;
-                                                            $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
-                                                            /*echo json_encode( $resultData2->hotels->hotels[$hb_r]);
-                                                            exit();*/
-
-                                                            $is_valid_hotel = 0;
-                                                            for ($hb_room=0; $hb_room < count($resultData2->hotels->hotels[$hb_r]->rooms) ; $hb_room++) { 
-                                                                    if(isset($resultData2->hotels->hotels[$hb_r]->rooms[$hb_room]->rates[0]->net)){
-                                                                            $is_valid_hotel = 1;
-                                                                    }
-                                                            }
-                                                            if($is_valid_hotel == 1 && $stars >= $rating){
-                                                                            $code = $resultData2->hotels->hotels[$hb_r]->code;
-                                                                            $final_hb_data['hotels'][$key_val]->id = $code;
-                                                                            $hb_hotel_code[$hb_r] = $resultData2->hotels->hotels[$hb_r]->code;
-                                                                            $final_hb_data['hotels'][$key_val]->title = $resultData2->hotels->hotels[$hb_r]->name;
-                                                                            $final_hb_data['hotels'][$key_val]->thumbnail = '';
-
-                                                                            $slug = $this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&checkin='.$checkIn.'&checkout='.$checkOut.$this->data['agesApendUrl'];
-                                                                            $final_hb_data['hotels'][$key_val]->slug = $slug;
-                                                                            $final_hb_data['hotels'][$key_val]->currCode = $resultData2->hotels->hotels[$hb_r]->currency;
-                                                                            $final_hb_data['hotels'][$key_val]->price = $resultData2->hotels->hotels[$hb_r]->minRate;
-                                                                            $final_hb_data['hotels'][$key_val]->location = $resultData2->hotels->hotels[$hb_r]->destinationName;
-
-                                                                            $hotel_longitude = $resultData2->hotels->hotels[$hb_r]->longitude;
-                                                                            $hotel_latitude = $resultData2->hotels->hotels[$hb_r]->latitude;
-                                                                            $final_hb_data['hotels'][$key_val]->longitude = $hotel_longitude;
-                                                                            $final_hb_data['hotels'][$key_val]->latitude = $hotel_latitude;
-
-                                                                            $final_hb_data['hotels'][$key_val]->distance = $this->distance($arrayInfo['lat'],$arrayInfo['long'],$hotel_latitude,$hotel_longitude,'K');
-
-                                                                            $final_hb_data['hotels'][$key_val]->desc = '';
-                                                                            $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
-                                                                            $final_Star = '';
-                                                                            for ($star_i=0; $star_i < 5 ; $star_i++) { 
-                                                                                    if($star_i < $stars){
-                                                                                            $final_Star .= '<i class="price-text-color fa fa-star"></i>';
-                                                                                    }else{
-                                                                                            $final_Star .= '<i class="fa fa-star"></i>';
-                                                                                    }
-                                                                            }
-                                                                            $final_hb_data['hotels'][$key_val]->stars = $final_Star;
-                                                                            $final_hb_data['hotels'][$key_val]->tripAdvisorRatingImg = null;
-                                                                            $final_hb_data['hotels'][$key_val]->tripAdvisorRating = 0;
-                                                                            $final_hb_data['hotels'][$key_val]->room_Data = $resultData2->hotels->hotels[$hb_r]->rooms;
-                                                                            $key_val++;
-                                                                    }
-                                                            }
+                                $diff = $date2->diff($date1)->format("%a");
+                                $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
 
 
-                                                            if(count($final_hb_data['hotels']) > 0){
-                                                                    $hb_image_data = $this->hb_lib->HotelImage_list($hb_hotel_code);
+                                $is_valid_hotel = 0;
+                                for ($hb_room=0; $hb_room < count($resultData2->hotels->hotels[$hb_r]->rooms) ; $hb_room++) { 
+                                        if(isset($resultData2->hotels->hotels[$hb_r]->rooms[$hb_room]->rates[0]->net)){
+                                                $is_valid_hotel = 1;
+                                        }
+                                }
+                                if($is_valid_hotel == 1 && $stars >= $rating){
+                                        $code = $resultData2->hotels->hotels[$hb_r]->code;
+                                        $final_hb_data['hotels'][$key_val]->id = $code;
+                                        $hb_hotel_code[$hb_r] = $resultData2->hotels->hotels[$hb_r]->code;
+                                        $final_hb_data['hotels'][$key_val]->title = $resultData2->hotels->hotels[$hb_r]->name;
+                                        $final_hb_data['hotels'][$key_val]->thumbnail = '';
 
-                                                                    $img_main_url = 'http://photos.hotelbeds.com/giata/bigger/';
+                                        $slug = $this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&child='.$this->input->get('child').'&checkin='.$checkIn.'&checkOut='.$checkOut.$this->data['agesApendUrl'].'&room='.$room;
+                                        $final_hb_data['hotels'][$key_val]->slug = $slug;
+                                        /*$final_hb_data['hotels'][$key_val]->currCode = $resultData2->hotels->hotels[$hb_r]->currency;*/
+                                        $final_hb_data['hotels'][$key_val]->currCode = '$';
+                                        $final_hb_data['hotels'][$key_val]->price = number_format($resultData2->hotels->hotels[$hb_r]->minRate / $diff,1);
+                                        $final_hb_data['hotels'][$key_val]->location = $resultData2->hotels->hotels[$hb_r]->destinationName;
+
+                                        $hotel_longitude = $resultData2->hotels->hotels[$hb_r]->longitude;
+                                        $hotel_latitude = $resultData2->hotels->hotels[$hb_r]->latitude;
+                                        $final_hb_data['hotels'][$key_val]->longitude = $hotel_longitude;
+                                        $final_hb_data['hotels'][$key_val]->latitude = $hotel_latitude;
+
+                                        $final_hb_data['hotels'][$key_val]->distance = $this->distance($arrayInfo['lat'],$arrayInfo['long'],$hotel_latitude,$hotel_longitude,'K');
+
+                                        $final_hb_data['hotels'][$key_val]->desc = '';
+                                        $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
+                                        $final_Star = '';
+                                        for ($star_i=0; $star_i < 5 ; $star_i++) { 
+                                                if($star_i < $stars){
+                                                        $final_Star .= '<i class="price-text-color fa fa-star"></i>';
+                                                }else{
+                                                        $final_Star .= '<i class="fa fa-star"></i>';
+                                                }
+                                        }
+                                        $final_hb_data['hotels'][$key_val]->stars = $final_Star;
+                                        $final_hb_data['hotels'][$key_val]->tripAdvisorRatingImg = null;
+                                        $final_hb_data['hotels'][$key_val]->tripAdvisorRating = 0;
+                                        $final_hb_data['hotels'][$key_val]->room_Data = $resultData2->hotels->hotels[$hb_r]->rooms;
+                                        $key_val++;
+                                }
+                            }
+                            /*  echo '<pre>'.json_encode( $final_hb_data).'</pre>';
+                            exit();*/
+
+                            if(count($final_hb_data['hotels']) > 0){
+                                    $hb_image_data = $this->hb_lib->HotelImage_list($hb_hotel_code);
+                                   /* echo json_encode($hb_image_data);
+                                    exit();*/
+                                    $img_main_url = 'http://photos.hotelbeds.com/giata/bigger/';
+
+                                    /*error_reporting(-1);*/
+                                    if(count($hb_image_data->hotels) > 0 && $hb_image_data != false){
+
+                                            for ($hb_i=0; $hb_i < count($hb_image_data->hotels) ; $hb_i++) { 
 
 
-                                                                    if(count($hb_image_data->hotels) > 0 && $hb_image_data != false){
-
-                                                                            for ($hb_i=0; $hb_i < count($hb_image_data->hotels) ; $hb_i++) { 
+                                                    for ($hb_h=0; $hb_h < count($final_hb_data['hotels']) ; $hb_h++) { 
 
 
-                                                                                    for ($hb_h=0; $hb_h < count($final_hb_data['hotels']) ; $hb_h++) { 
+                                                            if($final_hb_data['hotels'][$hb_h]->id == $hb_image_data->hotels[$hb_i]->code){
+
+                                                                    $thumbnail = $img_main_url.$hb_image_data->hotels[$hb_i]->images[0]->path;
+                                                                    $thumbnail1 = $hb_image_data->hotels[$hb_i]->images;
+                                                                    /*echo json_encode($hb_image_data->hotels[$hb_i]);
+                                                                    exit();*/
+                                                                    $description = $hb_image_data->hotels[$hb_i]->description->content;
+                                                                    $final_hb_data['hotels'][$hb_h]->desc = $description;
+                                                                    $final_hb_data['hotels'][$hb_h]->thumbnail = $thumbnail;
+                                                                    $final_hb_data['hotels'][$hb_h]->all_img = $thumbnail1;
+                                                                    $old_location = $final_hb_data['hotels'][$hb_h]->location;
+                                                                    $location = $hb_image_data->hotels[$hb_i]->address->content." ".$old_location;
+                                                                    $final_hb_data['hotels'][$hb_h]->location = $location." ".$hb_image_data->hotels[$hb_i]->postalCode;
 
 
-                                                                                            if($final_hb_data['hotels'][$hb_h]->id == $hb_image_data->hotels[$hb_i]->code){
-
-                                                                                                    $thumbnail = $img_main_url.$hb_image_data->hotels[$hb_i]->images[0]->path;
-                                                                                                    $thumbnail1 = $hb_image_data->hotels[$hb_i]->images;
-                                                                                                    /*echo json_encode($hb_image_data->hotels[$hb_i]);
-                                                                                                    exit();*/
-                                                                                                    $final_hb_data['hotels'][$hb_h]->thumbnail = $thumbnail;
-                                                                                                    $final_hb_data['hotels'][$hb_h]->all_img = $thumbnail1;
-                                                                                                    $old_location = $final_hb_data['hotels'][$hb_h]->location;
-                                                                                                    $location = $hb_image_data->hotels[$hb_i]->address->content." ".$old_location;
-                                                                                                    $final_hb_data['hotels'][$hb_h]->location = $location." ".$hb_image_data->hotels[$hb_i]->postalCode;
-
-
-                                                                                            }
-
-                                                                                    }
-
-                                                                            }
-
-                                                                    }else{
-                                                                            //echo "else";
-                                                                    }
-
-                                                            //echo json_encode($hb_image_data);
-                                                            }else{
-                                                                    //echo "no hotel found";
                                                             }
 
-                                                            /*echo '<pre>'.json_encode($local_hotels).'</pre>';*/
-                                                            /*exit();*/
-                                                            /*error_reporting(E_ALL);*/
-                                                            /*$abc = array_merge($final_hb_data['hotels'] , $local_hotels['hotels']);*/
-                                                            $abc = $final_hb_data['hotels'] + $local_hotels['hotels'];
+                                                    }
 
-                                                            /*echo json_encode($abc);
-                                                            exit();*/
-                                                            $sort_Data = usort($abc, "custom_sort");
-                                                            $this->data['module'] = $abc;
+                                            }
 
-                                                    }else{
-                                                            $resultData = $this->ean_lib->HotelLists($arrayInfo);
-
-                                                            $result = $this->getResultInObjects($resultData,$this->data['checkin'],$this->data['checkout'],$adultString,$this->data['agesApendUrl']);
-                                                            $this->data['module'] = $result->hotels;
-                                                    }	
-
-
-                                                    $this->data['multipleLocations'] = $result->multipleLocations;
-                                                    $this->data['locationInfo'] = $result->locationInfo;
-                                                    $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
-                                                    $this->data['cacheKey'] = $result->cacheKey;
-                                                    $this->data['cacheLocation'] = $result->cacheLocation;
-                                                    $this->data['lat'] = $arrayInfo['lat'];
-                                                    $this->data['long'] = $arrayInfo['long'];
-
-                                                    $cachedata = array(
-                                                                                            'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
-                                                                                             'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
-                                                                                             'cachekey' => $cachekey,
-                                                                                             'cacheloc' => $cacheloc);
-                                                    /*echo json_encode($cachedata);
-                                                    exit();*/
-                                                    $this->session->set_userdata($cachedata);
-
-
+                                    }else{
+                                            //echo "else";
                                     }
 
-                    }
-                    else {
-                                    $this->data['result'] = array();
-                    }
-                    $this->lang->load("front", $this->data['lang_set']);
-                    $this->data['page_title'] = 'Search';
-                    $this->data['currSign'] = $this->ean_lib->currency;
+                            //echo json_encode($hb_image_data);
+                            }else{
+                                    //echo "no hotel found";
+                            }
 
-                    $this->theme->view('grid-listing', $this->data);
+                            /*echo '<pre>'.json_encode($local_hotels).'</pre>';*/
+                            /*echo count($local_hotels['hotels']);
+                            exit();*/
+                            /*error_reporting(E_ALL);*/
+                            /*$abc = array_merge($final_hb_data['hotels'] , $local_hotels['hotels']);*/
+                            if(count($local_hotels['hotels']) > 0){
+
+                                    $abc = array_merge($local_hotels['hotels'],$final_hb_data['hotels']);
+                            }else{
+
+                                    $abc = $final_hb_data['hotels'];
+                            }
+                                    /*echo json_encode($abc);
+                                    exit();*/
+                            function custom_sort($a,$b) {
+                                return $a->distance > $b ->distance;
+                            }
+                                   $sort_Data = usort($abc, "custom_sort");
+                                    
+                                    $this->data['module'] = $abc;
+
+                    }else{
+                            $resultData = $this->ean_lib->HotelLists($arrayInfo);
+
+                            $result = $this->getResultInObjects($resultData,$this->data['checkin'],$this->data['checkout'],$adultString,$this->data['agesApendUrl']);
+                            $this->data['module'] = $result->hotels;
+                    }   
+                            /*error_reporting(E_ALL);   
+                            echo '<pre>'.json_encode( $abc).'</pre>';
+                            exit();*/
+                    $this->data['multipleLocations'] = $result->multipleLocations;
+                    $this->data['locationInfo'] = $result->locationInfo;
+                    $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
+                    $this->data['cacheKey'] = $result->cacheKey;
+                    $this->data['cacheLocation'] = $result->cacheLocation;
+                    $this->data['lat'] = $arrayInfo['lat'];
+                    $this->data['long'] = $arrayInfo['long'];
+
+                    $cachedata = array(
+                                    'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
+                                     'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
+                                     'cachekey' => $cachekey,
+                                     'cacheloc' => $cacheloc);
+                    /*echo json_encode($cachedata);
+                    exit();*/
+                    $this->session->set_userdata($cachedata);
+
+            }
+
+        }
+        else {
+                        $this->data['result'] = array();
+        }
+        $this->lang->load("front", $this->data['lang_set']);
+        $this->data['page_title'] = 'Search';
+        $this->data['currSign'] = $this->ean_lib->currency;
+
+        $this->theme->view('grid-listing', $this->data);
     }
 
     function search3($offset = null) {
-            /*error_reporting(E_ALL);
-            print_r($_GET);
-            exit();*/
-                    $search = $this->input->get('search');
-                    $rating = $this->input->get('rating');
-                    $room = $this->input->get('room');
+        //error_reporting(E_ALL);
+        /*
+        print_r($_GET);
+        exit();*/
+        $search = $this->input->get('search');
+        $rating = $this->input->get('rating');
+        $room = $this->input->get('room');
 
-                    //echo $this->input->get('child');
-                    for ($child_age=0; $child_age < $this->input->get('child') ; $child_age++) { 
-                            $c_ages[] = rand(0,15);
+        //echo $this->input->get('child');
+        for ($child_age=0; $child_age < $this->input->get('child') ; $child_age++) { 
+                $c_ages[] = rand(0,15);
+        }
+        $final_child_Ages = implode(",", $c_ages);
+        if (!empty ($search)) {
+            $this->data['checkin'] = trim($_GET['checkIn']);
+            $this->data['checkout'] = trim($_GET['checkOut']);
+            $this->data['room'] = $room;
+            $this->data['minprice'] = $this->settings[0]->front_search_min_price;
+            $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
+            $this->data['rating'] = $rating;
+
+
+            if (empty ($offset)) {
+                            // print_r($_POST);
+                    $arrayInfo["city"] = trim($_GET['city']);
+                    $tempCity[] = strtok($arrayInfo["city"], " ,-");
+                    $arrayInfo["destinationId"] = trim($_GET['destinationId']);
+                    $arrayInfo["city"] = $tempCity[0];
+                            // $arrayInfo['countryCode'] = 'IN';
+                    $arrayInfo['checkIn'] = trim($_GET['checkIn']);
+                            // $arrayInfo['checkIn'] = "18-08-2014";
+                    $arrayInfo['checkOut'] = trim($_GET['checkOut']);
+                    //$childAges = $this->input->get('childages');
+                    $childAges = $final_child_Ages;
+                    //$childCount = 0;
+                    $childAgesStr = "";
+                    if(!empty($childAges)){
+                    //$childCount =  count(explode(",",$childAges));
+                    $childAgesStr = ",".$child;
                     }
-                    $final_child_Ages = implode(",", $c_ages);
-                    if (!empty ($search)) {
-                                    $this->data['checkin'] = trim($_GET['checkIn']);
-                                    $this->data['checkout'] = trim($_GET['checkOut']);
-                                    $this->data['room'] = $room;
-                                    $this->data['minprice'] = $this->settings[0]->front_search_min_price;
-                            $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
-                            $this->data['rating'] = $rating;
+
+                    $adults = $this->input->get("adults");
+                    $this->data['propertyCategory'] = $_GET['propertyCategory'];
+                    $adultString = $adults.$childAgesStr;
+
+                    $this->data['adults'] = $adults;
+                    //$this->data['child'] = $childCount;
+                    $this->data['child'] = $this->input->get('child');
+                    $this->data['childAges'] = $childAges;
+                    if($this->data['child'] > 0){
+                            $this->data['agesApendUrl'] = '&ages='.$childAges;
+                    }else{
+                            $this->data['agesApendUrl'] = '';
+                    }
+
+                    $arrayinfo1['adults'] = $adults;
+                    $arrayinfo1['child'] = $this->input->get('child');
+                    $arrayinfo1['room'] = $room;
+                    /*$arrayinfo1['childAges'] = $childAges;*/
+                    $arrayinfo1['childAges'] = $final_child_Ages;
+
+                    $arrayInfo['rooms'] = "room1=$adultString";
+                    $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
+                    if(!empty($this->data['propertyCategory'])){
+                            $propertyCat = implode(",",$this->data['propertyCategory']);
+                            $arrayInfo['propertyCategory'] = $propertyCat;
+
+                    }
+
+                    $arrayInfo['maxStarRating']= $this->input->get('stars');
+                    $arrayInfo['minStarRating']= $this->input->get('stars');
+                    $arrayInfo['lat']= $this->input->get('lat');
+                    $arrayInfo['long']= $this->input->get('long');
+                    $sprice = $this->input->get('price');
+                    if (!empty ($sprice)) {
+                                    $sprice = str_replace(";", ",", $sprice);
+                                    $sprice = explode(",", $sprice);
+                                    $minp = $sprice[0];
+                                    $maxp = $sprice[1];
+                                    $arrayInfo['minRate'] = $minp;
+                                    $arrayInfo['maxRate'] = $maxp;
+                    }
+
+                    $is_hb = 1;
+                    /*
+                    echo "asdas";
+                    exit();*/
+                    /*error_reporting(-1);*/
+                    $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo+$arrayinfo1);
+                   /* echo json_encode($local_hotels);
+                     exit();*/
+                    if($is_hb == 1){
+
+                            $resultData1 = $this->hb_lib->HotelLists($arrayInfo+$arrayinfo1);
+
+                            /*echo $resultData1;
+                            exit();*/
+                            $resultData2 = json_decode($resultData1);
+
+                            $final_hb_data['hotels'] = array();
+
+                            $hb_hotel_code = array();
 
 
-                                    if (empty ($offset)) {
-                                                    // print_r($_POST);
-                                                    $arrayInfo["city"] = trim($_GET['city']);
-                                                    $tempCity[] = strtok($arrayInfo["city"], " ,-");
-                                                    $arrayInfo["destinationId"] = trim($_GET['destinationId']);
-                                                    $arrayInfo["city"] = $tempCity[0];
-                                                            // $arrayInfo['countryCode'] = 'IN';
-                                                    $arrayInfo['checkIn'] = trim($_GET['checkIn']);
-                                                            // $arrayInfo['checkIn'] = "18-08-2014";
-                                                    $arrayInfo['checkOut'] = trim($_GET['checkOut']);
-                                                    //$childAges = $this->input->get('childages');
-                                                    $childAges = $final_child_Ages;
-                                                    //$childCount = 0;
-                                                    $childAgesStr = "";
-                                                    if(!empty($childAges)){
-                                                    //$childCount =  count(explode(",",$childAges));
-                                                    $childAgesStr = ",".$child;
-                                                    }
 
-                                                    $adults = $this->input->get("adults");
-                                                    $this->data['propertyCategory'] = $_GET['propertyCategory'];
-                                                    $adultString = $adults.$childAgesStr;
+                            $key_val = 0;
+                            //for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
+                            for ($hb_r=0; $hb_r < 10 ; $hb_r++) { 
 
-                                                    $this->data['adults'] = $adults;
-                                                    //$this->data['child'] = $childCount;
-                                                    $this->data['child'] = $this->input->get('child');
-                                                    $this->data['childAges'] = $childAges;
-                                                    if($this->data['child'] > 0){
-                                                            $this->data['agesApendUrl'] = '&ages='.$childAges;
-                                                    }else{
-                                                            $this->data['agesApendUrl'] = '';
-                                                    }
+                                $checkIn = date("m/d/Y", strtotime($arrayInfo['checkIn'])) ;
+                                $checkOut = date("m/d/Y", strtotime($arrayInfo['checkOut'])) ;
+                                $date1 = new DateTime($checkIn);
+                                $date2 = new DateTime($checkOut);
 
-                                                    $arrayinfo1['adults'] = $adults;
-                                                    $arrayinfo1['child'] = $this->input->get('child');
-                                                    $arrayinfo1['room'] = $room;
-                                                    /*$arrayinfo1['childAges'] = $childAges;*/
-                                                    $arrayinfo1['childAges'] = $final_child_Ages;
-
-                                                    $arrayInfo['rooms'] = "room1=$adultString";
-                                                    $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
-                                                    if(!empty($this->data['propertyCategory'])){
-                                                            $propertyCat = implode(",",$this->data['propertyCategory']);
-                                                            $arrayInfo['propertyCategory'] = $propertyCat;
-
-                                                    }
-
-                                                    $arrayInfo['maxStarRating']= $this->input->get('stars');
-                                                    $arrayInfo['minStarRating']= $this->input->get('stars');
-                                                    $arrayInfo['lat']= $this->input->get('lat');
-                                                    $arrayInfo['long']= $this->input->get('long');
-                                                    $sprice = $this->input->get('price');
-                                                    if (!empty ($sprice)) {
-                                                                    $sprice = str_replace(";", ",", $sprice);
-                                                                    $sprice = explode(",", $sprice);
-                                                                    $minp = $sprice[0];
-                                                                    $maxp = $sprice[1];
-                                                                    $arrayInfo['minRate'] = $minp;
-                                                                    $arrayInfo['maxRate'] = $maxp;
-                                                    }
-
-                                                    $is_hb = 1;
-                                                    /*
-                                                    echo "asdas";
-                                                    exit();*/
-                                                    $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo+$arrayinfo1);
-                                                    /*echo json_encode($local_hotels);
-                                                     exit();*/
-                                                    if($is_hb == 1){
-
-                                                            $resultData1 = $this->hb_lib->HotelLists($arrayInfo+$arrayinfo1);
-
-                                                            /*echo $resultData1;
-                                                            exit();*/
-                                                            $resultData2 = json_decode($resultData1);
-
-                                                            $final_hb_data['hotels'] = array();
-
-                                                            $hb_hotel_code = array();
-
-                                                             function custom_sort($a,$b) {
-                                                            return $a->distance > $b ->distance;
-                                                       }
-
-                                                       $key_val = 0;
-                                                            for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
-
-                                                                    $checkIn = date("Y-m-d", strtotime($arrayInfo['checkIn'])) ;
-                                                                    $checkOut = date("Y-m-d", strtotime($arrayInfo['checkOut'])) ;
-                                                            $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
-                                                            /*echo json_encode( $resultData2->hotels->hotels[$hb_r]);
-                                                            exit();*/
-
-                                                            $is_valid_hotel = 0;
-                                                            for ($hb_room=0; $hb_room < count($resultData2->hotels->hotels[$hb_r]->rooms) ; $hb_room++) { 
-                                                                    if(isset($resultData2->hotels->hotels[$hb_r]->rooms[$hb_room]->rates[0]->net)){
-                                                                            $is_valid_hotel = 1;
-                                                                    }
-                                                            }
-                                                            if($is_valid_hotel == 1 && $stars >= $rating){
-                                                                            $code = $resultData2->hotels->hotels[$hb_r]->code;
-                                                                            $final_hb_data['hotels'][$key_val]->id = $code;
-                                                                            $hb_hotel_code[$hb_r] = $resultData2->hotels->hotels[$hb_r]->code;
-                                                                            $final_hb_data['hotels'][$key_val]->title = $resultData2->hotels->hotels[$hb_r]->name;
-                                                                            $final_hb_data['hotels'][$key_val]->thumbnail = '';
-
-                                                                            $slug = $this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&checkin='.$checkIn.'&checkout='.$checkOut.$this->data['agesApendUrl'];
-                                                                            $final_hb_data['hotels'][$key_val]->slug = $slug;
-                                                                            $final_hb_data['hotels'][$key_val]->currCode = $resultData2->hotels->hotels[$hb_r]->currency;
-                                                                            $final_hb_data['hotels'][$key_val]->price = $resultData2->hotels->hotels[$hb_r]->minRate;
-                                                                            $final_hb_data['hotels'][$key_val]->location = $resultData2->hotels->hotels[$hb_r]->destinationName;
-
-                                                                            $hotel_longitude = $resultData2->hotels->hotels[$hb_r]->longitude;
-                                                                            $hotel_latitude = $resultData2->hotels->hotels[$hb_r]->latitude;
-                                                                            $final_hb_data['hotels'][$key_val]->longitude = $hotel_longitude;
-                                                                            $final_hb_data['hotels'][$key_val]->latitude = $hotel_latitude;
-
-                                                                            $final_hb_data['hotels'][$key_val]->distance = $this->distance($arrayInfo['lat'],$arrayInfo['long'],$hotel_latitude,$hotel_longitude,'K');
-
-                                                                            $final_hb_data['hotels'][$key_val]->desc = '';
-                                                                            $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
-                                                                            $final_Star = '';
-                                                                            for ($star_i=0; $star_i < 5 ; $star_i++) { 
-                                                                                    if($star_i < $stars){
-                                                                                            $final_Star .= '<i class="price-text-color fa fa-star"></i>';
-                                                                                    }else{
-                                                                                            $final_Star .= '<i class="fa fa-star"></i>';
-                                                                                    }
-                                                                            }
-                                                                            $final_hb_data['hotels'][$key_val]->stars = $final_Star;
-                                                                            $final_hb_data['hotels'][$key_val]->tripAdvisorRatingImg = null;
-                                                                            $final_hb_data['hotels'][$key_val]->tripAdvisorRating = 0;
-                                                                            $final_hb_data['hotels'][$key_val]->room_Data = $resultData2->hotels->hotels[$hb_r]->rooms;
-                                                                            $key_val++;
-                                                                    }
-                                                            }
+                                $diff = $date2->diff($date1)->format("%a");
+                                $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
 
 
-                                                            if(count($final_hb_data['hotels']) > 0){
-                                                                    $hb_image_data = $this->hb_lib->HotelImage_list($hb_hotel_code);
+                                $is_valid_hotel = 0;
+                                for ($hb_room=0; $hb_room < count($resultData2->hotels->hotels[$hb_r]->rooms) ; $hb_room++) { 
+                                        if(isset($resultData2->hotels->hotels[$hb_r]->rooms[$hb_room]->rates[0]->net)){
+                                                $is_valid_hotel = 1;
+                                        }
+                                }
+                                if($is_valid_hotel == 1 && $stars >= $rating){
+                                        $code = $resultData2->hotels->hotels[$hb_r]->code;
+                                        $final_hb_data['hotels'][$key_val]->id = $code;
+                                        $hb_hotel_code[$hb_r] = $resultData2->hotels->hotels[$hb_r]->code;
+                                        $final_hb_data['hotels'][$key_val]->title = $resultData2->hotels->hotels[$hb_r]->name;
+                                        $final_hb_data['hotels'][$key_val]->thumbnail = '';
 
-                                                                    $img_main_url = 'http://photos.hotelbeds.com/giata/bigger/';
+                                        $slug = $this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&child='.$this->input->get('child').'&checkin='.$checkIn.'&checkOut='.$checkOut.$this->data['agesApendUrl'].'&room='.$room;
+                                        $final_hb_data['hotels'][$key_val]->slug = $slug;
+                                        /*$final_hb_data['hotels'][$key_val]->currCode = $resultData2->hotels->hotels[$hb_r]->currency;*/
+                                        $final_hb_data['hotels'][$key_val]->currCode = '$';
+                                        $final_hb_data['hotels'][$key_val]->price = number_format($resultData2->hotels->hotels[$hb_r]->minRate / $diff,1);
+                                        $final_hb_data['hotels'][$key_val]->location = $resultData2->hotels->hotels[$hb_r]->destinationName;
+
+                                        $hotel_longitude = $resultData2->hotels->hotels[$hb_r]->longitude;
+                                        $hotel_latitude = $resultData2->hotels->hotels[$hb_r]->latitude;
+                                        $final_hb_data['hotels'][$key_val]->longitude = $hotel_longitude;
+                                        $final_hb_data['hotels'][$key_val]->latitude = $hotel_latitude;
+
+                                        $final_hb_data['hotels'][$key_val]->distance = $this->distance($arrayInfo['lat'],$arrayInfo['long'],$hotel_latitude,$hotel_longitude,'K');
+
+                                        $final_hb_data['hotels'][$key_val]->desc = '';
+                                        $stars = filter_var($resultData2->hotels->hotels[$hb_r]->categoryName, FILTER_SANITIZE_NUMBER_INT);
+                                        $final_Star = '';
+                                        for ($star_i=0; $star_i < 5 ; $star_i++) { 
+                                                if($star_i < $stars){
+                                                        $final_Star .= '<i class="price-text-color fa fa-star"></i>';
+                                                }else{
+                                                        $final_Star .= '<i class="fa fa-star"></i>';
+                                                }
+                                        }
+                                        $final_hb_data['hotels'][$key_val]->stars = $final_Star;
+                                        $final_hb_data['hotels'][$key_val]->tripAdvisorRatingImg = null;
+                                        $final_hb_data['hotels'][$key_val]->tripAdvisorRating = 0;
+                                        $final_hb_data['hotels'][$key_val]->room_Data = $resultData2->hotels->hotels[$hb_r]->rooms;
+                                        $key_val++;
+                                }
+                            }
+                            /*  echo '<pre>'.json_encode( $final_hb_data).'</pre>';
+                            exit();*/
+
+                            if(count($final_hb_data['hotels']) > 0){
+                                    $hb_image_data = $this->hb_lib->HotelImage_list($hb_hotel_code);
+                                   /* echo json_encode($hb_image_data);
+                                    exit();*/
+                                    $img_main_url = 'http://photos.hotelbeds.com/giata/bigger/';
+
+                                    /*error_reporting(-1);*/
+                                    if(count($hb_image_data->hotels) > 0 && $hb_image_data != false){
+
+                                            for ($hb_i=0; $hb_i < count($hb_image_data->hotels) ; $hb_i++) { 
 
 
-                                                                    if(count($hb_image_data->hotels) > 0 && $hb_image_data != false){
-
-                                                                            for ($hb_i=0; $hb_i < count($hb_image_data->hotels) ; $hb_i++) { 
+                                                    for ($hb_h=0; $hb_h < count($final_hb_data['hotels']) ; $hb_h++) { 
 
 
-                                                                                    for ($hb_h=0; $hb_h < count($final_hb_data['hotels']) ; $hb_h++) { 
+                                                            if($final_hb_data['hotels'][$hb_h]->id == $hb_image_data->hotels[$hb_i]->code){
+
+                                                                    $thumbnail = $img_main_url.$hb_image_data->hotels[$hb_i]->images[0]->path;
+                                                                    $thumbnail1 = $hb_image_data->hotels[$hb_i]->images;
+                                                                    /*echo json_encode($hb_image_data->hotels[$hb_i]);
+                                                                    exit();*/
+                                                                    $description = $hb_image_data->hotels[$hb_i]->description->content;
+                                                                    $final_hb_data['hotels'][$hb_h]->desc = $description;
+                                                                    $final_hb_data['hotels'][$hb_h]->thumbnail = $thumbnail;
+                                                                    $final_hb_data['hotels'][$hb_h]->all_img = $thumbnail1;
+                                                                    $old_location = $final_hb_data['hotels'][$hb_h]->location;
+                                                                    $location = $hb_image_data->hotels[$hb_i]->address->content." ".$old_location;
+                                                                    $final_hb_data['hotels'][$hb_h]->location = $location." ".$hb_image_data->hotels[$hb_i]->postalCode;
 
 
-                                                                                            if($final_hb_data['hotels'][$hb_h]->id == $hb_image_data->hotels[$hb_i]->code){
-
-                                                                                                    $thumbnail = $img_main_url.$hb_image_data->hotels[$hb_i]->images[0]->path;
-                                                                                                    $thumbnail1 = $hb_image_data->hotels[$hb_i]->images;
-                                                                                                    /*echo json_encode($hb_image_data->hotels[$hb_i]);
-                                                                                                    exit();*/
-                                                                                                    $final_hb_data['hotels'][$hb_h]->thumbnail = $thumbnail;
-                                                                                                    $final_hb_data['hotels'][$hb_h]->all_img = $thumbnail1;
-                                                                                                    $old_location = $final_hb_data['hotels'][$hb_h]->location;
-                                                                                                    $location = $hb_image_data->hotels[$hb_i]->address->content." ".$old_location;
-                                                                                                    $final_hb_data['hotels'][$hb_h]->location = $location." ".$hb_image_data->hotels[$hb_i]->postalCode;
-
-
-                                                                                            }
-
-                                                                                    }
-
-                                                                            }
-
-                                                                    }else{
-                                                                            //echo "else";
-                                                                    }
-
-                                                            //echo json_encode($hb_image_data);
-                                                            }else{
-                                                                    //echo "no hotel found";
                                                             }
 
-                                                            /*echo '<pre>'.json_encode($local_hotels).'</pre>';*/
-                                                            /*exit();*/
-                                                            /*error_reporting(E_ALL);*/
-                                                            /*$abc = array_merge($final_hb_data['hotels'] , $local_hotels['hotels']);*/
-                                                            $abc = $final_hb_data['hotels'] + $local_hotels['hotels'];
+                                                    }
 
-                                                            /*echo json_encode($abc);
-                                                            exit();*/
-                                                            $sort_Data = usort($abc, "custom_sort");
-                                                            $this->data['module'] = $abc;
+                                            }
 
-                                                    }else{
-                                                            $resultData = $this->ean_lib->HotelLists($arrayInfo);
-
-                                                            $result = $this->getResultInObjects($resultData,$this->data['checkin'],$this->data['checkout'],$adultString,$this->data['agesApendUrl']);
-                                                            $this->data['module'] = $result->hotels;
-                                                    }	
-
-
-                                                    $this->data['multipleLocations'] = $result->multipleLocations;
-                                                    $this->data['locationInfo'] = $result->locationInfo;
-                                                    $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
-                                                    $this->data['cacheKey'] = $result->cacheKey;
-                                                    $this->data['cacheLocation'] = $result->cacheLocation;
-                                                    $this->data['lat'] = $arrayInfo['lat'];
-                                                    $this->data['long'] = $arrayInfo['long'];
-
-                                                    $cachedata = array(
-                                                                                            'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
-                                                                                             'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
-                                                                                             'cachekey' => $cachekey,
-                                                                                             'cacheloc' => $cacheloc);
-                                                    /*echo json_encode($cachedata);
-                                                    exit();*/
-                                                    $this->session->set_userdata($cachedata);
-
-
+                                    }else{
+                                            //echo "else";
                                     }
 
-                    }
-                    else {
-                                    $this->data['result'] = array();
-                    }
-                    $this->lang->load("front", $this->data['lang_set']);
-                    $this->data['page_title'] = 'Search';
-                    $this->data['currSign'] = $this->ean_lib->currency;
+                            //echo json_encode($hb_image_data);
+                            }else{
+                                    //echo "no hotel found";
+                            }
 
-                    $this->theme->view('map-listing', $this->data);
+                            
+                            if(count($local_hotels['hotels']) > 0){
+
+                                    $abc = array_merge($local_hotels['hotels'],$final_hb_data['hotels']);
+                            }else{
+
+                                    $abc = $final_hb_data['hotels'];
+                            }
+                                    /*echo json_encode($abc);
+                                    exit();*/
+                            function custom_sort($a,$b) {
+                                return $a->distance > $b ->distance;
+                            }
+                                   $sort_Data = usort($abc, "custom_sort");
+                                    
+                                    $this->data['module'] = $abc;
+
+                    }else{
+                            $resultData = $this->ean_lib->HotelLists($arrayInfo);
+
+                            $result = $this->getResultInObjects($resultData,$this->data['checkin'],$this->data['checkout'],$adultString,$this->data['agesApendUrl']);
+                            $this->data['module'] = $result->hotels;
+                    }   
+                            /*error_reporting(E_ALL);   
+                            echo '<pre>'.json_encode( $abc).'</pre>';
+                            exit();*/
+                    $this->data['multipleLocations'] = $result->multipleLocations;
+                    $this->data['locationInfo'] = $result->locationInfo;
+                    $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
+                    $this->data['cacheKey'] = $result->cacheKey;
+                    $this->data['cacheLocation'] = $result->cacheLocation;
+                    $this->data['lat'] = $arrayInfo['lat'];
+                    $this->data['long'] = $arrayInfo['long'];
+
+                    $cachedata = array(
+                                    'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
+                                     'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
+                                     'cachekey' => $cachekey,
+                                     'cacheloc' => $cacheloc);
+                    /*echo json_encode($cachedata);
+                    exit();*/
+                    $this->session->set_userdata($cachedata);
+
+            }
+
+        }
+        else {
+            $this->data['result'] = array();
+        }
+
+        $hb_hotels_img = $this->hotels_model->hb_hotel_detail_all($hb_hotel_code);
+    
+        $final_hb_img = array();
+        $kk = 0;
+        foreach ($hb_hotels_img as $key => $value) {
+            $final_hb_img[$value->iHbHotelID]['sThumbnail'] = $value->sThumbnail;
+        }
+        
+        $this->data['final_hb_img'] = $final_hb_img;
+        $this->lang->load("front", $this->data['lang_set']);
+        $this->data['page_title'] = 'Search';
+        $this->data['currSign'] = $this->ean_lib->currency;
+
+        $this->theme->view('map-listing', $this->data);
     }
 
     function gbsearch($offset = null) {
@@ -1501,65 +2504,65 @@ class Ean extends MX_Controller {
                 if (empty ($offset)) {
 
                                 
-                                $arrayInfo['checkIn'] = trim($check_in);
-                                
-                                $arrayInfo['checkOut'] = trim($check_out);
-                                
-                                
-                                $childAgesStr = "";
-                                if(!empty($childAges)){
-                                
-                                    $childAgesStr = ",".$child;
-                                }
+                    $arrayInfo['checkIn'] = trim($check_in);
+                    
+                    $arrayInfo['checkOut'] = trim($check_out);
+                    
+                    
+                    $childAgesStr = "";
+                    if(!empty($childAges)){
+                    
+                        $childAgesStr = ",".$child;
+                    }
 
-                                $this->data['propertyCategory'] = array('hotel');
-                                $adultString = $adults.$childAgesStr;
+                    $this->data['propertyCategory'] = array('hotel');
+                    $adultString = $adults.$childAgesStr;
 
-                                $arrayInfo['adults'] = $adults;
-                                $arrayInfo['child'] = $child;
-                                $arrayInfo['room'] = $room;
-                                $arrayInfo['childAges'] = $final_child_Ages;
-                                $arrayInfo['hotel_ids'] = $hotel_ids;
-                               /* echo json_encode($arrayinfo);
-                                exit();*/
+                    $arrayInfo['adults'] = $adults;
+                    $arrayInfo['child'] = $child;
+                    $arrayInfo['room'] = $room;
+                    $arrayInfo['childAges'] = $final_child_Ages;
+                    $arrayInfo['hotel_ids'] = $hotel_ids;
+                   /* echo json_encode($arrayinfo);
+                    exit();*/
 
-                                $arrayInfo['rooms'] = "room1=$adultString";
-                                $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
-                                if(!empty($this->data['propertyCategory'])){
-                                        $propertyCat = implode(",",$this->data['propertyCategory']);
-                                        $arrayInfo['propertyCategory'] = $propertyCat;
-                                }
+                    $arrayInfo['rooms'] = "room1=$adultString";
+                    $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
+                    if(!empty($this->data['propertyCategory'])){
+                            $propertyCat = implode(",",$this->data['propertyCategory']);
+                            $arrayInfo['propertyCategory'] = $propertyCat;
+                    }
 
-                                $arrayInfo['maxStarRating'] = $this->input->get('stars');
-                                $arrayInfo['minStarRating'] = $this->input->get('stars');
-                                $arrayInfo['lat']= $lat;
-                                $arrayInfo['long']= $long;
-                                
-                                $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang_gb($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo);
-                                //print_r($res_data);
-                                
+                    $arrayInfo['maxStarRating'] = $this->input->get('stars');
+                    $arrayInfo['minStarRating'] = $this->input->get('stars');
+                    $arrayInfo['lat']= $lat;
+                    $arrayInfo['long']= $long;
+                    
+                    $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang_gb($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo);
+                    //print_r($res_data);
+                    
 
-                                $abc =  $local_hotels['hotels'];
+                    $abc =  $local_hotels['hotels'];
 
-                                $sort_Data = usort($abc, "custom_sort");
-                                $this->data['module'] = $abc;
+                    $sort_Data = usort($abc, "custom_sort");
+                    $this->data['module'] = $abc;
 
-                               
-                                $this->data['multipleLocations'] = $result->multipleLocations;
-                                $this->data['locationInfo'] = $result->locationInfo;
-                                $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
-                                $this->data['cacheKey'] = $result->cacheKey;
-                                $this->data['cacheLocation'] = $result->cacheLocation;
-                                $this->data['lat'] = $arrayInfo['lat'];
-                                $this->data['long'] = $arrayInfo['long'];
+                   
+                    $this->data['multipleLocations'] = $result->multipleLocations;
+                    $this->data['locationInfo'] = $result->locationInfo;
+                    $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
+                    $this->data['cacheKey'] = $result->cacheKey;
+                    $this->data['cacheLocation'] = $result->cacheLocation;
+                    $this->data['lat'] = $arrayInfo['lat'];
+                    $this->data['long'] = $arrayInfo['long'];
 
-                                $cachedata = array(
-                                                    'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
-                                                     'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
-                                                     'cachekey' => $cachekey,
-                                                     'cacheloc' => $cacheloc);
-                                
-                                $this->session->set_userdata($cachedata);
+                    $cachedata = array(
+                                        'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
+                                         'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
+                                         'cachekey' => $cachekey,
+                                         'cacheloc' => $cacheloc);
+                    
+                    $this->session->set_userdata($cachedata);
 
                 }
 
@@ -1570,7 +2573,377 @@ class Ean extends MX_Controller {
             $this->data['page_title'] = 'Search';
             $this->data['currSign'] = $this->ean_lib->currency;
 
-            $this->theme->view('listing', $this->data);
+            $this->theme->view('grid-listing', $this->data);
+    }
+    function gbsearch1($offset = null) {
+            //echo $this->uri->segment(3);
+            //error_reporting(E_ALL);
+            $link_code = $this->input->get('gbcode');
+            $this->load->model("admin/groupbookings_model");
+            $res_data = $this->groupbookings_model->get_gbbookings($link_code);
+
+            
+            $check_in = $res_data->check_in;
+            $check_out = $res_data->check_out;
+            $lat = $res_data->location_lat;
+            $long = $res_data->location_long;
+            $hotel_data = json_decode($res_data->hotel_data);
+           
+            $hotel_ids = explode(',', $res_data->hotel_id);
+            $room = 1;
+            $child = 0;
+            $adults = 1;
+            $rating = '';
+            
+                    
+            $room = 1;
+
+            //echo $this->input->get('child');
+            $c_ages = array();
+            for ($child_age=0; $child_age < $child ; $child_age++) { 
+                    $c_ages[] = rand(0,15);
+            }
+            $final_child_Ages = implode(",", $c_ages);
+            $childAges = $final_child_Ages;
+                                
+            //if (!empty ($search)) {
+                $this->data['checkin'] = $check_in;
+                $this->data['checkout'] = $check_out;
+                $this->data['room'] = $room;
+                $this->data['minprice'] = $this->settings[0]->front_search_min_price;
+                $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
+                $this->data['rating'] = $rating;
+                $this->data['adults'] = $adults;
+                $this->data['child'] = $child;
+                $this->data['childAges'] = $childAges;
+                $this->data['selectedCity'] = $res_data->city.' '.$res_data->state;
+                if($this->data['child'] > 0){
+                        $this->data['agesApendUrl'] = '&ages='.$childAges;
+                }else{
+                        $this->data['agesApendUrl'] = '';
+                }
+
+                if (empty ($offset)) {
+
+                                
+                    $arrayInfo['checkIn'] = trim($check_in);
+                    
+                    $arrayInfo['checkOut'] = trim($check_out);
+                    
+                    
+                    $childAgesStr = "";
+                    if(!empty($childAges)){
+                    
+                        $childAgesStr = ",".$child;
+                    }
+
+                    $this->data['propertyCategory'] = array('hotel');
+                    $adultString = $adults.$childAgesStr;
+
+                    $arrayInfo['adults'] = $adults;
+                    $arrayInfo['child'] = $child;
+                    $arrayInfo['room'] = $room;
+                    $arrayInfo['childAges'] = $final_child_Ages;
+                    $arrayInfo['hotel_ids'] = $hotel_ids;
+                   /* echo json_encode($arrayinfo);
+                    exit();*/
+
+                    $arrayInfo['rooms'] = "room1=$adultString";
+                    $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
+                    if(!empty($this->data['propertyCategory'])){
+                            $propertyCat = implode(",",$this->data['propertyCategory']);
+                            $arrayInfo['propertyCategory'] = $propertyCat;
+                    }
+
+                    $arrayInfo['maxStarRating'] = $this->input->get('stars');
+                    $arrayInfo['minStarRating'] = $this->input->get('stars');
+                    $arrayInfo['lat']= $lat;
+                    $arrayInfo['long']= $long;
+                    
+                    $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang_gb($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo);
+                    //print_r($res_data);
+                    
+
+                    $abc =  $local_hotels['hotels'];
+
+                    $sort_Data = usort($abc, "custom_sort");
+                    $this->data['module'] = $abc;
+
+                   
+                    $this->data['multipleLocations'] = $result->multipleLocations;
+                    $this->data['locationInfo'] = $result->locationInfo;
+                    $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
+                    $this->data['cacheKey'] = $result->cacheKey;
+                    $this->data['cacheLocation'] = $result->cacheLocation;
+                    $this->data['lat'] = $arrayInfo['lat'];
+                    $this->data['long'] = $arrayInfo['long'];
+
+                    $cachedata = array(
+                                        'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
+                                         'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
+                                         'cachekey' => $cachekey,
+                                         'cacheloc' => $cacheloc);
+                    
+                    $this->session->set_userdata($cachedata);
+
+                }
+
+            /*}else{
+                $this->data['result'] = array();
+            }*/
+            $this->lang->load("front", $this->data['lang_set']);
+            $this->data['page_title'] = 'Search';
+            $this->data['currSign'] = $this->ean_lib->currency;
+
+            $this->theme->view('box-listing', $this->data);
+    }
+
+    function gbsearch2($offset = null) {
+            //echo $this->uri->segment(3);
+            //error_reporting(E_ALL);
+            $link_code = $this->input->get('gbcode');
+            $this->load->model("admin/groupbookings_model");
+            $res_data = $this->groupbookings_model->get_gbbookings($link_code);
+
+            
+            $check_in = $res_data->check_in;
+            $check_out = $res_data->check_out;
+            $lat = $res_data->location_lat;
+            $long = $res_data->location_long;
+            $hotel_data = json_decode($res_data->hotel_data);
+           
+            $hotel_ids = explode(',', $res_data->hotel_id);
+            $room = 1;
+            $child = 0;
+            $adults = 1;
+            $rating = '';
+            
+                    
+            $room = 1;
+
+            //echo $this->input->get('child');
+            $c_ages = array();
+            for ($child_age=0; $child_age < $child ; $child_age++) { 
+                    $c_ages[] = rand(0,15);
+            }
+            $final_child_Ages = implode(",", $c_ages);
+            $childAges = $final_child_Ages;
+                                
+            //if (!empty ($search)) {
+                $this->data['checkin'] = $check_in;
+                $this->data['checkout'] = $check_out;
+                $this->data['room'] = $room;
+                $this->data['minprice'] = $this->settings[0]->front_search_min_price;
+                $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
+                $this->data['rating'] = $rating;
+                $this->data['adults'] = $adults;
+                $this->data['child'] = $child;
+                $this->data['childAges'] = $childAges;
+                $this->data['selectedCity'] = $res_data->city.' '.$res_data->state;
+                if($this->data['child'] > 0){
+                        $this->data['agesApendUrl'] = '&ages='.$childAges;
+                }else{
+                        $this->data['agesApendUrl'] = '';
+                }
+
+                if (empty ($offset)) {
+
+                                
+                    $arrayInfo['checkIn'] = trim($check_in);
+                    
+                    $arrayInfo['checkOut'] = trim($check_out);
+                    
+                    
+                    $childAgesStr = "";
+                    if(!empty($childAges)){
+                    
+                        $childAgesStr = ",".$child;
+                    }
+
+                    $this->data['propertyCategory'] = array('hotel');
+                    $adultString = $adults.$childAgesStr;
+
+                    $arrayInfo['adults'] = $adults;
+                    $arrayInfo['child'] = $child;
+                    $arrayInfo['room'] = $room;
+                    $arrayInfo['childAges'] = $final_child_Ages;
+                    $arrayInfo['hotel_ids'] = $hotel_ids;
+                   /* echo json_encode($arrayinfo);
+                    exit();*/
+
+                    $arrayInfo['rooms'] = "room1=$adultString";
+                    $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
+                    if(!empty($this->data['propertyCategory'])){
+                            $propertyCat = implode(",",$this->data['propertyCategory']);
+                            $arrayInfo['propertyCategory'] = $propertyCat;
+                    }
+
+                    $arrayInfo['maxStarRating'] = $this->input->get('stars');
+                    $arrayInfo['minStarRating'] = $this->input->get('stars');
+                    $arrayInfo['lat']= $lat;
+                    $arrayInfo['long']= $long;
+                    
+                    $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang_gb($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo);
+                    //print_r($res_data);
+                    
+
+                    $abc =  $local_hotels['hotels'];
+
+                    $sort_Data = usort($abc, "custom_sort");
+                    $this->data['module'] = $abc;
+
+                   
+                    $this->data['multipleLocations'] = $result->multipleLocations;
+                    $this->data['locationInfo'] = $result->locationInfo;
+                    $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
+                    $this->data['cacheKey'] = $result->cacheKey;
+                    $this->data['cacheLocation'] = $result->cacheLocation;
+                    $this->data['lat'] = $arrayInfo['lat'];
+                    $this->data['long'] = $arrayInfo['long'];
+
+                    $cachedata = array(
+                                        'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
+                                         'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
+                                         'cachekey' => $cachekey,
+                                         'cacheloc' => $cacheloc);
+                    
+                    $this->session->set_userdata($cachedata);
+
+                }
+
+            /*}else{
+                $this->data['result'] = array();
+            }*/
+            $this->lang->load("front", $this->data['lang_set']);
+            $this->data['page_title'] = 'Search';
+            $this->data['currSign'] = $this->ean_lib->currency;
+
+            $this->theme->view('map-listing', $this->data);
+    }
+
+    function gbsearch_email($offset = null) {
+            //echo $this->uri->segment(3);
+            //error_reporting(E_ALL);
+            $link_code = $this->input->get('gbcode');
+            $this->load->model("admin/groupbookings_model");
+            $res_data = $this->groupbookings_model->get_gbbookings($link_code);
+
+            
+            $check_in = $res_data->check_in;
+            $check_out = $res_data->check_out;
+            $lat = $res_data->location_lat;
+            $long = $res_data->location_long;
+            $hotel_data = json_decode($res_data->hotel_data);
+           
+            $hotel_ids = explode(',', $res_data->hotel_id);
+            $room = 1;
+            $child = 0;
+            $adults = 1;
+            $rating = '';
+            
+                    
+            $room = 1;
+
+            //echo $this->input->get('child');
+            $c_ages = array();
+            for ($child_age=0; $child_age < $child ; $child_age++) { 
+                    $c_ages[] = rand(0,15);
+            }
+            $final_child_Ages = implode(",", $c_ages);
+            $childAges = $final_child_Ages;
+                                
+            //if (!empty ($search)) {
+                $this->data['checkin'] = $check_in;
+                $this->data['checkout'] = $check_out;
+                $this->data['room'] = $room;
+                $this->data['minprice'] = $this->settings[0]->front_search_min_price;
+                $this->data['maxprice'] = $this->settings[0]->front_search_max_price;
+                $this->data['rating'] = $rating;
+                $this->data['adults'] = $adults;
+                $this->data['child'] = $child;
+                $this->data['childAges'] = $childAges;
+                $this->data['selectedCity'] = $res_data->city.' '.$res_data->state;
+                if($this->data['child'] > 0){
+                        $this->data['agesApendUrl'] = '&ages='.$childAges;
+                }else{
+                        $this->data['agesApendUrl'] = '';
+                }
+
+                if (empty ($offset)) {
+
+                                
+                    $arrayInfo['checkIn'] = trim($check_in);
+                    
+                    $arrayInfo['checkOut'] = trim($check_out);
+                    
+                    
+                    $childAgesStr = "";
+                    if(!empty($childAges)){
+                    
+                        $childAgesStr = ",".$child;
+                    }
+
+                    $this->data['propertyCategory'] = array('hotel');
+                    $adultString = $adults.$childAgesStr;
+
+                    $arrayInfo['adults'] = $adults;
+                    $arrayInfo['child'] = $child;
+                    $arrayInfo['room'] = $room;
+                    $arrayInfo['childAges'] = $final_child_Ages;
+                    $arrayInfo['hotel_ids'] = $hotel_ids;
+                   /* echo json_encode($arrayinfo);
+                    exit();*/
+
+                    $arrayInfo['rooms'] = "room1=$adultString";
+                    $arrayInfo['numberOfResult'] = $this->settings[0]->front_search;
+                    if(!empty($this->data['propertyCategory'])){
+                            $propertyCat = implode(",",$this->data['propertyCategory']);
+                            $arrayInfo['propertyCategory'] = $propertyCat;
+                    }
+
+                    $arrayInfo['maxStarRating'] = $this->input->get('stars');
+                    $arrayInfo['minStarRating'] = $this->input->get('stars');
+                    $arrayInfo['lat']= $lat;
+                    $arrayInfo['long']= $long;
+                    
+                    $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang_gb($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo);
+                    //print_r($res_data);
+                    
+
+                    $abc =  $local_hotels['hotels'];
+
+                    $sort_Data = usort($abc, "custom_sort");
+                    $this->data['module'] = $abc;
+
+                   
+                    $this->data['multipleLocations'] = $result->multipleLocations;
+                    $this->data['locationInfo'] = $result->locationInfo;
+                    $this->data['moreResultsAvailable'] = $result->moreResultsAvailable;
+                    $this->data['cacheKey'] = $result->cacheKey;
+                    $this->data['cacheLocation'] = $result->cacheLocation;
+                    $this->data['lat'] = $arrayInfo['lat'];
+                    $this->data['long'] = $arrayInfo['long'];
+
+                    $cachedata = array(
+                                        'customerSessionId' => $this->data['result']['HotelListResponse']['customerSessionId'],
+                                         'activePropertyCount' => $this->data['result']['HotelListResponse']['HotelList']['@activePropertyCount'],
+                                         'cachekey' => $cachekey,
+                                         'cacheloc' => $cacheloc);
+                    
+                    $this->session->set_userdata($cachedata);
+
+                }
+
+                echo json_encode($cachedata);
+                exit();
+            /*}else{
+                $this->data['result'] = array();
+            }*/
+           /* $this->lang->load("front", $this->data['lang_set']);
+            $this->data['page_title'] = 'Search';
+            $this->data['currSign'] = $this->ean_lib->currency;
+
+            $this->theme->view('listing', $this->data);*/
     }
 
     function __firstlist() {
@@ -1613,14 +2986,14 @@ class Ean extends MX_Controller {
             $surl = http_build_query($_GET);
             if($isValidLang){
                     $currLang = $hotelId;
-    $hotelId = $this->uri->segment(4);
-    $customerSessionId = $this->uri->segment(5);
+                $hotelId = $this->uri->segment(4);
+                $customerSessionId = $this->uri->segment(5);
 
-    redirect($this->data['baseUrl']."hotel/".$hotelId."/".$customerSessionId.'?'.$surl,'refresh');
-}else{
-    $currLang = $this->data['lang_set'];
+                redirect($this->data['baseUrl']."hotel/".$hotelId."/".$customerSessionId.'?'.$surl,'refresh');
+            }else{
+                $currLang = $this->data['lang_set'];
 
-}
+            }
 
 
                     $arrayInfo['hotelId'] = $hotelId;
@@ -1705,11 +3078,11 @@ class Ean extends MX_Controller {
 
                     /* For Room Availability Request and Response */
 
-  /*  echo "<pre>";
-    echo $this->ean_lib->apistr."<br>";
-    print_r($roomsInfo);
-    echo "</pre>";
-    exit;*/
+                      /*  echo "<pre>";
+                        echo $this->ean_lib->apistr."<br>";
+                        print_r($roomsInfo);
+                        echo "</pre>";
+                        exit;*/
 
                     $this->data['loggedin'] = $this->loggedin;
 
@@ -1742,20 +3115,21 @@ class Ean extends MX_Controller {
             $surl = http_build_query($_GET);
             if($isValidLang){
                     $currLang = $hotelId;
-    $hotelId = $this->uri->segment(4);
-    //$customerSessionId = $this->uri->segment(5);
+                $hotelId = $this->uri->segment(4);
+                //$customerSessionId = $this->uri->segment(5);
 
-    redirect($this->data['baseUrl']."hbhotel/".$hotelId."/".$customerSessionId.'?'.$surl,'refresh');
-}else{
-    $currLang = $this->data['lang_set'];
+                redirect($this->data['baseUrl']."hbhotel/".$hotelId."/".$customerSessionId.'?'.$surl,'refresh');
+            }else{
+                $currLang = $this->data['lang_set'];
 
-}
-    /*error_reporting(E_ALL);*/
+            }
+            /*error_reporting(E_ALL);*/
 
                     $arrayInfo[] = $hotelId;
 
                     $Hotel_details = $this->hb_lib->Hotel_details($hotelId);
-
+                    /*echo json_encode($Hotel_details);
+                    exit();*/
                     $ne_facilities = array();
                     $description = "";
                     if(isset($Hotel_details->hotel)){
@@ -1766,7 +3140,7 @@ class Ean extends MX_Controller {
                                     $main_fac = $Hotel_details->hotel->facilities[$i];
                                     $ne_facilities[$i]->name = $main_fac->description->content;
                             }
-
+                            $hb_data['stars'] = $Hotel_details->hotel->category->description->content;
                             //echo json_encode($ne_facilities);
                     }
                     $result = $this->hb_lib->HotelImage_list($arrayInfo);
@@ -1777,17 +3151,17 @@ class Ean extends MX_Controller {
 
                             $hotel_data = $result->hotels[0];
                             $hotel_name = $hotel_data->name->content;
-                            $hb_data['id'] = '';
+                            $hb_data['id'] = $hotel_data->code;
                             $hb_data['title'] = $hotel_data->name->content;
                             $hb_data['desc'] = '';
-                            $hb_data['location'] = $hotel_data->city->content;
+                            $hb_data['location'] = $hotel_data->address->content.' '.$hotel_data->city->content;
                             $hb_data['lowRate'] = '50';
                             $address = $hotel_data->address->content." ".$hotel_data->postalCode." ".$hotel_data->city->content;
                             $hb_data['hotelAddress'] = $address;
                             $hb_data['latitude'] = $hotel_data->coordinates->latitude;
                             $hb_data['longitude'] = $hotel_data->coordinates->longitude;
                             $hb_data['policy'] = '';
-                            $hb_data['stars'] = '';
+
                             $hb_data['amenities'] = array();
 
                             $img_main_url = 'http://photos.hotelbeds.com/giata/bigger/';
@@ -1824,6 +3198,23 @@ class Ean extends MX_Controller {
                     exit();*/
                     $result = (object)$hb_data;
                     $this->data['module'] = $result;
+                   
+
+                    //Get the list of hb hotel based on hb hotel ID and title name. STP
+                    $cond = array('iHbHotelID' => $hotelId, 'sHbHotelName' => $this->data['module']->title);
+                    $hb_hotels = $this->hotels_model->hb_hotel_detail($cond);
+                    $this->data['hb_hotels'] = $hb_hotels;
+
+                    //Get the list of room based on hb hotel ID . STP
+                    $cond = array('iHotelID' => $hb_hotels['iHotelID']);
+                    $hb_hotel_rooms = $this->hotels_model->hb_hotel_room_detail($cond);
+                    $this->data['hb_hotel_rooms'] = $hb_hotel_rooms;
+
+                    //Get the list of hb hotel images based on hb hotel ID . STP
+                    $cond = array('iHotelID' => $hb_hotels['iHotelID']);
+                    
+                    $hb_hotel_images = $this->hotels_model->hb_hotel_images($cond);
+                    $this->data['hb_hotel_images'] = $hb_hotel_images;
 
                     $this->data['lowestPrice'] = $this->data['module']->lowRate;
 
@@ -1855,10 +3246,10 @@ class Ean extends MX_Controller {
                     $arrayInfo['checkIn'] = $checkinDate;
                     $arrayInfo['checkOut'] = $checkoutDate;
                     $date1 = new DateTime($checkinDate);
-    $date2 = new DateTime($checkoutDate);
+                    $date2 = new DateTime($checkoutDate);
 
-    $diff = $date2->diff($date1)->format("%a");
-    $this->data['diff'] = $diff;
+                    $diff = $date2->diff($date1)->format("%a");
+                    $this->data['diff'] = $diff;
                     $childAges = $this->input->get('ages');
                     $this->data['childAges'] = $childAges;
                     if(!empty($childAges)){
@@ -1882,6 +3273,7 @@ class Ean extends MX_Controller {
                     exit();*/
                     $adults = $this->input->get('adults').$ages;
                     $arrayInfo['adults'] = $this->input->get('adults');
+                    $arrayInfo['child'] = $this->input->get('child');
                     $arrayInfo['childAges'] = $this->input->get('ages');
                     $arrayInfo['room'] = $this->input->get('room');
                     $arrayInfo['hotelId'] = $hotelId;
@@ -1953,150 +3345,139 @@ class Ean extends MX_Controller {
     public function reservation(){
 
 
-                    $isguest = $this->input->get('user');
-                    $this->data['affiliateConfirmationId'] = $this->setAffliateConfirmation();
+        $isguest = $this->input->get('user');
+        $this->data['affiliateConfirmationId'] = $this->setAffliateConfirmation();
+
+        $user = $this->data['user'];
+
+        if($isguest == "guest"){
+
+        }elseif($isguest == "register"){
+            unset($_GET['user']);
+            $url = http_build_query($_GET);
+            redirect('register?' . $url);
+
+        }else{
+
+            if(empty($this->loggedin)){
+                unset($_GET['user']);
+                $url = http_build_query($_GET);
+                redirect('login?' . $url);
+            }
+
+        }
+
+        $this->load->model('admin/countries_model');
+        $this->data['allcountries'] = $this->countries_model->get_all_countries();
+        $pay = $this->input->post('pay');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('firstName', 'First Name', 'trim');
+        $this->form_validation->set_rules('lastName', 'Last name', 'trim');
+        $this->form_validation->set_rules('policy', 'Cancellation Policy', 'required');
+        $this->form_validation->set_rules('address', 'Address', 'trim');
+        $this->form_validation->set_rules('cvv', 'CVV', 'trim');
+        $this->form_validation->set_rules('cardno', 'Card Number', 'trim');
+        $this->form_validation->set_rules('province', 'State', 'trim');
+        $this->form_validation->set_rules('postalcode', 'Postal Code', 'trim');
+        $this->form_validation->set_rules('phone', 'Phone', 'trim');
+
+        if (!empty ($pay)) {
+
+            //echo "Asdas";
+            $this->form_validation->run();
+            $this->data['result'] = $this->ean_lib->HotelRoomReservation();
+            /*print_r($this->data['result']);
+            exit();*/
+            /* For Room Reservation Request and Response */
+
+            /*echo "<pre>";
+            echo "https://book.api.ean.com/ean-services/rs/hotel/v3/res? <br>";
+            print_r($this->data['result']);
+            echo "</pre>";
+            exit;*/
+
+            $error = $this->data['result']->HotelRoomReservationResponse->EanWsError;
+            $bookresponse = $this->data['result']->HotelRoomReservationResponse;
+
+            $bookresponse->affiliateConfirmationId = $this->input->post('affiliateConfirmationId');
+            if (!empty ($error)) {
+                $itid = $this->data['result']->HotelRoomReservationResponse->EanWsError->itineraryId;
+                $confirmation = "";
+                $this->data['msg'] = $error->presentationMessage;
+                //$this->data['msg'] = print_r($this->data['result']->HotelRoomReservationResponse);
+                $this->data['result'] = "fail";
+            } else {
+                $itid = $this->data['result']->HotelRoomReservationResponse->itineraryId;
 
 
 
-                    $user = $this->data['user'];
+                $confirmation = $this->data['result']->HotelRoomReservationResponse->confirmationNumbers;
+                $this->data['itineraryID'] = $itid;
+                $this->data['confirmationNumber'] = $confirmation;
+                $this->data['checkInInstructions'] = $this->data['result']->HotelRoomReservationResponse->checkInInstructions;
+                $this->data['nonRefundable'] = $this->data['result']->HotelRoomReservationResponse->nonRefundable;
+                $this->data['cancellationPolicy'] = $this->data['result']->HotelRoomReservationResponse->cancellationPolicy;
+                $totalCharge = $this->data['result']->HotelRoomReservationResponse->RateInfo->ConvertedRateInfo;
+                if(empty($totalCharge)){
+                $totalCharge = $this->data['result']->HotelRoomReservationResponse->RateInfo->ChargeableRateInfo;
+                                                }
 
-                    if($isguest == "guest"){
-
-                    }elseif($isguest == "register"){
-                            unset($_GET['user']);
-
-                            $url = http_build_query($_GET);
-
-                            redirect('register?' . $url);
-
-                    }else{
-
-                    if(empty($this->loggedin)){
-                            unset($_GET['user']);
-
-                            $url = http_build_query($_GET);
-                                    redirect('login?' . $url);
-                    }
-
-                    }
-
-                    $this->load->model('admin/countries_model');
-                    $this->data['allcountries'] = $this->countries_model->get_all_countries();
-                    $pay = $this->input->post('pay');
-                    $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-                    $this->form_validation->set_rules('firstName', 'First Name', 'trim');
-                    $this->form_validation->set_rules('lastName', 'Last name', 'trim');
-                    $this->form_validation->set_rules('policy', 'Cancellation Policy', 'required');
-                    $this->form_validation->set_rules('address', 'Address', 'trim');
-                    $this->form_validation->set_rules('cvv', 'CVV', 'trim');
-                    $this->form_validation->set_rules('cardno', 'Card Number', 'trim');
-                    $this->form_validation->set_rules('province', 'State', 'trim');
-                    $this->form_validation->set_rules('postalcode', 'Postal Code', 'trim');
-                    $this->form_validation->set_rules('phone', 'Phone', 'trim');
-
-                    if (!empty ($pay)) {
-
-                                    //echo "Asdas";
-                                    $this->form_validation->run();
-                                    $this->data['result'] = $this->ean_lib->HotelRoomReservation();
-                                    /*print_r($this->data['result']);
-                                    exit();*/
-                                    /* For Room Reservation Request and Response */
-
-                                    /*echo "<pre>";
-                                    echo "https://book.api.ean.com/ean-services/rs/hotel/v3/res? <br>";
-                                    print_r($this->data['result']);
-                                    echo "</pre>";
-                                    exit;*/
-
-                                    $error = $this->data['result']->HotelRoomReservationResponse->EanWsError;
-                                    $bookresponse = $this->data['result']->HotelRoomReservationResponse;
-
-                                    $bookresponse->affiliateConfirmationId = $this->input->post('affiliateConfirmationId');
-                                    if (!empty ($error)) {
-                                                    $itid = $this->data['result']->HotelRoomReservationResponse->EanWsError->itineraryId;
-                                                    $confirmation = "";
-                                                    $this->data['msg'] = $error->presentationMessage;
-                                                    //$this->data['msg'] = print_r($this->data['result']->HotelRoomReservationResponse);
-                                                    $this->data['result'] = "fail";
-                                    } else {
-                                                    $itid = $this->data['result']->HotelRoomReservationResponse->itineraryId;
+                $total = (array)$totalCharge;
+                $this->data['grandTotal'] = $total['@total'];
+                $this->data['currency'] = $this->ean_lib->currency;
+                $this->data['surchargeTotal'] = $total['@surchargeTotal'];
+                $this->data['nightlyRateTotal'] = $total['@nightlyRateTotal'];
 
 
 
-                                                    $confirmation = $this->data['result']->HotelRoomReservationResponse->confirmationNumbers;
-                                                    $this->data['itineraryID'] = $itid;
-                                                    $this->data['confirmationNumber'] = $confirmation;
-                                                    $this->data['checkInInstructions'] = $this->data['result']->HotelRoomReservationResponse->checkInInstructions;
-                                                    $this->data['nonRefundable'] = $this->data['result']->HotelRoomReservationResponse->nonRefundable;
-                                                    $this->data['cancellationPolicy'] = $this->data['result']->HotelRoomReservationResponse->cancellationPolicy;
-                    $totalCharge = $this->data['result']->HotelRoomReservationResponse->RateInfo->ConvertedRateInfo;
-                    if(empty($totalCharge)){
-                    $totalCharge = $this->data['result']->HotelRoomReservationResponse->RateInfo->ChargeableRateInfo;
-                                                    }
+                $this->data['msg'] = trans("0336");
+                //$this->data['msg'] = $this->data['msg'] = print_r($this->data['result']->HotelRoomReservationResponse);
+                if(!empty($confirmation)){
+                        $this->data['result'] = "success";
 
-                    $total = (array)$totalCharge;
-                                                    $this->data['grandTotal'] = $total['@total'];
-                                                    $this->data['currency'] = $this->ean_lib->currency;
-                                                    $this->data['surchargeTotal'] = $total['@surchargeTotal'];
-                                                    $this->data['nightlyRateTotal'] = $total['@nightlyRateTotal'];
+                }else{
+                        $this->data['result'] = "fail";
+                }
 
+            }
+            if ($itid > 1 && !empty($confirmation)) {
+                $totalamount = $this->input->post('total');
+                if($isguest == "guest"){
 
+                        $user = $this->ean_model->eanSignup_account($this->input->post());
+                }
 
-                                                    $this->data['msg'] = trans("0336");
-                                                    //$this->data['msg'] = $this->data['msg'] = print_r($this->data['result']->HotelRoomReservationResponse);
-                                                    if(!empty($confirmation)){
-                                                            $this->data['result'] = "success";
+                $insertdata = array('user' => $user, 'checkin' => $this->input->post('checkin'), 'checkout' => $this->input->post('checkout'), 'hotel' => $this->input->post('hotel'), 'thumbnail' => $this->input->post('thumbnail'), 'location' => $this->input->post('location'),'stars' => $this->input->post('hotelstars'),'hotelname' => $this->input->post('hotelname'), 'roomname' => $this->input->post('roomname'), 'roomtotal' => $this->input->post('roomtotal'), 'tax' => $this->input->post('tax'), 'total' => $totalamount, 'email' => $this->input->post('email'), 'itineraryid' => $itid, 'confirmation' => $confirmation, 'nights' => $this->input->post('nights'),'currency' => $this->input->post('currency'),'bookResponse' => json_encode($bookresponse));
+                $this->ean_model->insert_booking($insertdata);
 
-                                                    }else{
-                                                            $this->data['result'] = "fail";
-                                                    }
-
-                                    }
-                                    if ($itid > 1 && !empty($confirmation)) {
-                                                    $totalamount = $this->input->post('total');
-                                                    if($isguest == "guest"){
-
-                                                            $user = $this->ean_model->eanSignup_account($this->input->post());
-                                                    }
-
-                                                    $insertdata = array('user' => $user, 'checkin' => $this->input->post('checkin'), 'checkout' => $this->input->post('checkout'), 'hotel' => $this->input->post('hotel'), 'thumbnail' => $this->input->post('thumbnail'), 'location' => $this->input->post('location'),'stars' => $this->input->post('hotelstars'),'hotelname' => $this->input->post('hotelname'), 'roomname' => $this->input->post('roomname'), 'roomtotal' => $this->input->post('roomtotal'), 'tax' => $this->input->post('tax'), 'total' => $totalamount, 'email' => $this->input->post('email'), 'itineraryid' => $itid, 'confirmation' => $confirmation, 'nights' => $this->input->post('nights'),'currency' => $this->input->post('currency'),'bookResponse' => json_encode($bookresponse));
-                                                    $this->ean_model->insert_booking($insertdata);
-
-                                                    $this->db->where('book_itineraryid',$itid);
-                                                $res = $this->db->get('pt_ean_booking')->result();
-                                                $rrr = json_decode($res[0]->book_response);
-                                                    $arrKeys = array();
-                                                    $arrVals = array();
-                    $surrInfo = $rrr->RateInfo->ConvertedRateInfo;
-                    if(empty($surrInfo)){
+                $this->db->where('book_itineraryid',$itid);
+                $res = $this->db->get('pt_ean_booking')->result();
+                $rrr = json_decode($res[0]->book_response);
+                $arrKeys = array();
+                $arrVals = array();
+                $surrInfo = $rrr->RateInfo->ConvertedRateInfo;
+                if(empty($surrInfo)){
                     $surrInfo = $rrr->RateInfo->ChargeableRateInfo;
+                }
+
+
+                $surchargesArray = (array)$surrInfo->Surcharges->Surcharge;
+                foreach($surchargesArray as $s => $k){
+                    if($s == "@type"){
+                        $arrKeys[] = $k;
+                    }elseif($s == "@amount"){
+                        $arrVals[] = $k;
                     }
+                }
 
+                $surchargeTypes = array_combine($arrKeys,$arrVals);
 
-                                                    $surchargesArray = (array)$surrInfo->Surcharges->Surcharge;
-                                                    foreach($surchargesArray as $s => $k){
-                                                    if($s == "@type"){
-                                                    $arrKeys[] = $k;
-                                                    }elseif($s == "@amount"){
-                                                    $arrVals[] = $k;
-                                                    }
+                $this->data['SalesTax'] = $surchargeTypes['SalesTax'];
+                $this->data['HotelOccupancyTax'] = $surchargeTypes['HotelOccupancyTax'];
+                $this->data['TaxAndServiceFee'] = $surchargeTypes['TaxAndServiceFee'];
 
-                                                    }
-
-                                                    $surchargeTypes = array_combine($arrKeys,$arrVals);
-
-
-
-                                                    $this->data['SalesTax'] = $surchargeTypes['SalesTax'];
-                                                    $this->data['HotelOccupancyTax'] = $surchargeTypes['HotelOccupancyTax'];
-                                                    $this->data['TaxAndServiceFee'] = $surchargeTypes['TaxAndServiceFee'];
-
-
-
-
-                                    }
-                    }
+            }
+        }
                     $this->data['checkin'] = $this->input->get('checkin');
                     $this->data['checkout'] = $this->input->get('checkout');
                     $arrayInfo['hotelId'] = $this->input->get('hotel');
@@ -2114,11 +3495,11 @@ class Ean extends MX_Controller {
 
                     /* For Payment Types Request and Response */
 
-    /*echo "<pre>";
-    echo $this->ean_lib->apistr."<br>";
-    print_r($paymenttypes);
-    echo "</pre>";
-    exit;*/
+                    /*echo "<pre>";
+                    echo $this->ean_lib->apistr."<br>";
+                    print_r($paymenttypes);
+                    echo "</pre>";
+                    exit;*/
                     $this->data['payment'] = $paymenttypes['HotelPaymentResponse']['PaymentType'];
                     $this->data['room'] = $roomresponse['HotelRoomAvailabilityResponse'];
                     $this->data['roomsCount'] = count($this->data['room']['HotelRoomResponse']['RateInfos']['RateInfo']['RoomGroup']);
@@ -2126,12 +3507,12 @@ class Ean extends MX_Controller {
                     $this->data['cancelpolicy'] = $roomresponse['HotelRoomAvailabilityResponse']['HotelRoomResponse']['RateInfos']['RateInfo']['cancellationPolicy'];
                     $this->data['roomname'] = $this->data['room']['HotelRoomResponse']['rateDescription'];
                     $this->data['nights'] = $this->data['room']['HotelRoomResponse']['RateInfos']['RateInfo']['ChargeableRateInfo']['NightlyRatesPerRoom']['@size'];
-    $rateInfo = $this->data['room']['HotelRoomResponse']['RateInfos']['RateInfo']['ConvertedRateInfo'];
-    if(empty($rateInfo)){
-    $rateInfo = $this->data['room']['HotelRoomResponse']['RateInfos']['RateInfo']['ChargeableRateInfo'];
-    }
+                    $rateInfo = $this->data['room']['HotelRoomResponse']['RateInfos']['RateInfo']['ConvertedRateInfo'];
+                    if(empty($rateInfo)){
+                    $rateInfo = $this->data['room']['HotelRoomResponse']['RateInfos']['RateInfo']['ChargeableRateInfo'];
+                    }
 
-    $this->data['total'] = round($rateInfo['@total'], 2);
+                    $this->data['total'] = round($rateInfo['@total'], 2);
                     $surchargesArray = $rateInfo['Surcharges']['Surcharge'];
                     $this->data['tax'] = round($rateInfo['@surchargeTotal'], 2);
 
@@ -2180,8 +3561,8 @@ class Ean extends MX_Controller {
 
                     $this->load->model('admin/accounts_model');
                     $loggedin = $this->loggedin;
-    $this->data['profile'] = $this->accounts_model->get_profile_details($loggedin);
-    $this->lang->load("front", $this->data['lang_set']);
+                    $this->data['profile'] = $this->accounts_model->get_profile_details($loggedin);
+                    $this->lang->load("front", $this->data['lang_set']);
                     $this->data['page_title'] = $this->data['HotelSummary']['name'];
                     //$this->theme->view('integrations/ean/booking', $this->data);
                     $this->theme->view('booking', $this->data);
@@ -2197,336 +3578,639 @@ class Ean extends MX_Controller {
     }
 
     public function hbreservation(){
-                    /*print_r($this->input->post());
-                    exit();*/
-                    $isguest = $this->input->get('user');
-                    $this->data['affiliateConfirmationId'] = $this->setAffliateConfirmation();
+        /*print_r($this->input->post());
+        exit();*/
+        $isguest = $this->input->get('user');
+        $this->data['affiliateConfirmationId'] = $this->setAffliateConfirmation();
+        $user = $this->data['user'];
+
+        if($isguest == "guest"){
+        }elseif($isguest == "register"){
+            unset($_GET['user']);
+            $url = http_build_query($_GET);
+            redirect('register?' . $url);
+        }else{
+
+            if(empty($this->loggedin)){
+                unset($_GET['user']);
+                $url = http_build_query($_GET);
+                redirect('login?' . $url);
+            }
+
+        }
 
 
-                    $user = $this->data['user'];
+        $this->load->model('admin/countries_model');
+        $this->data['allcountries'] = $this->countries_model->get_all_countries();
+        $pay = $this->input->post('pay');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('firstName', 'First Name', 'trim');
+        $this->form_validation->set_rules('lastName', 'Last name', 'trim');
+        $this->form_validation->set_rules('policy', 'Cancellation Policy', 'required');
+        $this->form_validation->set_rules('address', 'Address', 'trim');
+        $this->form_validation->set_rules('cvv', 'CVV', 'trim');
+        $this->form_validation->set_rules('cardno', 'Card Number', 'trim');
+        $this->form_validation->set_rules('province', 'State', 'trim');
+        $this->form_validation->set_rules('postalcode', 'Postal Code', 'trim');
+        $this->form_validation->set_rules('phone', 'Phone', 'trim');
 
-                    if($isguest == "guest"){
+        if (!empty ($pay)) {
+            /*error_reporting(E_ALL);*/
 
-                    }elseif($isguest == "register"){
-                            unset($_GET['user']);
+            $input_dat = $this->input->post();
+            /*echo json_encode($input_dat);*/
+            /*echo $guest_data = json_encode($input_dat['guest_data']);
+            echo $additionalnotes = json_encode($input_dat['additionalnotes']);*/
+            $extra_data['guest_data'] = $input_dat['guest_data'];
+            $extra_data['additionalnotes'] = $input_dat['additionalnotes'];
+            /*echo json_encode($extra_data);
+            echo "<br>";
+            error_reporting(E_ALL);*/
 
-                            $url = http_build_query($_GET);
+            // $this->db->insert('pt_ean_booking',$pt_book_extra);
+            /*exit();*/
 
-                            redirect('register?' . $url);
+            /*if ($input_dat['payment_type'] == 'paypal') {
 
-                    }else{
+                    $invoiceid = $this->RandomString();
 
-                            if(empty($this->loggedin)){
-                                    unset($_GET['user']);
+                    $insertdata = array(
+                                        'invoice_id' => $invoiceid,
+                                        'json_data' => json_encode($input_dat),
+                                        'booking_data' => '',//json_encode($booking_data),
+                                        'pt_ean_booking_id' => $itid,
+                                        );
 
-                                    $url = http_build_query($_GET);
-                                            redirect('login?' . $url);
-                            }
+                    $this->hb_model->insert_booking($insertdata);
 
-                    }
+                    $input_dat['invoice_id'] = $invoiceid;
+                    $this->load->model('admin/payments_model');
+                    $gateway = 'paypalexpress';
+                    $P_data =  $this->payments_model->getGatewayMsg_paypal($gateway,$input_dat);
+                    $P_data = json_decode($P_data);
+                    redirect($P_data->htmldata);
 
+            }*/
+            
+            /*echo json_encode($input_dat);
+            exit();*/
+            /*$this->form_validation->run();*/
+            $booking_data = $this->hb_lib->HotelRoomReservation($input_dat);
+            /*echo $booking_data;
+            echo "<br>";*/
+            $booking_data = json_decode($booking_data);
 
-                    $this->load->model('admin/countries_model');
-                    $this->data['allcountries'] = $this->countries_model->get_all_countries();
-                    $pay = $this->input->post('pay');
-                    $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-                    $this->form_validation->set_rules('firstName', 'First Name', 'trim');
-                    $this->form_validation->set_rules('lastName', 'Last name', 'trim');
-                    $this->form_validation->set_rules('policy', 'Cancellation Policy', 'required');
-                    $this->form_validation->set_rules('address', 'Address', 'trim');
-                    $this->form_validation->set_rules('cvv', 'CVV', 'trim');
-                    $this->form_validation->set_rules('cardno', 'Card Number', 'trim');
-                    $this->form_validation->set_rules('province', 'State', 'trim');
-                    $this->form_validation->set_rules('postalcode', 'Postal Code', 'trim');
-                    $this->form_validation->set_rules('phone', 'Phone', 'trim');
+            $this->data['result'] = $booking_data;
+            /*exit();*/
+            /*$this->data['result'] = "success";
+            $confirmation = array();*/
 
-                    if (!empty ($pay)) {
-                                    /*error_reporting(E_ALL);*/
+            //echo "Asdas";
 
-                                    $input_dat = $this->input->post();
-                                                    /*echo json_encode($input_dat);*/
-                                                    /*echo $guest_data = json_encode($input_dat['guest_data']);
-                                                    echo $additionalnotes = json_encode($input_dat['additionalnotes']);*/
-                                                    $extra_data['guest_data'] = $input_dat['guest_data'];
-                                                    $extra_data['additionalnotes'] = $input_dat['additionalnotes'];
-                                                    /*echo json_encode($extra_data);
-                                                    echo "<br>";
-                                                    error_reporting(E_ALL);*/
+            $error = $this->data['result']->error;
+            $bookresponse = $this->data['result']->booking;
 
-                                // $this->db->insert('pt_ean_booking',$pt_book_extra);
-                                                    /*exit();*/
+            if (!empty ($error)) {
 
-                                                    /*if ($input_dat['payment_type'] == 'paypal') {
+                $this->data['msg'] = $error->message;
+                $this->data['result'] = "fail";
+            } else {
+                $itid = $this->data['result']->booking->reference;
 
-                                                            $invoiceid = $this->RandomString();
-
-                                                            $insertdata = array(
-                                                                                                    'invoice_id' => $invoiceid,
-                                                                                                    'json_data' => json_encode($input_dat),
-                                                                                                    'booking_data' => '',//json_encode($booking_data),
-                                                                                                    'pt_ean_booking_id' => $itid,
-                                                                                                    );
-
-                                                            $this->hb_model->insert_booking($insertdata);
-
-                                                            $input_dat['invoice_id'] = $invoiceid;
-                                                            $this->load->model('admin/payments_model');
-                                                            $gateway = 'paypalexpress';
-                                                            $P_data =  $this->payments_model->getGatewayMsg_paypal($gateway,$input_dat);
-                                                            $P_data = json_decode($P_data);
-                                                            redirect($P_data->htmldata);
-
-                                                    }*/
-                                                    /*echo "Asdas";
-                                                    exit();*/
-                                    /*echo json_encode($input_dat);
-                                    exit();*/
-                                    /*$this->form_validation->run();*/
-                                    $booking_data = $this->hb_lib->HotelRoomReservation($input_dat);
-                                    /*echo $booking_data;
-                                    echo "<br>";*/
-                                    $booking_data = json_decode($booking_data);
-
-                                    $this->data['result'] = $booking_data;
-                                    /*exit();*/
-                                    /*$this->data['result'] = "success";
-                                    $confirmation = array();*/
-
-                                    //echo "Asdas";
-
-                                    $error = $this->data['result']->error;
-                                    $bookresponse = $this->data['result']->booking;
-
-                                    if (!empty ($error)) {
-
-                                                    $this->data['msg'] = $error->message;
-                                                    $this->data['result'] = "fail";
-                                    } else {
-                                                    $itid = $this->data['result']->booking->reference;
-
-                                                    $confirmation = $this->data['result']->booking->reference;
-                                                    $this->data['itineraryID'] = $itid;
-                                                    $this->data['confirmationNumber'] = $confirmation;
-                                                    $this->data['nonRefundable'] = '';
-                                                    //$this->data['checkInInstructions'] = $this->data['result']->booking->hotel->rooms[0]->rates->[0]->rateComments;
-                                                    $this->data['checkInInstructions'] = $this->data['result']->booking->hotel->rooms;
-                                                    //$this->data['cancellationPolicy'] = $this->data['result']->booking->hotel->rooms[0]->rates->[0]->cancellationPolicies;
-                                $totalCharge = $this->data['result']->booking->totalNet;
-                                if(empty($totalCharge)){
-                                    $totalCharge = $this->data['result']->booking->totalSellingRate;
-                                                    }
-
-                                $total = $totalCharge;
-                                                    $this->data['grandTotal'] = $total;
-                                                    $this->data['currency'] = $this->booking->currency;
-                                                    $this->data['surchargeTotal'] = '';
-                                                    $this->data['nightlyRateTotal'] = '';
-
-                                                    $this->data['msg'] = trans("0336");
-                                                    //$this->data['msg'] = $this->data['msg'] = print_r($this->data['result']->HotelRoomReservationResponse);
-                                                    if(!empty($confirmation)){
-                                                            $this->data['result'] = "success";
-                                                    }else{
-                                                            $this->data['result'] = "fail";
-                                                    }
-
-                                    }
-                                    if ($itid > 1 && !empty($confirmation)) {
-                                                    //if (empty($confirmation)) {
-                                                    $totalamount = $this->input->post('total');
-                                                    if($isguest == "guest"){
-
-                                                            $user = $this->ean_model->eanSignup_account($this->input->post());
-                                                    }
-
-                                                    $a_hot_loc['longitude'] = $input_dat['longitude'];
-                                                    $a_hot_loc['latitude'] = $input_dat['latitude'];
-                                                    $bookresponse = (object)array_merge((array)$booking_data , $a_hot_loc);
-                                                    /*print_r($bookresponse);
-                                                    exit();*/
-
-                                                    $insertdata = array('user' => $user, 
-                                                                                            'checkin' => $this->input->post('checkin'),
-                                                                                            'checkout' => $this->input->post('checkout'),
-                                                                                            'hotel' => $this->input->post('hotel'),
-                                                                                            'thumbnail' => $this->input->post('thumbnail'),
-                                                                                            'location' => $this->input->post('location'),
-                                                                                            'stars' => $this->input->post('hotelstars'),
-                                                                                            'hotelname' => $this->input->post('hotelname'),
-                                                                                            'roomname' => $this->input->post('roomname'),
-                                                                                            'roomtotal' => $this->input->post('roomtotal'),
-                                                                                            'tax' => $this->input->post('tax'),
-                                                                                            'total' => $totalamount,
-                                                                                            'email' => $this->input->post('email'),
-                                                                                            'itineraryid' => $itid,
-                                                                                            'confirmation' => $confirmation,
-                                                                                            'nights' => $this->input->post('nights'),
-                                                                                            'currency' => $this->input->post('currency'),
-                                                                                            'bookResponse' => json_encode($bookresponse));
-
-                                                    $this->ean_model->insert_booking($insertdata);
-
-                                                    $this->db->where('book_itineraryid',$itid);
-                                                $res = $this->db->get('pt_ean_booking')->result();
-                                                $rrr = json_decode($res);
-                                                /*echo $rrr->book_id;*/
-                                                $inv_id = $res[0]->book_id;
-                                                /*print_r($res[0]->book_id);
-                                                exit();*/
-                                                    $arrKeys = array();
-                                                    $arrVals = array();
-                                $surrInfo = $rrr->totalNet;
-
-                                $insertdata_extra = array(
-                                                                                    'booking_id' => $inv_id,
-                                                                                    'hotel_type' => "1",
-                                                                                    'extra_data' => json_encode($extra_data),
-                                                                                    );
-
-                                $this->ean_model->insert_booking_extra($insertdata_extra);
-
-                                if(empty($surrInfo)){
-                                    $surrInfo = $rrr->totalSellingRate;
-                                }
-
-                                                    $this->data['SalesTax'] = '';
-                                                    $this->data['HotelOccupancyTax'] = '';
-                                                    $this->data['TaxAndServiceFee'] = '10';
-                                                    /*$this->data['extra_data'] = $extra_data;*/
-
-                                                    if ($input_dat['payment_type'] == 'paypal') {
-                                                            /*error_reporting(E_ALL);*/
-                                                            /*echo json_encode($input_dat);
-                                                            exit();*/
-                                                            /*echo "<br>";*/
-                                                            $invoiceid = $this->RandomString();
-
-                                                            $insertdata = array(
-                                                                                                    'invoice_id' => $invoiceid,
-                                                                                                    'json_data' => json_encode($input_dat),
-                                                                                                    'booking_data' => json_encode($booking_data),
-                                                                                                    'pt_ean_booking_id' => $itid,
-                                                                                                    );
-                                                            /*echo json_encode($insertdata);
-                                                            echo "<br>";*/
-                                                            $this->hb_model->insert_booking($insertdata);
-                                                            //exit();
-                                                            $input_dat['invoice_id'] = $invoiceid;
-                                                            $this->load->model('admin/payments_model');
-                                                            $gateway = 'paypalexpress';
-                                                            $P_data =  $this->payments_model->getGatewayMsg_paypal($gateway,$input_dat);
-                                                            $P_data = json_decode($P_data);
-                                                            //echo $P_data->htmldata;
-                                                            redirect($P_data->htmldata);
-                                                            //echo "<br>";
-                                                    }else{
-                                                            /*print_r($this->data['checkInInstructions']);*/
-                                                            /*exit();*/
-                                                            redirect(base_url().'invoice?eid='.$inv_id.'&sessid='.$itid);
-                                                            //$this->theme->view('invoice?eid='.$inv_id.'&sessid='.$itid, $this->data);
-                                                    }
-                                                    /*exit();*/
+                $confirmation = $this->data['result']->booking->reference;
+                $this->data['itineraryID'] = $itid;
+                $this->data['confirmationNumber'] = $confirmation;
+                $this->data['nonRefundable'] = '';
+                //$this->data['checkInInstructions'] = $this->data['result']->booking->hotel->rooms[0]->rates->[0]->rateComments;
+                $this->data['checkInInstructions'] = $this->data['result']->booking->hotel->rooms;
+                //$this->data['cancellationPolicy'] = $this->data['result']->booking->hotel->rooms[0]->rates->[0]->cancellationPolicies;
+                $totalCharge = $this->data['result']->booking->totalNet;
+                if(empty($totalCharge)){
+                    $totalCharge = $this->data['result']->booking->totalSellingRate;
                                     }
 
-                    }
-                    $this->data['checkin'] = $this->input->get('checkin');
-                    $this->data['checkout'] = $this->input->get('checkout');
-                    $arrayInfo['hotelId'] = $this->input->get('hotel');
-                    $arrayInfo['customerSessionId'] = $this->input->get('sessionid');
-                    $arrayInfo['checkIn'] = trim($this->input->get('checkin'));
-                    $arrayInfo['checkOut'] = trim($this->input->get('checkout'));
-                    $arrayInfo['roomTypeCode'] = $this->input->get('roomtype');
+                $total = $totalCharge;
+                $this->data['grandTotal'] = $total;
+                $this->data['currency'] = $this->booking->currency;
+                $this->data['surchargeTotal'] = '';
+                $this->data['nightlyRateTotal'] = '';
 
-                    $arrayInfo['rateKey'] = $this->input->get('ratekey');
-                    $arrayInfo['roomImg'] = $this->input->get('roomImg');
-                    $arrayInfo['room'] = $this->input->get('room');
-                    $arrayInfo1['latitude'] = $this->input->get('latitude');
-                    $arrayInfo1['longitude'] = $this->input->get('longitude');
-                    /*error_reporting(E_ALL);*/
-                    $check_rate =  $this->session->userdata('check_rate');
+                $this->data['msg'] = trans("0336");
+                //$this->data['msg'] = $this->data['msg'] = print_r($this->data['result']->HotelRoomReservationResponse);
+                if(!empty($confirmation)){
+                        $this->data['result'] = "success";
+                }else{
+                        $this->data['result'] = "fail";
+                }
 
-                    if(isset($check_rate) && $check_rate == 1){
-                            $result = $this->hb_lib->checkrates($arrayInfo);
+            }
+            
+            if ($itid > 1 && !empty($confirmation)) {
+                //if (empty($confirmation)) {
+                $totalamount = $this->input->post('total');
+                if($isguest == "guest"){
 
-                            $this->session->set_userdata('check_rate',0);
-                            $this->session->set_userdata('rate_data',$result);
-                    }else{
-                            $result = $this->session->userdata('rate_data');
-                    }
-                    /*echo $result;
-                    exit;*/
-                    $result = json_decode($result);
-                    $checkIn = $arrayInfo['checkIn'];
-                    $checkOut = $arrayInfo['checkOut'];
+                        $user = $this->ean_model->eanSignup_account($this->input->post());
+                }
 
-                    $hotelname = $result->hotel->name;
-                    $destinationName = $result->hotel->destinationName;
-                    $latitude = $result->hotel->latitude;
-                    $longitude = $result->hotel->longitude;
+                $a_hot_loc['longitude'] = $input_dat['longitude'];
+                $a_hot_loc['latitude'] = $input_dat['latitude'];
+                $bookresponse = (object)array_merge((array)$booking_data , $a_hot_loc);
+                /*print_r($bookresponse);
+                exit();*/
+
+                $insertdata = array('user' => $user, 
+                                    'checkin' => $this->input->post('checkin'),
+                                    'checkout' => $this->input->post('checkout'),
+                                    'hotel' => $this->input->post('hotel'),
+                                    'thumbnail' => $this->input->post('thumbnail'),
+                                    'location' => $this->input->post('location'),
+                                    'stars' => $this->input->post('hotelstars'),
+                                    'hotelname' => $this->input->post('hotelname'),
+                                    'roomname' => $this->input->post('roomname'),
+                                    'roomtotal' => $this->input->post('roomtotal'),
+                                    'tax' => $this->input->post('tax'),
+                                    'total' => $totalamount,
+                                    'email' => $this->input->post('username'),
+                                    'itineraryid' => $itid,
+                                    'confirmation' => $confirmation,
+                                    'nights' => $this->input->post('nights'),
+                                    'currency' => $this->input->post('currency'),
+                                    'bookResponse' => json_encode($bookresponse));
+
+                $this->ean_model->insert_booking($insertdata);
+
+                $this->db->where('book_itineraryid',$itid);
+                $res = $this->db->get('pt_ean_booking')->result();
+                $rrr = json_decode($res);
+                /*echo $rrr->book_id;*/
+                $inv_id = $res[0]->book_id;
+                /*print_r($res[0]->book_id);
+                exit();*/
+                $arrKeys = array();
+                $arrVals = array();
+                $surrInfo = $rrr->totalNet;
+
+                $insertdata_extra = array(
+                                        'booking_id' => $inv_id,
+                                        'hotel_type' => "1",
+                                        'extra_data' => json_encode($extra_data),
+                                        );
+
+                $this->ean_model->insert_booking_extra($insertdata_extra);
+
+                if(empty($surrInfo)){
+                    $surrInfo = $rrr->totalSellingRate;
+                }
+
+                $this->data['SalesTax'] = '';
+                $this->data['HotelOccupancyTax'] = '';
+                $this->data['TaxAndServiceFee'] = '10';
+                /*$this->data['extra_data'] = $extra_data;*/
+
+                if ($input_dat['payment_type'] == 'paypal') {
+                        /*error_reporting(E_ALL);*/
+                        /*echo json_encode($input_dat);
+                        exit();*/
+                        /*echo "<br>";*/
+                        $invoiceid = $this->RandomString();
+
+                        $insertdata = array(
+                                            'invoice_id' => $invoiceid,
+                                            'json_data' => json_encode($input_dat),
+                                            'booking_data' => json_encode($booking_data),
+                                            'pt_ean_booking_id' => $itid,
+                                            );
+                        /*echo json_encode($insertdata);
+                        echo "<br>";*/
+                        $this->hb_model->insert_booking($insertdata);
+                        //exit();
+                        $input_dat['invoice_id'] = $invoiceid;
+                        $this->load->model('admin/payments_model');
+                        $gateway = 'paypalexpress';
+                        $P_data =  $this->payments_model->getGatewayMsg_paypal($gateway,$input_dat);
+                        $P_data = json_decode($P_data);
+                        //echo $P_data->htmldata;
+                        redirect($P_data->htmldata);
+                        //echo "<br>";
+                }else{
+                        /*print_r($this->data['checkInInstructions']);*/
+                        /*exit();*/
+                        redirect(base_url().'invoice?eid='.$inv_id.'&sessid='.$itid);
+                        //$this->theme->view('invoice?eid='.$inv_id.'&sessid='.$itid, $this->data);
+                }
+                /*exit();*/
+            }
+
+        }
+        $this->data['checkin'] = $this->input->get('checkin');
+        $this->data['checkout'] = $this->input->get('checkout');
+        $arrayInfo['hotelId'] = $this->input->get('hotel');
+        $arrayInfo['customerSessionId'] = $this->input->get('sessionid');
+        $arrayInfo['checkIn'] = trim($this->input->get('checkin'));
+        $arrayInfo['checkOut'] = trim($this->input->get('checkout'));
+        $arrayInfo['roomTypeCode'] = $this->input->get('roomtype');
+
+        $arrayInfo['rateKey'] = $this->input->get('ratekey');
+        $arrayInfo['roomImg'] = $this->input->get('roomImg');
+        $arrayInfo['room'] = $this->input->get('room');
+        $arrayInfo1['latitude'] = $this->input->get('latitude');
+        $arrayInfo1['longitude'] = $this->input->get('longitude');
+        /*error_reporting(E_ALL);*/
+        $check_rate =  $this->session->userdata('check_rate');
+
+        if(isset($check_rate) && $check_rate == 1){
+                $result = $this->hb_lib->checkrates($arrayInfo);
+
+                $this->session->set_userdata('check_rate',0);
+                $this->session->set_userdata('rate_data',$result);
+        }else{
+                $result = $this->session->userdata('rate_data');
+        }
+        /*echo $result;
+        exit;*/
+        $result = json_decode($result);
+        $checkIn = $arrayInfo['checkIn'];
+        $checkOut = $arrayInfo['checkOut'];
+
+        $hotelname = $result->hotel->name;
+        $destinationName = $result->hotel->destinationName;
+        $latitude = $result->hotel->latitude;
+        $longitude = $result->hotel->longitude;
 
 
-                    $room_name = $result->hotel->rooms[0]->name;
-                    $rateComments = $result->hotel->rooms[0]->rates[0]->rateComments;
+        $room_name = $result->hotel->rooms[0]->name;
+        $rateComments = $result->hotel->rooms[0]->rates[0]->rateComments;
 
-                    $cancellationPolicies = $result->hotel->rooms[0]->rates[0]->cancellationPolicies;
-                    $rooms = $result->hotel->rooms[0]->rates[0]->rooms;
-                    $adults = $result->hotel->rooms[0]->rates[0]->adults;
-                    $children = $result->hotel->rooms[0]->rates[0]->children;
-                    $totalNet = $result->hotel->totalNet;
-                    $currency = $result->hotel->currency;
+        $cancellationPolicies = $result->hotel->rooms[0]->rates[0]->cancellationPolicies;
+        $rooms = $result->hotel->rooms[0]->rates[0]->rooms;
+        $adults = $result->hotel->rooms[0]->rates[0]->adults;
+        $children = $result->hotel->rooms[0]->rates[0]->children;
+        $totalNet = $result->hotel->totalNet;
+        $currency = $result->hotel->currency;
 
 
-                    $roomresponse = array();
-                    $paymenttypes = array();
+        $roomresponse = array();
+        $paymenttypes = array();
 
-                    $this->data['payment'] = $paymenttypes['HotelPaymentResponse']['PaymentType'];
-                    $this->data['room'] = $arrayInfo['room'];
-                    $this->data['roomsCount'] = $arrayInfo['room'];
+        $this->data['payment'] = $paymenttypes['HotelPaymentResponse']['PaymentType'];
+        $this->data['room'] = $arrayInfo['room'];
+        $this->data['roomsCount'] = $arrayInfo['room'];
 
-                    $this->data['cancelpolicy'] = $cancellationPolicies;
-                    $this->data['roomname'] = $room_name;
-                    $this->data['longitude'] = $longitude;
-                    $this->data['latitude'] = $latitude;
-                    $date1 = new DateTime($checkIn);
+        $this->data['cancelpolicy'] = $cancellationPolicies;
+        $this->data['roomname'] = $room_name;
+        $this->data['longitude'] = $longitude;
+        $this->data['latitude'] = $latitude;
+        $date1 = new DateTime($checkIn);
         $date2 = new DateTime($checkOut);
 
         $diff = $date2->diff($date1)->format("%a");
 
-                    $this->data['nights'] = $diff;
+        $this->data['nights'] = $diff;
 
 
-    $this->data['total'] = round($totalNet * $arrayInfo['room'] , 2);
-                    $this->data['tax'] = round(10, 2);
+        $this->data['total'] = round($totalNet * $arrayInfo['room'] , 2);
+        $this->data['tax'] = round(10, 2);
 
-                    $this->data['currency'] = $currency;
-                    $this->data['roomtotal'] = round($totalNet / $diff, 2);
-                    /*$this->data['HotelSummary'] = $result['HotelInformationResponse']['HotelSummary'];
-                    $this->data['HotelImages'] = $result['HotelInformationResponse']['HotelImages'];*/
-                    $this->data['checkInInstructions'] =  $rateComments;
-                    $stars = 0;
-                    if($stars < 1){
-                            $stars = 0;
-                    }
-                    $this->data['hotelStars'] = $stars;
-                    $this->data['module'] = (object)array('title' =>  $hotelname,
-                                                                                            'location' => $destinationName,
-                                                                                            'stars' => pt_create_stars($stars),
-                                                                                            'thumbnail' => $arrayInfo['roomImg']);
+        $this->data['currency'] = $currency;
+        $this->data['roomtotal'] = round($totalNet / $diff, 2);
+        /*$this->data['HotelSummary'] = $result['HotelInformationResponse']['HotelSummary'];
+        $this->data['HotelImages'] = $result['HotelInformationResponse']['HotelImages'];*/
+        $this->data['checkInInstructions'] =  $rateComments;
+        $stars = 0;
+        if($stars < 1){
+                $stars = 0;
+        }
+        $this->data['hotelStars'] = $stars;
+        $this->data['module'] = (object)array('title' =>  $hotelname,
+                                            'location' => $destinationName,
+                                            'stars' => pt_create_stars($stars),
+                                            'thumbnail' => $arrayInfo['roomImg']);
 
-                    if (!empty ($submit)) {
-                                    $this->data['paid'] = "Payment made";
-                    }
-                    $this->load->model('admin/payments_model');
-                    $paygateways = $this->payments_model->getAllPaymentsBack();
-                    $this->data['paymentGateways'] = $paygateways['activeGateways'];
-                    $this->load->model('admin/accounts_model');
-                    $loggedin = $this->loggedin;
-    $this->data['profile'] = $this->accounts_model->get_profile_details($loggedin);
-    $this->lang->load("front", $this->data['lang_set']);
-                    $this->data['page_title'] = $this->data['HotelSummary']['name'];
-                    //$this->theme->view('integrations/ean/booking', $this->data);
-                    $this->theme->view('hbbooking', $this->data);
+        if (!empty ($submit)) {
+            $this->data['paid'] = "Payment made";
+        }
+        $this->load->model('admin/payments_model');
+        $paygateways = $this->payments_model->getAllPaymentsBack();
+        $this->data['paymentGateways'] = $paygateways['activeGateways'];
+        $this->load->model('admin/accounts_model');
+        $loggedin = $this->loggedin;
+        $this->data['profile'] = $this->accounts_model->get_profile_details($loggedin);
+        $this->lang->load("front", $this->data['lang_set']);
+        $this->data['page_title'] = $this->data['HotelSummary']['name'];
+        //$this->theme->view('integrations/ean/booking', $this->data);
+        $this->theme->view('hbbooking', $this->data);
     }
+
+    public function hbreservation_vip_login_member(){
+        /*print_r($this->input->post());
+        exit();*/
+        $isguest = $this->input->get('user');
+        $this->data['affiliateConfirmationId'] = $this->setAffliateConfirmation();
+        $user = $this->data['user'];
+
+        $this->load->model('admin/countries_model');
+        $this->data['allcountries'] = $this->countries_model->get_all_countries();
+        $pay = $this->input->post('pay');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('firstName', 'First Name', 'trim');
+        $this->form_validation->set_rules('lastName', 'Last name', 'trim');
+        $this->form_validation->set_rules('policy', 'Cancellation Policy', 'required');
+        $this->form_validation->set_rules('address', 'Address', 'trim');
+        $this->form_validation->set_rules('cvv', 'CVV', 'trim');
+        $this->form_validation->set_rules('cardno', 'Card Number', 'trim');
+        $this->form_validation->set_rules('province', 'State', 'trim');
+        $this->form_validation->set_rules('postalcode', 'Postal Code', 'trim');
+        $this->form_validation->set_rules('phone', 'Phone', 'trim');
+
+        if (!empty ($pay)) {
+            /*error_reporting(E_ALL);*/
+
+            $input_dat = $this->input->post();
+            /*echo json_encode($input_dat);*/
+            /*echo $guest_data = json_encode($input_dat['guest_data']);
+            echo $additionalnotes = json_encode($input_dat['additionalnotes']);*/
+            $extra_data['guest_data'] = $input_dat['guest_data'];
+            $extra_data['additionalnotes'] = $input_dat['additionalnotes'];
+            /*echo json_encode($extra_data);
+            echo "<br>";
+            error_reporting(E_ALL);*/
+
+            // $this->db->insert('pt_ean_booking',$pt_book_extra);
+            /*exit();*/
+
+            /*if ($input_dat['payment_type'] == 'paypal') {
+
+                    $invoiceid = $this->RandomString();
+
+                    $insertdata = array(
+                                        'invoice_id' => $invoiceid,
+                                        'json_data' => json_encode($input_dat),
+                                        'booking_data' => '',//json_encode($booking_data),
+                                        'pt_ean_booking_id' => $itid,
+                                        );
+
+                    $this->hb_model->insert_booking($insertdata);
+
+                    $input_dat['invoice_id'] = $invoiceid;
+                    $this->load->model('admin/payments_model');
+                    $gateway = 'paypalexpress';
+                    $P_data =  $this->payments_model->getGatewayMsg_paypal($gateway,$input_dat);
+                    $P_data = json_decode($P_data);
+                    redirect($P_data->htmldata);
+
+            }*/
+            
+            /*echo json_encode($input_dat);
+            exit();*/
+            /*$this->form_validation->run();*/
+            $booking_data = $this->hb_lib->HotelRoomReservation($input_dat);
+            /*echo $booking_data;
+            echo "<br>";*/
+            $booking_data = json_decode($booking_data);
+
+            $this->data['result'] = $booking_data;
+            /*exit();*/
+            /*$this->data['result'] = "success";
+            $confirmation = array();*/
+
+            //echo "Asdas";
+
+            $error = $this->data['result']->error;
+            $bookresponse = $this->data['result']->booking;
+
+            if (!empty ($error)) {
+
+                $this->data['msg'] = $error->message;
+                $this->data['result'] = "fail";
+            } else {
+                $itid = $this->data['result']->booking->reference;
+
+                $confirmation = $this->data['result']->booking->reference;
+                $this->data['itineraryID'] = $itid;
+                $this->data['confirmationNumber'] = $confirmation;
+                $this->data['nonRefundable'] = '';
+                //$this->data['checkInInstructions'] = $this->data['result']->booking->hotel->rooms[0]->rates->[0]->rateComments;
+                $this->data['checkInInstructions'] = $this->data['result']->booking->hotel->rooms;
+                //$this->data['cancellationPolicy'] = $this->data['result']->booking->hotel->rooms[0]->rates->[0]->cancellationPolicies;
+                $totalCharge = $this->data['result']->booking->totalNet;
+                if(empty($totalCharge)){
+                    $totalCharge = $this->data['result']->booking->totalSellingRate;
+                                    }
+
+                $total = $totalCharge;
+                $this->data['grandTotal'] = $total;
+                $this->data['currency'] = $this->booking->currency;
+                $this->data['surchargeTotal'] = '';
+                $this->data['nightlyRateTotal'] = '';
+
+                $this->data['msg'] = trans("0336");
+                //$this->data['msg'] = $this->data['msg'] = print_r($this->data['result']->HotelRoomReservationResponse);
+                if(!empty($confirmation)){
+                        $this->data['result'] = "success";
+                }else{
+                        $this->data['result'] = "fail";
+                }
+
+            }
+            
+            if ($itid > 1 && !empty($confirmation)) {
+                //if (empty($confirmation)) {
+                $totalamount = $this->input->post('total');
+                if($isguest == "guest"){
+
+                        $user = $this->ean_model->eanSignup_account($this->input->post());
+                }
+
+                $a_hot_loc['longitude'] = $input_dat['longitude'];
+                $a_hot_loc['latitude'] = $input_dat['latitude'];
+                $bookresponse = (object)array_merge((array)$booking_data , $a_hot_loc);
+                /*print_r($bookresponse);
+                exit();*/
+
+                $insertdata = array('user' => $user, 
+                                    'checkin' => $this->input->post('checkin'),
+                                    'checkout' => $this->input->post('checkout'),
+                                    'hotel' => $this->input->post('hotel'),
+                                    'thumbnail' => $this->input->post('thumbnail'),
+                                    'location' => $this->input->post('location'),
+                                    'stars' => $this->input->post('hotelstars'),
+                                    'hotelname' => $this->input->post('hotelname'),
+                                    'roomname' => $this->input->post('roomname'),
+                                    'roomtotal' => $this->input->post('roomtotal'),
+                                    'tax' => $this->input->post('tax'),
+                                    'total' => $totalamount,
+                                    'email' => $this->input->post('email'),
+                                    'itineraryid' => $itid,
+                                    'confirmation' => $confirmation,
+                                    'nights' => $this->input->post('nights'),
+                                    'currency' => $this->input->post('currency'),
+                                    'bookResponse' => json_encode($bookresponse));
+
+                $this->ean_model->insert_booking($insertdata);
+
+                $this->db->where('book_itineraryid',$itid);
+                $res = $this->db->get('pt_ean_booking')->result();
+                $rrr = json_decode($res);
+                /*echo $rrr->book_id;*/
+                $inv_id = $res[0]->book_id;
+                /*print_r($res[0]->book_id);
+                exit();*/
+                $arrKeys = array();
+                $arrVals = array();
+                $surrInfo = $rrr->totalNet;
+
+                $insertdata_extra = array(
+                                        'booking_id' => $inv_id,
+                                        'hotel_type' => "1",
+                                        'extra_data' => json_encode($extra_data),
+                                        );
+
+                $this->ean_model->insert_booking_extra($insertdata_extra);
+
+                if(empty($surrInfo)){
+                    $surrInfo = $rrr->totalSellingRate;
+                }
+
+                $this->data['SalesTax'] = '';
+                $this->data['HotelOccupancyTax'] = '';
+                $this->data['TaxAndServiceFee'] = '10';
+                /*$this->data['extra_data'] = $extra_data;*/
+
+                if ($input_dat['payment_type'] == 'paypal') {
+                        /*error_reporting(E_ALL);*/
+                        /*echo json_encode($input_dat);
+                        exit();*/
+                        /*echo "<br>";*/
+                        $invoiceid = $this->RandomString();
+
+                        $insertdata = array(
+                                            'invoice_id' => $invoiceid,
+                                            'json_data' => json_encode($input_dat),
+                                            'booking_data' => json_encode($booking_data),
+                                            'pt_ean_booking_id' => $itid,
+                                            );
+                        /*echo json_encode($insertdata);
+                        echo "<br>";*/
+                        $this->hb_model->insert_booking($insertdata);
+                        //exit();
+                        $input_dat['invoice_id'] = $invoiceid;
+                        $this->load->model('admin/payments_model');
+                        $gateway = 'paypalexpress';
+                        $P_data =  $this->payments_model->getGatewayMsg_paypal($gateway,$input_dat);
+                        $P_data = json_decode($P_data);
+                        //echo $P_data->htmldata;
+                        redirect($P_data->htmldata);
+                        //echo "<br>";
+                }else{
+                        /*print_r($this->data['checkInInstructions']);*/
+                        /*exit();*/
+                        redirect(base_url().'invoice?eid='.$inv_id.'&sessid='.$itid);
+                        //$this->theme->view('invoice?eid='.$inv_id.'&sessid='.$itid, $this->data);
+                }
+                /*exit();*/
+            }
+
+        }
+        $this->data['checkin'] = $this->input->get('checkin');
+        $this->data['checkout'] = $this->input->get('checkout');
+        $arrayInfo['hotelId'] = $this->input->get('hotel');
+        $arrayInfo['customerSessionId'] = $this->input->get('sessionid');
+        $arrayInfo['checkIn'] = trim($this->input->get('checkin'));
+        $arrayInfo['checkOut'] = trim($this->input->get('checkout'));
+        $arrayInfo['roomTypeCode'] = $this->input->get('roomtype');
+
+        $arrayInfo['rateKey'] = $this->input->get('ratekey');
+        $arrayInfo['roomImg'] = $this->input->get('roomImg');
+        $arrayInfo['room'] = $this->input->get('room');
+        $arrayInfo1['latitude'] = $this->input->get('latitude');
+        $arrayInfo1['longitude'] = $this->input->get('longitude');
+        /*error_reporting(E_ALL);*/
+        $check_rate =  $this->session->userdata('check_rate');
+
+        if(isset($check_rate) && $check_rate == 1){
+                $result = $this->hb_lib->checkrates($arrayInfo);
+
+                $this->session->set_userdata('check_rate',0);
+                $this->session->set_userdata('rate_data',$result);
+        }else{
+                $result = $this->session->userdata('rate_data');
+        }
+        /*echo $result;
+        exit;*/
+        $result = json_decode($result);
+        $checkIn = $arrayInfo['checkIn'];
+        $checkOut = $arrayInfo['checkOut'];
+
+        $hotelname = $result->hotel->name;
+        $destinationName = $result->hotel->destinationName;
+        $latitude = $result->hotel->latitude;
+        $longitude = $result->hotel->longitude;
+
+
+        $room_name = $result->hotel->rooms[0]->name;
+        $rateComments = $result->hotel->rooms[0]->rates[0]->rateComments;
+
+        $cancellationPolicies = $result->hotel->rooms[0]->rates[0]->cancellationPolicies;
+        $rooms = $result->hotel->rooms[0]->rates[0]->rooms;
+        $adults = $result->hotel->rooms[0]->rates[0]->adults;
+        $children = $result->hotel->rooms[0]->rates[0]->children;
+        $totalNet = $result->hotel->totalNet;
+        $currency = $result->hotel->currency;
+
+
+        $roomresponse = array();
+        $paymenttypes = array();
+
+        $this->data['payment'] = $paymenttypes['HotelPaymentResponse']['PaymentType'];
+        $this->data['room'] = $arrayInfo['room'];
+        $this->data['roomsCount'] = $arrayInfo['room'];
+
+        $this->data['cancelpolicy'] = $cancellationPolicies;
+        $this->data['roomname'] = $room_name;
+        $this->data['longitude'] = $longitude;
+        $this->data['latitude'] = $latitude;
+        $date1 = new DateTime($checkIn);
+        $date2 = new DateTime($checkOut);
+
+        $diff = $date2->diff($date1)->format("%a");
+
+        $this->data['nights'] = $diff;
+
+
+        $this->data['total'] = round($totalNet * $arrayInfo['room'] , 2);
+        $this->data['tax'] = round(10, 2);
+
+        $this->data['currency'] = $currency;
+        $this->data['roomtotal'] = round($totalNet / $diff, 2);
+        /*$this->data['HotelSummary'] = $result['HotelInformationResponse']['HotelSummary'];
+        $this->data['HotelImages'] = $result['HotelInformationResponse']['HotelImages'];*/
+        $this->data['checkInInstructions'] =  $rateComments;
+        $stars = 0;
+        if($stars < 1){
+                $stars = 0;
+        }
+        $this->data['hotelStars'] = $stars;
+        $this->data['module'] = (object)array('title' =>  $hotelname,
+                                            'location' => $destinationName,
+                                            'stars' => pt_create_stars($stars),
+                                            'thumbnail' => $arrayInfo['roomImg']);
+
+        if (!empty ($submit)) {
+            $this->data['paid'] = "Payment made";
+        }
+        $this->load->model('admin/payments_model');
+        $paygateways = $this->payments_model->getAllPaymentsBack();
+        $this->data['paymentGateways'] = $paygateways['activeGateways'];
+        $this->load->model('admin/accounts_model');
+        $loggedin = $this->loggedin;
+        $this->data['profile'] = $this->accounts_model->get_profile_details($loggedin);
+        $this->lang->load("front", $this->data['lang_set']);
+        $this->data['page_title'] = $this->data['HotelSummary']['name'];
+        //$this->theme->view('integrations/ean/booking', $this->data);
+        $this->theme->view('hbbooking', $this->data);
+    }
+
 
     function hb_p_success(){
             $input_dat = $this->input->get();

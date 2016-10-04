@@ -1,6 +1,6 @@
 <?php
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+/*error_reporting(E_ALL);*/
 class Hb_lib {
 
         public  $cid;
@@ -25,60 +25,50 @@ class Hb_lib {
         public $itinUrl;
 
 
-      	function __construct($_apiKey = "n2cxz49a5vd9u9verw3afva7" ,$_local = "en_US",$_currency = "USD"){
+      	function __construct($_apiKey = "n2cxz49a5vd9u9verw3afva7" ,$_local = "en_US",$_currency = "$"){
             
 
       	}
-
-
-
         /*
          * function for API call using curl
          */
         function apiCall($url,$post_data){
-            
-
-           /* exit();*/
+           
             $url = str_replace(" ", '%20', $url);
             $sharedSecret = 't8qZYfnceE';
-            $apiKey = '7evpxa7utyytvj48y3fp75rj1';
+            $apiKey = '7evpxa7utyytvj48y3fp75rj';
             $signature = hash("sha256", $apiKey.$sharedSecret.time());
             $header[] = "Accept: application/json";
             $header[] = "Content-Type: application/json";
             $header[] = "Api-key: ".$apiKey;
             $header[] = "X-Signature: ".$signature;
-            /*echo json_encode($header);
-             echo "<br>";
-             echo "<br>";*/
-           /*echo json_encode($post_data);
-           exit();*/
-           /* echo "<br>";
+            
+           /* echo $url;
+            echo "<br>";
+            echo json_encode($header);
+            echo "<br>";
+            echo json_encode($post_data);
             echo "<br>";
             exit();*/
-
+            $response = array();
             $ch = curl_init();
             curl_setopt( $ch, CURLOPT_HTTPHEADER, $header );
             curl_setopt($ch,CURLOPT_ENCODING , "gzip");
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
             curl_setopt( $ch, CURLOPT_URL, $url );
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-            //$response = json_decode(curl_exec($ch),true);
             $response = curl_exec($ch);
-
+            //$response = json_decode(curl_exec($ch),true);
             $curlinfo = curl_getinfo($ch);
-            /*echo json_encode($post_data);
-            if(curl_exec($ch) === false)
+           /* if(curl_exec($ch) === false)
             {
                 echo 'Curl error: ' . curl_error($ch);
-            }*/
-            /*echo "<br>";
-            echo "<br>";
-              echo $response;
-            echo "<br>";
-              exit();*/
-            /*echo $response;
+            }
+            echo $response;
             exit();*/
+            /*$response = '';*/
             return $response;
 
         }
@@ -100,17 +90,20 @@ class Hb_lib {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
             curl_setopt( $ch, CURLOPT_URL, $url );
             curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $response = curl_exec($ch);
             //$response = curl_exec($ch);
 
             $curlinfo = curl_getinfo($ch);
 
-            if(curl_exec($ch) === false)
+            /*if(curl_exec($ch) === false)
             {
+                $response = array();
                 //echo 'Curl error: ' . curl_error($ch);
-            }
+            }*/
             $response = json_decode($response);
-            /*print_r($response);*/
+            /*print_r($response);
+            exit();*/
             return $response;
 
         }
@@ -123,6 +116,7 @@ class Hb_lib {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
             curl_setopt( $ch, CURLOPT_URL, $url );
             curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $response = curl_exec($ch);
             //$response = curl_exec($ch);
 
@@ -130,6 +124,7 @@ class Hb_lib {
 
             if(curl_exec($ch) === false)
             {
+              $response = array();
                 //echo 'Curl error: ' . curl_error($ch);
             }
             //$response = json_decode($response);
@@ -154,8 +149,8 @@ class Hb_lib {
             $rooms = $arrayInfo['room'];
             $adults = $arrayInfo['adults'];
             $room_guest = $adults / $rooms;
-
             $child = isset($arrayInfo['child']) && $arrayInfo['child'] != null ? $arrayInfo['child'] : 0;
+            $room_child = $child / $rooms;
             $childAges = explode(',', $arrayInfo['childAges']) ;
 
             $date1 = new DateTime($checkIn);
@@ -171,22 +166,22 @@ class Hb_lib {
             /*echo $rooms;
             exit();*/
            /* for ($room_Data=0; $room_Data < $rooms ; $room_Data++) { */
-                $hotel_beds_post['occupancies'][$a]['rooms'] =  $rooms;
-                $hotel_beds_post['occupancies'][$a]['adults'] = $adults;
-                $hotel_beds_post['occupancies'][$a]['children'] = $child;
+                $hotel_beds_post['occupancies'][$a]['rooms'] =  1;
+                $hotel_beds_post['occupancies'][$a]['adults'] = $room_guest;
+                $hotel_beds_post['occupancies'][$a]['children'] = $room_child;
 
 
             
               
-                for ($i=0; $i < $adults  ; $i++) { 
+                for ($i=0; $i < $room_guest  ; $i++) { 
                   $paxes[$i]['type'] = 'AD';
                   $paxes[$i]['age'] = 30;
                 }
             
 
-                for ($j=0; $j < $child ; $j++) { 
+                for ($j=0; $j < $room_child ; $j++) { 
                   $paxes[$j+$i]['type'] = 'CH';
-                  $paxes[$j+$i]['age'] = $childAges[$j];
+                  $paxes[$j+$i]['age'] = 10;
                 }
                 $hotel_beds_post['occupancies'][$a]['paxes'] = $paxes;
 
@@ -324,20 +319,24 @@ class Hb_lib {
 
          function get_hotel_by_code($arrayInfo){
             
-
+           /* print_r($arrayInfo);
+            exit();*/
               $hotelId = $arrayInfo['hotelId'];
+              //$hotelId = 38205;
               
               $checkIn = $arrayInfo['checkIn'];
               $checkOut = $arrayInfo['checkOut'];
               $rooms = $arrayInfo['room'];
               $adults = $arrayInfo['adults'];
-              
-              $child = isset($arrayInfo['childAges']) ? $arrayInfo['childAges'] : "";
+              $room_guest = $adults / $rooms;
+              $child = isset($arrayInfo['child']) && $arrayInfo['child'] != null ? $arrayInfo['child'] : 0;
+              $room_child = $child / $rooms;
+             /* $child = isset($arrayInfo['childAges']) ? $arrayInfo['childAges'] : "";
               if($child != ""){
                 $childAges = explode(',', $child);
               }else{
                 $childAges = array();
-              }
+              }*/
 
               
               $child = count($childAges) > 0 ? count($childAges) : 0 ;
@@ -355,28 +354,28 @@ class Hb_lib {
                 /*echo $rooms;
                 exit();*/
                /* for ($room_Data=0; $room_Data < $rooms ; $room_Data++) { */
-                $hotel_beds_post['occupancies'][$a]['rooms'] =  $rooms;
-                $hotel_beds_post['occupancies'][$a]['adults'] = $adults;
-                $hotel_beds_post['occupancies'][$a]['children'] = $child;
+                $hotel_beds_post['occupancies'][$a]['rooms'] =  1;
+                $hotel_beds_post['occupancies'][$a]['adults'] = $room_guest;
+                $hotel_beds_post['occupancies'][$a]['children'] = $room_child;
 
 
             
               
-                for ($i=0; $i < $adults  ; $i++) { 
+                for ($i=0; $i < $room_guest  ; $i++) { 
                   $paxes[$i]['type'] = 'AD';
                   $paxes[$i]['age'] = 30;
                 }
             
 
-                for ($j=0; $j < $child ; $j++) { 
+                for ($j=0; $j < $room_child ; $j++) { 
                   $paxes[$j+$i]['type'] = 'CH';
-                  $paxes[$j+$i]['age'] = $childAges[$j];
+                  $paxes[$j+$i]['age'] = 10;
                 }
                 $hotel_beds_post['occupancies'][$a]['paxes'] = $paxes;
 
             
 
-            /*$hotel_beds_post['occupancies'] = $TT;*/
+              /*$hotel_beds_post['occupancies'] = $TT;*/
 
               $hotel_beds_post['hotels']['hotel'][] = $hotelId;
               
@@ -439,7 +438,7 @@ class Hb_lib {
             // exit();
 
             //$str = $url.'?fields=name,description,address,coordinates,postalCode,city,email,images&language=EN&codes='.$hotel_data;
-            $str = $url.'?fields=all&language=EN&codes='.$hotel_data;
+            $str = $url.'?fields=all&language=ENG&codes='.$hotel_data;
            
                
             $image_data =  $this->apiCall_get($str);
@@ -487,54 +486,70 @@ class Hb_lib {
               
 
               $adults = $arrayInfo['adults'];
-              
+              $rooms = $arrayInfo['room'];
               /*$cs = isset($arrayInfo['child']) && $arrayInfo['child'] != "" ? $arrayInfo['child'] : "0";
               $cc = explode(",", $cs);
               $child = count($cc);*/
 
 
               $child = isset($arrayInfo['child']) ? $arrayInfo['child'] : "";
-              if($child != ""){
+              /*if($child != ""){
                 $childAges = explode(',', $child);
               }else{
                 $childAges = array();
-              }
+              }*/
 
               
-              $child = count($childAges) > 0 ? count($childAges) : 0 ;
+              //$child = count($childAges) > 0 ? count($childAges) : 0 ;
               
               $a = 0;
-
+               $room_guest = $adults / $rooms;
+                $room_child = $child / $rooms;
               $firstName = $arrayInfo['firstName'];
               $lastName = $arrayInfo['lastName'];
               $hotel_beds_post['holder']['name'] = $firstName;
               $hotel_beds_post['holder']['surname'] = $lastName;
-              $hotel_beds_post['rooms'][$a]['rateKey'] = $arrayInfo['ratekey'];
+              
 
-              for ($i=0; $i < $adults ; $i++) { 
-                  $paxes[$i]['roomId'] = '1';
-                  $paxes[$i]['type'] = 'AD';
-                  $paxes[$i]['age'] = 30;
-                  $paxes[$i]['name'] = $firstName;
-                  $paxes[$i]['surname'] = $lastName;
-              }
+               for ($r_i=0; $r_i < $rooms ; $r_i++) { 
+               
+                  $TT[$a]['rateKey'] = $arrayInfo['ratekey'];
+                
+                  for ($i=0; $i < $room_guest ; $i++) { 
+                      $paxes[$i]['roomId'] = 1;
+                      $paxes[$i]['type'] = 'AD';
+                      $paxes[$i]['age'] = 30;
+                      $paxes[$i]['name'] = $firstName;
+                      $paxes[$i]['surname'] = $lastName;
+                  }
 
-              for ($j=0; $j < $child ; $j++) { 
-                  $paxes[$j+$i]['roomId'] = '1';
-                  $paxes[$j+$i]['type'] = 'CH';
-                  $paxes[$j+$i]['age'] = $childAges[$j];
-                  $paxes[$j+$i]['name'] = 'Child of '.$firstName;
-                  $paxes[$j+$i]['surname'] = $lastName;
-              }
+                  for ($j=0; $j < $room_child ; $j++) { 
+                      $paxes[$j+$i]['roomId'] = 1;
+                      $paxes[$j+$i]['type'] = 'CH';
+                      $paxes[$j+$i]['age'] = 10;
+                      $paxes[$j+$i]['name'] = 'Child ';
+                      $paxes[$j+$i]['surname'] = 'of';
+                  }
 
-              $hotel_beds_post['rooms'][$a]['paxes'] = $paxes;
-              $hotel_beds_post['clientReference'] = 'HOTELBEDS USA';
+                $TT[$a]['paxes'] = $paxes;
+                //$a++;
+                   $hotel_beds_post['rooms'] = $TT;
+                $hotel_beds_post['clientReference'] = 'HOTELBEDS USA';
 
-              //echo json_encode($hotel_beds_post);
+              /*echo json_encode($hotel_beds_post);
+              echo "\n";*/
+              /*exit();*/
 
               $url = 'https://api.test.hotelbeds.com/hotel-api/1.0/bookings';
 
-              return $this->apiCall($url,$hotel_beds_post);
+               $res_Data[] = $this->apiCall($url,$hotel_beds_post);
+               /*echo $abc;
+              echo "\n";
+              echo "\n";*/
+              }
+              /*exit();*/
+              return $res_Data;
+              
           }
 
      

@@ -1,0 +1,9 @@
+D:\xampp\htdocs\tarzango_2\themes\tarzango\views\booking.php 
+D:\xampp\htdocs\tarzango_2\application\modules\integrations\ean\controllers\ean.php - 1982
+D:\xampp\htdocs\tarzango_2\themes\tarzango\views\details.php - 676
+D:\xampp\htdocs\tarzango_2\themes\tarzango\views\includes\hb_rooms.php - 96
+D:\xampp\htdocs\tarzango_2\application\modules\integrations\ean\models\hb_model.php - 124
+D:\xampp\htdocs\tarzango_2\application\modules\integrations\ean\models\ean_model.php - 130
+D:\xampp\htdocs\tarzango_2\assets\js\hbbooking.js - 130
+D:\xampp\htdocs\tarzango_2\application\modules\admin\controllers\ajaxcalls.php
+D:\xampp\htdocs\tarzango_2\application\modules\integrations\ean\libraries\hb_lib.php - 63

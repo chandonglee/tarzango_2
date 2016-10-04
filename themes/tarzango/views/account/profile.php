@@ -9,7 +9,11 @@
     padding: 20px;
     font-family: 'Apercu-Regular';
     letter-spacing: 1px;
-        font-size: 14px;
+    font-size: 14px;
+}
+.news_active{
+  background-color: #32c9fd !important;
+  color: #FFF !important;
 }
 </style>
 <div class="toppage"></div>
@@ -18,10 +22,12 @@
                <div class="clearfix"></div>
 <div class="accountresult"></div>
    <form action="" id="profilefrm" method="POST" onsubmit="return false;">
+   <input type="hidden" value="<?php echo $profile[0]->accounts_email; ?>" id="user_email_data">
                            <div class="col-sm-12">
                               <label>Subscribe to Newsletter</label>
-                              <a class="subscribed" href="#">Subscribed<i class="fa fa-check" aria-hidden="true"></i></a>
-                              <a class="unsubscribed" href="#">Unsubscribe<i class="fa fa-times" aria-hidden="true"></i></a>
+                              
+                              <a class="subscribed newsletter <?php if($is_subscribed){echo "news_active";}?> " data-issubscribed="1" >Subscribed <i class="fa fa-check" aria-hidden="true"></i></a>
+                              <a class="unsubscribed newsletter <?php if(!$is_subscribed){echo "news_active";}?> " data-issubscribed="0" >Unsubscribe <i class="fa fa-times" aria-hidden="true"></i></a>
                            </div>
                            <div class="col-sm-12">
                               <p>PERSONAL INFORMATION</p>

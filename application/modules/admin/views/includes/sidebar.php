@@ -73,7 +73,7 @@
     </div>
     <div class="menu">
       <div class="menu-content">
-        <ul id="social-sidebar-menu">
+        <ul id="social-sidebar-menu" style="overflow-x: hidden;overflow-y: scroll;">
           <?php if($isadmin){ ?>
           <li class="active">
             <a href="<?php echo base_url();?>" target="_blank">
@@ -145,6 +145,7 @@
           </li>
           <?php } ?>
           <!-- END ELEMENT MENU-->
+
           <!-- BEGIN ELEMENT MENU-->
           <li <?php if($pagename == "cms"){ ?> class="open" <?php } ?> >
             <a href="#CMS" data-toggle="collapse" data-parent="#social-sidebar-menu">
@@ -163,28 +164,65 @@
             </ul>
           </li>
           <?php } if(empty($supplier)){  ?>
-          <?php $moduleslist = $this->ptmodules->read_config();
+          <?php 
+          /*error_reporting(E_ALL);*/
+          $moduleslist = $this->ptmodules->read_config();
             $baseurl = base_url();
             @$urisegment = $this->uri->segment(1);
-
+            /*echo json_encode($moduleslist);
+            exit();*/
             foreach($moduleslist as $modl){
             $isenabled = $this->ptmodules->is_main_module_enabled(strtolower($modl['Name']));
             if($isenabled){
-            if($urisegment == "admin"){ $submenu = $modl['AdminMenu'];}else{ $submenu = $modl['SupplierMenu']; }
-            if(pt_permissions($modl['Name'],@$userloggedin)){
-             if($modl['isIntegration'] != "Yes"){
-            ?>
-          <li>
-            <a href="#<?php echo $modl['DisplayName']; ?>" data-toggle="collapse" data-parent="#social-sidebar-menu">
-            <?php echo $modl['Icon']; ?>
-            <span><?php echo $modl['DisplayName']; ?></span>
-            <i class="fa arrow"></i>
-            </a>
-            <ul id="<?php echo $modl['DisplayName']; ?>" class="collapse  wow fadeIn animated">
-              <?php echo str_replace("%baseurl%","$baseurl",$submenu); ?>
-            </ul>
-          </li>
-          <?php } } } } } ?>
+                if($urisegment == "admin"){ 
+
+                  $submenu = $modl['AdminMenu']; 
+                  if($modl['Name'] == 'Blog'){
+                     $b_ch = 1;
+                    
+                  }else{
+                      $b_ch = 0;
+                    
+                  }
+           
+                }else{
+                      $b_ch = 0;
+
+                 $submenu = $modl['SupplierMenu']; 
+
+               }
+               if($b_ch == 0){
+                if(pt_permissions($modl['Name'],@$userloggedin) ){
+                //echo $submenu;
+                 if($modl['isIntegration'] != "Yes"){
+                ?>
+              <li>
+                <a href="#<?php echo $modl['DisplayName']; ?>" data-toggle="collapse" data-parent="#social-sidebar-menu">
+                <?php echo $modl['Icon']; ?>
+                <span><?php echo $modl['DisplayName']; ?></span>
+                <i class="fa arrow"></i>
+                </a>
+                <ul id="<?php echo $modl['DisplayName']; ?>" class="collapse  wow fadeIn animated">
+                  <?php echo str_replace("%baseurl%","$baseurl",$submenu); ?>
+                </ul>
+              </li>
+              <?php }
+               } 
+             }else{ 
+                if($modl['isIntegration'] != "Yes"){
+                ?>
+              <li>
+                <a href="#<?php echo $modl['DisplayName']; ?>" data-toggle="collapse" data-parent="#social-sidebar-menu">
+                <?php echo $modl['Icon']; ?>
+                <span><?php echo $modl['DisplayName']; ?></span>
+                <i class="fa arrow"></i>
+                </a>
+                <ul id="<?php echo $modl['DisplayName']; ?>" class="collapse  wow fadeIn animated">
+                  <?php echo str_replace("%baseurl%","$baseurl",$submenu); ?>
+                </ul>
+              </li>
+
+          <?php  }   }    }    }     } ?>
           <?php if($isadmin && $role != "admin"){ if(pt_is_module_enabled('offers')){  ?>
           <li>
             <a data-toggle="collapse" data-parent="#social-sidebar-menu" href="#SPECIAL_OFFERS"><i class="fa fa-gift"></i>
@@ -218,14 +256,36 @@
           </li>
           <?php } } } ?>
           <?php if(pt_permissions('booking',@$userloggedin)){ ?>
-           <li>
+          <li>
             <a href="<?php echo base_url().$this->uri->segment(1);?>/bookings/"><i class="fa fa-list"></i>
             <span><?php echo trans('034');?></span><span class="pull-right label label-danger" id=""></span>
             </a>
           </li>
+          <?php if($isadmin && $role != "admin"){ ?>
+            <li>
+            <a href="<?php echo base_url().$this->uri->segment(1);?>/ean/bookings/"><i class="fa fa-list"></i>
+            <span>HB Bookings</span><span class="pull-right label label-danger" id=""></span>
+            </a>
+          </li>
+          <li>
+            <a href="<?php echo base_url().$this->uri->segment(1);?>/hb_images/"><i class="fa fa-list"></i>
+            <span>HB Images</span><span class="pull-right label label-danger" id=""></span>
+            </a>
+          </li>
            <li>
+              <a href="<?php echo base_url().$this->uri->segment(1);?>/attraction/"><i class="fa fa-list"></i>
+              <span>Attr. Bookings</span><span class="pull-right label label-danger" id=""></span>
+              </a>
+            </li>
+          <?php } ?>
+          <li>
             <a href="<?php echo base_url().$this->uri->segment(1);?>/groupbookings/"><i class="fa fa-list"></i>
             <span>Group bookings</span><span class="pull-right label label-danger" id=""></span>
+            </a>
+          </li>
+          <li>
+            <a href="<?php echo base_url().$this->uri->segment(1);?>/top_destinations/"><i class="fa fa-list"></i>
+            <span>Top Destinations</span><span class="pull-right label label-danger" id=""></span>
             </a>
           </li>
           <li>

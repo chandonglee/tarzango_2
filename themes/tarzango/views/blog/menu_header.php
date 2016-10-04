@@ -14,26 +14,28 @@
 					<div class="menu-dropdown">
                		<?php  if(!empty($customerloggedin)){ ?>
                			<ul>
+               				<li><a href="">Attraction</a></li>
                				<li><a href="">About</a></li>
-							<li><a href="">Group Bookings</a></li>
+							<li><a href="<?php echo base_url().'groupbooking'; ?>">Group Bookings</a></li>
 							<li><a href="">Services</a></li>
 							<li><a href="<?php echo base_url().'membership'; ?>">Membership</a></li>
 							<li><a href="">Agent Show Guide</a></li>
 							<li><a href="">We're Hiring</a></li>
-							<li><a href="">Blog</a></li>
+							<li><a href="<?php echo base_url().'blog'; ?>">Blog</a></li>
 							<li><a href="<?php echo base_url().'contact-us'; ?>">Contact</a></li>
 							<li class="last"><a href="<?php echo base_url()?>account/"> <?php echo $firstname; ?> / </a><a href="<?php echo base_url()?>account/logout/"> <?php echo trans('03');?></a></li>
-							<li class="last"><a href=""><img src="../images/call.png"> 415-680-3008</a></li>
+							<li class="last"><a href=""><img src="images/call.png"> 415-680-3008</a></li>
 						</ul>	
                 		  <?php }else{  ?>
 						<ul>
+							<li><a href="">Attraction</a></li>
 							<li><a href="">About</a></li>
-							<li><a href="">Group Bookings</a></li>
+							<li><a href="<?php echo base_url().'groupbooking'; ?>">Group Bookings</a></li>
 							<li><a href="">Services</a></li>
 							<li class=""><a href="<?php echo base_url().'membership'; ?>">Membership</a></li>
 							<li><a href="">Agent Show Guide</a></li>
 							<li><a href="">We're Hiring</a></li>
-							<li><a href="">Blog</a></li>
+							<li><a href="<?php echo base_url().'blog'; ?>">Blog</a></li>
 							<li><a href="<?php echo base_url().'contact-us'; ?>">Contact</a></li>
 							<li class="last"><a href="<?php echo base_url(); ?>login"><img src="images/shape.png"> Sign In /</a><a href="<?php echo base_url(); ?>register"> Sign Up</a></li>
 							<li class="last"><a href="tel:4156803008"><img src="images/call.png"> 415-680-3008</a></li>

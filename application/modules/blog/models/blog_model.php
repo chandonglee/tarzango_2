@@ -24,7 +24,7 @@ class Blog_model extends CI_Model {
 				$this->db->where('cat_slug', $catslug);
 				$res = $this->db->get('pt_blog_categories')->result();
 				$cat = $res[0]->cat_id;
-//$days = pt_count_days($checkin,$checkout);
+				//$days = pt_count_days($checkin,$checkout);
 				if ($offset != null) {
 						$offset = ($offset == 1) ? 0 : ($offset * $perpage) - $perpage;
 				}
@@ -54,7 +54,7 @@ class Blog_model extends CI_Model {
 		function search_posts_front($perpage = null, $offset = null, $orderby = null, $cities = null) {
 				$data = array();
 				$text = $this->input->get('s');
-//$days = pt_count_days($checkin,$checkout);
+				//$days = pt_count_days($checkin,$checkout);
 				if ($offset != null) {
 						$offset = ($offset == 1) ? 0 : ($offset * $perpage) - $perpage;
 				}
@@ -158,6 +158,41 @@ class Blog_model extends CI_Model {
 				$data['rows'] = $query->num_rows();
 				return $data;
 		}
+
+		function list_posts_front_by_dest_id($perpage = null, $offset = null, $orderby = null,$top_destinations_id=null) {
+				$data = array();
+				if ($offset != null) {
+						$offset = ($offset == 1) ? 0 : ($offset * $perpage) - $perpage;
+				}
+				$this->db->select('pt_blog.*,pt_blog_categories.cat_name');
+				if ($orderby == "za") {
+						$this->db->order_by('pt_blog.post_title', 'desc');
+				}
+				elseif ($orderby == "az") {
+						$this->db->order_by('pt_blog.post_title', 'asc');
+				}
+				elseif ($orderby == "oldf") {
+						$this->db->order_by('pt_blog.post_id', 'asc');
+				}
+				elseif ($orderby == "newf") {
+						$this->db->order_by('pt_blog.post_id', 'desc');
+				}
+				elseif ($orderby == "ol") {
+						$this->db->order_by('pt_blog.post_order', 'asc');
+				}
+				$this->db->group_by('pt_blog.post_id');
+				$this->db->join('pt_blog_categories', 'pt_blog.post_category = pt_blog_categories.cat_id', 'left');
+				$this->db->where('pt_blog.post_status', 'Yes');
+				$this->db->where('pt_blog.top_destinations_id', $top_destinations_id);
+
+				$query = $this->db->get('pt_blog');
+				/*echo $this->db->last_query();
+				exit();*/
+				$data['all'] = $query->result();
+				$data['rows'] = $query->num_rows();
+				return $data;
+		}
+
 
 // List all latest posts
 		function latest_posts($limit, $orderby = null) {
@@ -271,9 +306,9 @@ class Blog_model extends CI_Model {
 
               $postslug = $this->input->post('slug');
               if(empty($postslug)){
-              $postslug = $this->makeSlug($this->input->post('title'),$postlastid);
+              	$postslug = $this->makeSlug($this->input->post('title'),$postlastid);
               }else{
-              $postslug = $this->makeSlug($postslug,$postlastid);
+              	$postslug = $this->makeSlug($postslug,$postlastid);
               }
 
 
@@ -285,6 +320,7 @@ class Blog_model extends CI_Model {
                 'post_slug' => $postslug,
                 'post_desc' => $this->input->post('desc'),
                 'post_category' => $this->input->post('category'),
+                'top_destinations_id' => $this->input->post('top_destinations_id'),
                 'post_meta_keywords' => $this->input->post('keywords'),
                 'post_meta_desc' => $this->input->post('metadesc'),
                 'post_status' => $this->input->post('status'),
@@ -294,6 +330,8 @@ class Blog_model extends CI_Model {
                 'post_created_at' => time(),
                 'post_updated_at' => time());
 				$this->db->insert('pt_blog', $data);
+				/*echo $this->db->last_query();
+				exit();*/
                 $postid = $this->db->insert_id();
                 $this->add_translation($this->input->post('translated'),$postid);
 		}
@@ -341,7 +379,17 @@ class Blog_model extends CI_Model {
 						}
 				}
 				$relatedposts = @ implode(",", $this->input->post('relatedposts'));
-				$data = array('post_title' => $this->input->post('title'), 'post_slug' => $postslug, 'post_desc' => $this->input->post('desc'), 'post_category' => $this->input->post('category'), 'post_meta_keywords' => $this->input->post('keywords'), 'post_meta_desc' => $this->input->post('metadesc'), 'post_status' => $this->input->post('status'), 'post_related' => $relatedposts, 'post_img' => $filename_db, 'post_updated_at' => time());
+				$data = array('post_title' => $this->input->post('title'), 
+						'post_slug' => $postslug, 
+						'post_desc' => $this->input->post('desc'), 
+						'post_category' => $this->input->post('category'), 
+						'top_destinations_id' => $this->input->post('top_destinations_id'), 
+						'post_meta_keywords' => $this->input->post('keywords'), 
+						'post_meta_desc' => $this->input->post('metadesc'), 
+						'post_status' => $this->input->post('status'), 
+						'post_related' => $relatedposts, 
+						'post_img' => $filename_db, 
+						'post_updated_at' => time());
 				$this->db->where('post_id', $id);
 				$this->db->update('pt_blog', $data);
                 $this->update_translation($this->input->post('translated'),$id);
@@ -390,6 +438,11 @@ class Blog_model extends CI_Model {
 		function get_enabled_categories() {
 				$this->db->where('cat_status', 'Yes');
 				return $this->db->get('pt_blog_categories')->result();
+		}
+
+		function get_enabled_top_destinations() {
+				
+				return $this->db->get('top_destinations')->result();
 		}
 
 // add category
@@ -729,5 +782,39 @@ class Blog_model extends CI_Model {
             return $this->db->get('pt_blog_categories_translation')->result();
 
         }
+
+        
+        function storeComment($data){
+      
+	      if(!empty($data)){  
+		    $query = $this->db->insert("pt_comment",$data);
+	        if($query){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }  
+    public function ListComment($data1){
+     
+     if(!empty($data1)){  
+        $this->db->select('*');
+        $this->db->from('pt_comment');
+        $this->db->join('pt_blog', 'pt_blog.post_id = pt_comment.post_id', 'left');
+        
+        $query = $this->db->get();
+        $result = $query->result_array();
+        if(!empty($result)){
+            return $result;
+        }else{
+            return false;
+        }
+       
+    }else{
+            return false;
+        }
+	}
 
 }

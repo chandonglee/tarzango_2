@@ -1136,6 +1136,24 @@ if (!function_exists('pt_show_map')) {
 				return $res;
 		}
 
+}if (!function_exists('pt_DestPhotosCount')) {
+
+		function pt_DestPhotosCount($hotelid) {
+				$CI = get_instance();
+				$CI->load->model('top_destinations/top_destinations_model');
+				$res = $CI->top_destinations_model->photos_count($hotelid);
+				return $res;
+		}
+
+}if (!function_exists('pt_HbImageCount')) {
+
+		function pt_HbImageCount($hotelid) {
+				$CI = get_instance();
+				$CI->load->model('hb_images/hb_images_model');
+				$res = $CI->hb_images_model->photos_count($hotelid);
+				return $res;
+		}
+
 }if (!function_exists('pt_RoomPhotosCount')) {
 
 		function pt_RoomPhotosCount($roomid) {

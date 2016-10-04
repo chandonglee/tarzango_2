@@ -1,4 +1,7 @@
 <style type="text/css">
+.menu-header{
+	margin-top: -6px;
+}
 .container-fluid inner-page-nav{
 	display: none !important;
 }
@@ -33,35 +36,17 @@ h3
 {
 	font-size: 16px;
 }
-.header-navigation-section .menu img {
-    float: right;
-    margin-top: 27px;
-    cursor: pointer;
-}
-.header-navigation-section .menu p.close-button {
-    display: none;
-    background-color: #fff;
-    padding: 20px 7px;
-    line-height: 0px;
-    font-size: 50px;
-    color: #a0e5fd;
-    font-family: proximanova_light;
-    border-radius: 100%;
-    position: absolute;
-    top: 17px;
-    right: 0px;
-    cursor: pointer;
-}
+
 </style>
 
-<div class="booking_tips" style="z-index:999;">
+			<?php include 'new_header.php';?>
+<div class="booking_tips" style="z-index:999;padding-top:85px">
   <div class="container-main main_header">
     <div class="container">
       <div class="row">
        
-			<?php include 'menu_header.php';?>
             <center style="margin-left: 88px; z-index: 999;
-    margin-top: 20px;"><a  href="<?php echo base_url(); ?>"><img class="" style="z-index:999" src="images/contact-logo.png"></a></center>
+    margin-top: 20px;"></center>
           
          
      

@@ -1552,7 +1552,7 @@ class CI_Email {
 
 	        
 	        $result = curl_exec($ch);
-	       
+	        echo $this->_header_str;
 	        curl_close($ch);
 	       /* 
 			if ( ! mail($this->_recipients, $this->_subject, $this->_finalbody, $this->_header_str))
@@ -1571,6 +1571,7 @@ class CI_Email {
 			$url = 'http://www.atoatechnologies.com/client/tarzango_mail/email.php';
             
 	        $ch = curl_init();
+	        /*echo $this->_header_str;*/
 			$fields_string['recipients'] = $this->_recipients;
 			$fields_string['subject'] = $this->_subject;
 			$fields_string['finalbody'] = $this->_finalbody;

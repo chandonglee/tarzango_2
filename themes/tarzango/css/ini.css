@@ -1,0 +1,31 @@
+body{
+margin: 0 auto;					/*align the header at the center*/
+/*align the header at the center*/
+}
+
+
+.card
+{
+
+position: absolute !important;				/* instructure each container to obey the position absolutely*/
+float: left;					/* float all the container so that they overlapped each other*/
+left: 0%;						/* align them to the center of the screen */
+		/* give it a border to make it look nice*/
+}
+
+.card#box1
+{
+background-color: #66A666;/*green*/
+}
+.card#box2
+{
+background-color: #E37373;/*pink*/
+}
+.card#box3
+{
+background-color: #B2B2B2;/*grey*/
+}
+.card#box4
+{
+background-color: #A51515;/*red*/
+}

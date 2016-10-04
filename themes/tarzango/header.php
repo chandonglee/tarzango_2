@@ -54,7 +54,7 @@
 <meta property="og:title" content="<?php $ishome = $CI->uri->segment(1); if(empty($ishome)){ echo $app_settings[0]->home_title; }else{ echo $CI->theme->_data['page_title']; } ?>"/>
 <meta property="og:site_name" content="<?php echo $app_settings[0]->site_title;?>"/>
 <meta property="og:description" content="<?php if($app_settings[0]->seo_status == "1"){echo $metadescription;}?>"/>
-<meta property="og:image" content="<?php echo base_url(); ?>uploads/global/favicon.png"/>
+<!--<meta property="og:image" content="<?php echo base_url(); ?>uploads/global/favicon.png"/>-->
 <meta property="og:url" content="<?php echo $app_settings[0]->site_url;?>/"/>
 <meta property="og:publisher" content="https://www.facebook.com/<?php echo $app_settings[0]->site_title;?>"/>
 <script type="application/ld+json">{"@context":"http://schema.org/","@type":"Organization","name":"<?php echo $app_settings[0]->site_title;?>","url":"<?php echo $app_settings[0]->site_url;?>/","logo":"<?php echo base_url(); ?>uploads/global/favicon.png","sameAs":"https://www.facebook.com/<?php echo $app_settings[0]->site_title;?>","sameAs":"https://twitter.com/<?php echo $app_settings[0]->site_title;?>","sameAs":"https://www.pinterest.com/<?php echo $app_settings[0]->site_title;?>/","sameAs":"https://plus.google.com/u/0/<?php echo $app_settings[0]->site_title;?>/posts","contactPoint":{"@type":"ContactPoint","telephone":"<?php echo $phone; ?>","contactType":"Customer Service"}}{"@context":"http://schema.org","@type":"WebSite","name":"<?php echo $app_settings[0]->site_title;?>","url":"<?php echo $app_settings[0]->site_url;?>"}  </script>
@@ -66,11 +66,86 @@
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,700' rel='stylesheet' type='text/css'>
 <style>
 @import "<?php echo $theme_url; ?>childtheme/childstyle.css";
+
+ .blog{
+    display: block !important;
+  }
+  .header-navigation-section .menu img {
+    float: right;
+    margin-top: 25px;
+    cursor: pointer;
+}
+.dropbtn {
+      outline: none;
+  width: 175px;
+  font-family: 'gotham_light_test';
+  text-align: left;
+  margin-top: -12px;
+    background-color: #433074;
+    color: white;
+    padding: 15px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+  width: 175px;
+    display: none;
+    text-align: left;
+    position: absolute;
+    background-color: #433074;
+    font-family: 'gotham_light_test';
+    min-width: 160px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+    color: #fff;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.dropdown-content a:hover {
+    color: #fff;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.container-main.main_header.new input.search-box{
+    border: none !important;
+    width: 60%;
+    box-shadow: none;
+  }
+  
+  .container-main.main_header.new{
+    padding: 10px 0px !important;
+  }
+  
+  
+.menu-header{
+  display: none;
+ }
+.user{
+  margin-top: 20px;
+}
+#header.sticky > .container-main.main_header.new{
+    padding: 25px 0px !important;
+  }
 </style>
 <!-- **** Google Maps **** -->
-<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyAH65sTGsDsP4mMpmbHC8zqRiM1Qh07iL8&sensor=false&libraries=places"></script>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyAH65sTGsDsP4mMpmbHC8zqRiM1Qh07iL8&sensor=false&libraries=places"  ></script>
 <!-- jQuery **** -->
-<script src="<?php echo $theme_url; ?>assets/js/jquery-1.11.2.min.js"></script><script src="<?php echo $theme_url; ?>assets/js/wow.min.js"></script>
+<script src="<?php echo $theme_url; ?>assets/js/jquery-1.11.2.min.js"></script>
+<script src="<?php echo $theme_url; ?>assets/js/wow.min.js"></script>
 <!-- RTL CSS **** -->
 <?php if($isRTL == "RTL"){ ?>
 <link href="<?php echo $theme_url; ?>RTL.css" rel="stylesheet">
@@ -83,11 +158,21 @@
 	}
 </script>
 <?php } } ?>
+<?php 
+/*error_reporting(-1);*/
+ $pageslug_attraction = $CI->uri->segment(1);
+/*exit();*/
+   $pagename =  uri_string();
+   
+?>
 <!--[if lt IE 7]>        
 	<link rel="stylesheet" type="text/css" href="<?php echo $theme_url; ?>assets/css/font-awesome-ie7.css" media="screen" /> 
 <![endif]-->
-<link rel="stylesheet" href="<?php echo $theme_url; ?>assets/css/jquery-ui.css" />
-
+<?php 
+if($pagename != 'membership' && $pagename != 'membership_perks' && $pagename != 'faq'){
+?>
+  <link rel="stylesheet" href="<?php echo $theme_url; ?>assets/css/jquery-ui.css" />
+<?php } ?>
 <!-- Bootstrap -->
 <link href="<?php echo $theme_url; ?>css/bootstrap.css" rel="stylesheet">
 
@@ -98,8 +183,6 @@
 <!-- Bootstrap -->
 <?php 
 
-   $pagename =  uri_string();
-
   if($pagename == ''){
  ?>
 <link href="<?php echo $theme_url; ?>css/style.css" rel="stylesheet">
@@ -107,7 +190,18 @@
   $cls_name = 'slider';
   $cls_name_1 = 'cover';
   $cls_div = '';
- }else{ ?>
+ }else if($pagename == 'attraction' || $pageslug_attraction == 'attraction' ){ ?>
+  <link href="<?php echo $theme_url; ?>css/style_attraction.css" rel="stylesheet">
+ <style>
+ .inner-page-nav{
+  display: none;
+ }
+ </style>
+<?php 
+$cls_name = 'inner-page-nav';
+  $cls_name_1 = '';
+  $cls_div = '</div></div>';
+}else{ ?>
 <link href="<?php echo $theme_url; ?>css/style_listing.css" rel="stylesheet">
 <?php
   $cls_name = 'inner-page-nav';
@@ -115,7 +209,7 @@
   $cls_div = '</div></div>';
    } ?>
 <!-- Bootstrap -->
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+<!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css"> -->
 <link href="<?php echo $theme_url; ?>css/font-awesome.css" rel="stylesheet">
 
 
@@ -135,7 +229,7 @@
 }
 .header-navigation-section .menu img {
     float: right;
-    margin-top: 33px;
+    
     cursor: pointer;
 }
 .header-navigation-section .menu p.close-button{
@@ -151,6 +245,18 @@
     top: 23px;
     right: 0px;
     cursor: pointer;}
+
+    .close-button{
+    -moz-transition: all 0.3s linear;
+    -webkit-transition: all 0.3s linear;
+    transition: all 0.3s linear;
+}
+
+.close-button.down{
+    -moz-transform:rotate(45deg);
+    -webkit-transform:rotate(45deg);
+    transform:rotate(45deg);
+}
 
 /*.dropdown .show-submenu {
 	border: 1px solid #fd4a63 !important;
@@ -176,7 +282,11 @@ background: url(<?php echo $theme_url;
 
 
 <body id="top" class="why-tsrzango">
-
+<div class="divLoading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0, 0, 0); z-index: 30001; opacity: 0.8;overflow-x: hidden;display: none;">
+<p style="position: absolute; color: white; top: 50%; left: 45%;">
+  <img src="<?php echo $theme_url.'images/loader.gif'; ?>">
+</p>
+</div>
 <!-- Top wrapper -->
 <div class="header-navigation-section container-fluid <?php echo $cls_name; ?>">
   <div class="<?php echo $cls_name_1; ?> row">
@@ -187,33 +297,59 @@ background: url(<?php echo $theme_url;
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header"> <a class="navbar-brand non-sticky-logo" href="<?php echo base_url(); ?>"><img src="img/logo.png" class="img-responsive" alt="logo"></a> <a class="navbar-brand sticky-logo" href="<?php echo base_url(); ?>"><img src="img/sticky-logo.png" class="img-responsive" alt="logo"></a>
 
-            <div class="col-sm-1 menu pull-right">
-						<img class="open menu" src="images/menu.png">
-						<p class="close-button">×</p>
-					</div>
+             <div class="col-sm-1 menu pull-right">
+           <!--  <img class="open menu" src="images/menu.png"> -->
+            <img src="images/acc_icon.png" class="close-button" style="display:block"></img>
+            <!-- <p class="close-button" style="display:block">+</p> -->
+          </div>
+
+          <script type="text/javascript">
+
+				$(".close-button").click(function(){
+				 
+				 $(this).toggleClass("down"); 
+				});
+			</script>
+				  <?php  if(!empty($customerloggedin)){ ?>
+				     
+				      <div class="col-sm-2 user" style="float: right;
+    top: 12px;">
+				       <div class="dropdown">
+				        <button onclick="myFunction()" class="dropbtn">Hello,  <?php echo $firstname; ?>  <img  style="width: 20px; float: right;margin-left: 10px; " src="images/menu-arrow-down.png"></button>
+				          <div id="myDropdown1" class="dropdown-content">
+				            <a href="<?php echo base_url()?>account/"> Reservations </a>
+				           <a href="<?php echo base_url()?>account/logout/"> <?php echo trans('03');?></a>   
+				          </div>
+				        </div>
+				        
+				       </div>
+        <?php }?>
+
 					<div class="menu-dropdown">
                		<?php  if(!empty($customerloggedin)){ ?>
                			<ul>
-               				<li><a href="">About</a></li>
+               				<li><a href="<?php echo base_url().'attraction'; ?>">Attraction</a></li>
 							<li><a href="<?php echo base_url().'groupbooking'; ?>">Group Bookings</a></li>
-							<li><a href="">Services</a></li>
+							<li><a href="<?php echo base_url().'services'; ?>">Services</a></li>
 							<li><a href="<?php echo base_url().'membership'; ?>">Membership</a></li>
-							<li><a href="">Agent Show Guide</a></li>
-							<li><a href="">We're Hiring</a></li>
+							<li><a href="<?php echo base_url().'agent_show_guide'; ?>">Agent Show Guide</a></li>
+							<li><a href="<?php echo base_url().'we_are_hiring'; ?>">We're Hiring</a></li>
 							<li><a href="<?php echo base_url().'blog'; ?>">Blog</a></li>
+              <li><a href="<?php echo base_url().'About_us'; ?>">About</a></li>
 							<li><a href="<?php echo base_url().'contact-us'; ?>">Contact</a></li>
 							<li class="last"><a href="<?php echo base_url()?>account/"> <?php echo $firstname; ?> / </a><a href="<?php echo base_url()?>account/logout/"> <?php echo trans('03');?></a></li>
 							<li class="last"><a href=""><img src="images/call.png"> 415-680-3008</a></li>
 						</ul>	
                 		  <?php }else{ if (strpos($currenturl,'book') !== false) { }else{ if($allowreg == "1"){ ?>
 						<ul>
-							<li><a href="">About</a></li>
+							<li><a href="<?php echo base_url().'attraction'; ?>">Attraction</a></li>
 							<li><a href="<?php echo base_url().'groupbooking'; ?>">Group Bookings</a></li>
-							<li><a href="">Services</a></li>
+							<li><a href="<?php echo base_url().'services'; ?>">Services</a></li>
 							<li class=""><a href="<?php echo base_url().'membership'; ?>">Membership</a></li>
-							<li><a href="">Agent Show Guide</a></li>
-							<li><a href="">We're Hiring</a></li>
+							<li><a href="<?php echo base_url().'agent_show_guide'; ?>">Agent Show Guide</a></li>
+							<li><a href="<?php echo base_url().'we_are_hiring'; ?>">We're Hiring</a></li>
 							<li><a href="<?php echo base_url().'blog'; ?>">Blog</a></li>
+							<li><a href="<?php echo base_url().'About_us'; ?>">About</a></li>
 							<li><a href="<?php echo base_url().'contact-us'; ?>">Contact</a></li>
 							<li class="last"><a href="<?php echo base_url(); ?>login"><img src="images/shape.png"> Sign In /</a><a href="<?php echo base_url(); ?>register"> Sign Up</a></li>
 							<li class="last"><a href="tel:4156803008"><img src="images/call.png"> 415-680-3008</a></li>

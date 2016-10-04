@@ -239,9 +239,11 @@
           }
 
           function check_login_user_for_member($username, $password) {
+             /*$bookingResult = array("error" => "no", 'msg' => 17,'user_id' => 17);
+                  return $bookingResult;*/
               $login = $this->accounts_model->login_member_customer($username, $password);
               if ($login) {
-                  $bookingResult = array("error" => "no", 'msg' => $login);
+                  $bookingResult = array("error" => "no", 'msg' => $login, 'user_id' => $login);
                   return $bookingResult;
               }
               else {
@@ -250,15 +252,31 @@
               }
           }
 
+         
+
           function do_customer_booking() {
              
               //$this->load->helper('member');
              
               $userid = $this->accounts_model->signup_account('customers', '1');
-              add_member($userid);
+              //add_member($userid);
 
               return $this->do_booking($userid);
           }
+          
+          function do_customer_booking_vip() {
+             
+              //$this->load->helper('member');
+              /*error_reporting(-1);*/
+
+              $userid = $this->accounts_model->signup_account('customers', '1');
+              add_member($userid);
+              /*exit();*/
+              /*echo $this->session->userdata('pt_logged_customer');
+              exit();*/
+              return $this->do_booking($userid);
+          }
+          
 
           function doGuestBooking($bookquick = null) {
               $userid = $this->accounts_model->signup_account('guest', '0');
@@ -274,7 +292,9 @@
 
 
           function do_booking($userid) {
-           
+              
+              /*print_r($this->input->post());
+              exit();*/
               $is_member = check_is_member($userid);
               
               $error = true;
@@ -429,11 +449,14 @@
                   if($is_member[0]->accounts_id == $userid){
                     $grandtotal = $grandtotal - ($grandtotal * 10 / 100);
                     $pickup['location'] = $this->input->post('pickup_location');
-                    $pickup['time'] = $this->input->post('pickup_time');
+                    $pickup['pickup_time'] = $this->input->post('pickup_time');
+                    $pickup['pickup_date'] = $this->input->post('pickup_date');
+                    $pickup['dropoff_time'] = $this->input->post('dropoff_time');
+                    $pickup['dropoff_date'] = $this->input->post('dropoff_date');
                     $pickup['book_main_price'] = $book_main_price;
                     $pickup['discount_price'] = $grandtotal;
-                    add_pickup_detail($bookid,json_encode($pickup));
                   }
+                    add_pickup_detail($bookid,json_encode($this->input->post()));
 
 
                   $url = base_url() . 'invoice?id=' . $bookid . '&sessid=' . $refno;
@@ -585,7 +608,7 @@
                   }
                  
               $invoicedetails = invoiceDetails($bookid,$refno);
-
+              add_pickup_detail($bookid,json_encode($this->input->post()));
               $this->emails_model->sendEmail_customer($invoicedetails,$this->data['app_settings'][0]->site_title);
               $this->emails_model->sendEmail_supplier($invoicedetails,$this->data['app_settings'][0]->site_title);
               $this->emails_model->sendEmail_admin($invoicedetails,$this->data['app_settings'][0]->site_title);
@@ -762,7 +785,8 @@
 
 
              }elseif($status == 'cancelled'){
-                  $this->emails_model->booking_cancellation_email_cust($useremail,$refno);
+                  $invoicedetails = invoiceDetails($bookid,$refno);
+                  $this->emails_model->booking_cancellation_email_cust($invoicedetails,$refno);
              }else{
                 
                 $invoicedetails = invoiceDetails($bookid,$refno);

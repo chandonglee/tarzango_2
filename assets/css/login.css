@@ -6,7 +6,7 @@ form,
 footer,
 .footer {
   color:#d1d1d1;
-  max-width: 350px;
+  max-width: 450px;
   padding: 19px 29px 29px;
   margin: 0 auto;
   margin-bottom: 15px;
@@ -26,7 +26,7 @@ footer,
 }
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 }
 .form-signin .checkbox {
   font-weight: normal;
@@ -49,8 +49,11 @@ footer,
           border-top-right-radius: 0;
 }
 .form-signin .forget-password {
-  text-align: center;
-  padding: 15px 0;
+     text-align: right;
+   
+    padding-right: 15px;
+    color: #23527c !important;
+    font-family: apercu_regular;
 }
 .form-signup {
   display: none;
@@ -66,10 +69,13 @@ footer,
 }
 .form-heading {
   /* padding: 10px 0; */
+ 
+  font-size: 28px;
+  display: inherit;
   margin: 10px 0;
-  padding-top: 25px;
+  padding-top: 5px;
   padding-bottom: 5px;
-  font-size: 20px;
+ 
 }
 footer,
 .footer {

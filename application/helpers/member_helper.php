@@ -5,6 +5,7 @@ if (!function_exists('check_is_member')) {
 
 	function check_is_member($user_id = ''){
         //echo $user_id;
+        /*error_reporting(-1);*/
         $CI = get_instance();
         $CI->db->select('*');
         $CI->db->where("accounts_id ", $user_id);
@@ -18,6 +19,7 @@ if (!function_exists('check_is_member')) {
 if (!function_exists('add_member')) {
 
     function add_member($user_id = ''){
+        
         //echo $user_id;
         $cur_date = date('Y-m-d');
       // $after_one = strtotime('+30 days',$cur_date);
@@ -27,7 +29,9 @@ if (!function_exists('add_member')) {
         $data = array('accounts_id' => $user_id,'exp_date' => $after_one ); 
         
         $abc = $CI->db->insert('pt_member',$data);
-
+         $CI->load->model('emails_model');
+        
+        $CI->emails_model->signupEmail_VIP($user_id);
     }
 
 }
@@ -46,6 +50,21 @@ if (!function_exists('add_pickup_detail')) {
     }
 
 }
+
+if (!function_exists('add_pickup_detail_hb')) {
+
+    function add_pickup_detail_hb($booking_id = '',$extra_data){
+         
+        //exit();
+        $CI = get_instance();
+        $data = array('booking_id' => $booking_id,'hotel_type' => 1, 'extra_data'=>  $extra_data); 
+        
+        $abc = $CI->db->insert('pt_book_extra',$data);
+
+    }
+
+}
+
 
 if (!function_exists('get_pickup_detail')) {
 

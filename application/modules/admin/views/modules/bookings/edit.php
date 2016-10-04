@@ -265,8 +265,8 @@
           </div>
         </div>
         <?php 
-$repl_arry = array(".",",");
-?>
+          $repl_arry = array(".",",");
+          ?>
         <script>
               $(".paystand_btn_show").hide();
                $(".creditcardform").hide();

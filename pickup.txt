@@ -1,0 +1,58 @@
+Greetings from XML Team! We are pleased to give you information of XML integration for Transfers module. 
+
+Following the link below: 
+https://www.dropbox.com/sh/l64ow5lu9wrc2q8/AAApECKjLWyNkgSFsewTOZu6a?dl=0 
+
+you will find all information for Transfers module. There, you will find: 
+
+1.	Transfer Service XML Interface Specification-v2013-12.pdf – This is the master document where all the Transfers functionality is explained. This document contains the whole information about our API, necessary to understand how it works both at technical and business level, and also what kind of scenarios we could find. On its first part it gives an introduction of the proposed booking funnel. 
+
+2.	Certification_Process_XML_Transfers.docx – This document is a template which contains, step by step, all the reviews we will make once the Transfers development is finished in order to certify it. 
+
+3.	SANDBOX 2013-12 V2.rar – The Sandbox contains practical and real working examples which can be used to help you to understand how our API works. 
+
+4.	Transfer Service XML-FAQ.pdf – This is a file in which you’ll find answers to the most frequent questions that may rise during integration. 
+
+5.	Xsd.rar – A file containing all our API xsd specifications for a better insight on the way the API works. 
+
+6.	POSTMAN TRANSFER BOOKING FUNNEL.zip Postman collection with working flows and examples 
+All these files are constantly being updated to ease the integration process to all our partners. 
+
+The test credentials with which you can use the API are: 
+
+User: TESTCHAINS 
+Pass: TESTCHAINS 
+
+And the Test URLs are: 
+
+HTTP: http://testapi.interface-xml.com/appservices/http/FrontendService 
+WebService: http://testapi.interface-xml.com/appservices/ws/FrontendService 
+
+Transfers Product has a static content that can be used to make a Master Structure. There are 2 FTPs from where you can get relevant and necessary information: 
+
+FTP where you can find the Hotel list for transfers, Transfers destinations and areas, which is: 
+
+FTP: ftp://ftp.hotelbeds.com 
+
+User: ToClient_01 
+Pass: HB2006 
+The route is /ExportCSV/Extended.zip 
+
+FTP where static content can be retrieved: 
+
+FTP: ftp.hotelbeds.com 
+User: trancucliente02 
+Pass: a\xI8Cx7==X12q 
+
+In addition, we have an Active Inventory solution which allows to have the whole Transfers product inventory in your servers. Downloading a set of files and applying certain rules it’s possible to have Transfers availability response without making a request to the Transfers API (only in availability step because for the booking it will be necessary to make the availability request). Active Inventory has certain benefits, mostly (but not limited to): 
+
+•	Being able to make availability research for Destination allowing to obtain all combinations between Airport-Hotel zones. We have seen that some companies are interested in this kind of sell process. 
+
+•	Allows to improve performance by having all the product inside your database and having the availability calculation systems in your side. 
+
+We will need you to provide us a list of your server IPs in order to add them to our whitelist. Otherwise you won't be able to receive responses from our system. 
+
+Please, remember to set the XML version in ALL the requests (version="2013/12") and also to gzip all of the requests. 
+
+Also, it’s very important that you always send to us the flight/train departure time and not the desired pickup time, because this time is calculated by our system and putting a different time could lead to errors. 
+If you have any doubt, please do not hesitate to contact us. In case you accept our proposal of explaining the API, please let us know when it’s possible in order to stablish a meeting date. 

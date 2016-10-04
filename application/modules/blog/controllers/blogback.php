@@ -41,10 +41,9 @@ class Blogback extends MX_Controller {
 		else {
 			$this->data['adminsegment'] = "supplier";
 		}
-		if (empty($this->data['isSuperAdmin'])) {
-
-				redirect('admin');
-		}
+		/*if (empty($this->data['isSuperAdmin'])) {
+			redirect('admin');
+		}*/
 		
 
 		$this->data['c_model'] = $this->countries_model;
@@ -122,7 +121,10 @@ class Blogback extends MX_Controller {
 			$this->form_validation->set_rules('keywords', 'Meta Keywords', 'trim');
 			$this->form_validation->set_rules('metadesc', 'Meta Description', 'trim');
 			$this->form_validation->set_rules('desc', 'Post Content', 'trim|required');
+			/*echo json_encode($this->input->post());
+			exit();*/
 			if ($this->form_validation->run() == FALSE) {
+				$msg = "<div class='alert alert-danger'>" . validation_errors() . "</div>";
 			}
 			else {
 				if (isset ($_FILES['defaultphoto']) && !empty ($_FILES['defaultphoto']['name'])) {
@@ -137,6 +139,8 @@ class Blogback extends MX_Controller {
 				}
 				else {
 					$postid = $this->blog_model->add_post();
+					/*print_r($this->input->post());
+					exit();*/
 
 					$this->session->set_flashdata('flashmsgs', 'Post added Successfully');
 					redirect('admin/blog');
@@ -146,6 +150,9 @@ class Blogback extends MX_Controller {
 		$this->data['action'] = "add";
 		$this->data['all_posts'] = $this->blog_model->select_related_posts();
 		$this->data['categories'] = $this->blog_model->get_enabled_categories();
+		$this->data['top_destinations'] = $this->blog_model->get_enabled_top_destinations();
+		/*print_r($this->data['top_destinations']);
+		exit();*/
 		$this->data['main_content'] = 'blog/manage';
 		$this->data['page_title'] = 'Add Blog';
 		$this->load->view('admin/template', $this->data);
@@ -201,6 +208,7 @@ class Blogback extends MX_Controller {
 			$this->data['related_selected'] = explode(",", $this->data['pdata'][0]->post_related);
 			$this->data['all_posts'] = $this->blog_model->select_related_posts($this->data['pdata'][0]->post_id);
 			$this->data['categories'] = $this->blog_model->get_enabled_categories();
+			$this->data['top_destinations'] = $this->blog_model->get_enabled_top_destinations();
 			$this->data['main_content'] = 'blog/manage';
 			$this->data['page_title'] = 'Manage Post';
 			$this->load->view('admin/template', $this->data);

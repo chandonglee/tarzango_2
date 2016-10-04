@@ -98,6 +98,22 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
     define('PT_HOTELS_ICONS_UPLOAD', 'uploads/images/hotels/amenities/');
     /*** End Hotel Images ***/
 
+     /*** Destinations Images ***/
+     define('PT_DEST_SLIDER', PT_BASE_URL.'uploads/images/dest_img/slider/');
+    define('PT_DEST_SLIDER_THUMBS', PT_BASE_URL.'uploads/images/dest_img/slider/thumbs/');
+    define('PT_DEST_SLIDER_UPLOAD', 'uploads/images/dest_img/slider/');
+    define('PT_DEST_SLIDER_THUMBS_UPLOAD', 'uploads/images/dest_img/slider/thumbs/');
+
+     /*** End Destinations Images ***/
+
+     /*** Destinations Images ***/
+     define('PT_HB_SLIDER', PT_BASE_URL.'uploads/images/hbhotels/slider/');
+    define('PT_HB_SLIDER_THUMBS', PT_BASE_URL.'uploads/images/hbhotels/slider/thumbs/');
+    define('PT_HB_SLIDER_UPLOAD', 'uploads/images/hbhotels/slider/');
+    define('PT_HB_SLIDER_THUMBS_UPLOAD', 'uploads/images/hbhotels/slider/thumbs/');
+
+     /*** End Destinations Images ***/
+
     /*** Hotel Videos ***/
     define('PT_HOTELS_VIDEOS', PT_BASE_URL.'uploads/videos/hotels/');
     define('PT_HOTELS_VIDEOS_UPLOAD', 'uploads/videos/hotels/');

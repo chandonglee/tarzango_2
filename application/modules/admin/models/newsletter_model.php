@@ -14,10 +14,15 @@ class Newsletter_model extends CI_Model {
 
 // add to subscription list
 		function add_subscriber($email, $type = "subscribers") {
+						 /*$emails = $this->get_emails('admin');
+						print_r($emails);
+						exit();*/
 				$issubscribed = $this->is_subscribed($email);
 				if (!$issubscribed) {
 						$data = array('newsletter_subscribers' => $email, 'newsletter_type' => $type);
 						$this->db->insert('pt_newsletter', $data);
+						$this->load->model('admin/emails_model');
+						$this->emails_model->sendNewsletter_sub($email, 'booking@tarzango.com');
 						return true;
 				}
 				else {

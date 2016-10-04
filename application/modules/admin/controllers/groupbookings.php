@@ -92,7 +92,7 @@ class Groupbookings extends MX_Controller {
     }
 
     function edit($module, $id) {
-        error_reporting(E_ALL);
+        /*error_reporting(E_ALL);*/
         if(!$this->editpermission){
                  echo "<center><h1>Access Denied</h1></center>";
                  backError_404($this->data);
@@ -111,6 +111,8 @@ class Groupbookings extends MX_Controller {
                 $this->data['chklib'] = $this->ptmodules;
                 $bdetails = $this->groupbookings_model->getBookingRefNo($id);
                 $all_hotel = $this->groupbookings_model->get_all_hotel();
+                /*echo json_encode($bdetails);
+                exit();*/
                 /*print_r($all_hotel);
                 echo $all_hotel[0]->hotel_title;
                 exit();*/

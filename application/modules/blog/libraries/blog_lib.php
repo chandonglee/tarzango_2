@@ -46,6 +46,16 @@ class Blog_lib {
 			$this->blogid = $r[0]->post_id;
 		}
 
+		function get_comment(){
+
+			$this->db->select('pt_comment.comment_body,pt_comment.ai_first_name');
+        	$this->db->from('pt_comment');
+        	$this->db->where('pt_comment.post_id', $this->blogid);
+
+        	$details = $this->db->get()->result();
+        	return $details;
+		}
+
 //set car id by id
 		function set_id($id) {
 			$this->blogid = $id;
@@ -91,6 +101,7 @@ class Blog_lib {
 			$this->thumbnail = $this->post_thumbnail($details[0]->post_id);
 			$this->date = pt_show_date_php($details[0]->post_created_at);
 			$this->hits = $details[0]->post_visits;
+			
 			return $details;
 		}
 

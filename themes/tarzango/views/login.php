@@ -11,7 +11,12 @@
 .login-form{
   margin-top: 50px;
 }
-
+@media (max-width: 767px){}
+.login-form {
+    padding: 20px 25px !important;
+    margin-top: 0px !important;
+}
+}
 </style>
 <?php include'main-header.php';?>
 <div class="bg_list_image">
@@ -68,7 +73,7 @@
       </div>
       <div class="login-c3 wow zoomInDown animated" style="margin-top: 10px;position: relative;float: left;width: 100%;">
         <?php if($registerationAllowed == "1"){ ?><div class="left" style="width: 50%;float: left;"><a href="<?php echo base_url();?>register" class="whitelink"><span></span><?php echo trans('0237');?></a></div><?php } ?>
-        <div class="right" style="float: right;"><a data-toggle="modal" href="#ForgetPassword" class="whitelink"><?php echo trans('0112');?></a></div>
+        <div class="right" style="float: right;"><a data-toggle="modal" href="#ForgetPassword" id="whitelink" class="whitelink "><?php echo trans('0112');?></a></div>
       </div>
     </div>
     <!-- End of Login Wrap  -->
@@ -86,20 +91,28 @@
 <?php } ?>
 <?php } }  ?>
 <!-- PHPTRAVELS forget password starting -->
-<div class="modal wow fadeIn animated" id="ForgetPassword" tabindex="" role="dialog" aria-labelledby="ForgetPassword" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
+<div class="modal fadeIn animated" id="ForgetPassword1" style="display:none">
+  <div class="modal-dialog modal-sm" style="width:450px">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title"><i class="fa fa-asterisk"></i> <?php echo trans('0112');?></h4>
+        <h4 class="modal-title" style="font-family: 'Gotham-Bold'; color: #4867aa; font-size: 28px; display: inherit;"><i class="fa fa-asterisk"></i> <?php echo trans('0112');?></h4>
       </div>
       <div class="modal-body">
         <form method="POST" action="" id="passresetfrm" accept-charset="UTF-8" onsubmit="return false;">
           <div class="resultreset"></div>
-          <div class="input-group">
+          <div class="input-group" style="width:95%">
             <input type="text" placeholder="your@email.com" class="form-control form" id="resetemail" name="email" required>
             <span class="input-group-btn">
-            <button type="submit" class="btn btn-primary resetbtn" type="button"><?php echo trans('0114');?></button>
+            <button type="submit" style="text-align: center; font-family: 'Gotham-Bold'; font-size: 14px;color: #fff;
+    padding: 20px 20%;
+    background: #3ecdff;
+   
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    letter-spacing: 1px;
+    " class="btn btn-primary resetbtn" type="button"><?php echo trans('0114');?></button>
             </span>
           </div>
         </form>
@@ -109,6 +122,15 @@
 </div>
 <!-- PHPTRAVELS forget password ending -->
 <script>
+ 
+     $("#whitelink").click(function(){      
+        $("#ForgetPassword1").toggle();
+    });
+ $(".close").click(function(){      
+        $("#ForgetPassword1").hide();
+    });
+
+  
   $(function(){
   var url = $(".url").val();
   // start login functionality

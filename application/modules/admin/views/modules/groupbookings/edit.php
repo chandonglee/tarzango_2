@@ -57,22 +57,40 @@
               <div class="col-md-8" style="margin-top:7px;"> <?php echo $bdetails->place_type;?> </div>
             </div>
             
+            <div class="form-group">
+              <label class="col-md-3 control-label">hotelbeds Hotel</label>
+              <div class="col-md-8" style="margin-top:7px;"> 
+                <?php
+                        $sel_hotel_data = $bdetails->hotel_data;
+                        $sel_hotel_data = json_decode($sel_hotel_data);
+                        
+                        for($s_i=0;  $s_i < count($sel_hotel_data->hotel_name); $s_i++){ 
+                          if($sel_hotel_data->sel_hotel_type[$s_i] == 1){
+                            echo $sel_hotel_data->hotel_name[$s_i];
+                            echo "<br>";
+                          ?>
+
+                        <?php } } ?>   
+              </div>
+            </div>
+
             <!--Hotels-->
             <div class="form-group">
                 <label class="col-md-3 control-label">Hotel Name</label>
                 <div class="col-md-6">
-                    <select multiple class="chosen-multi-select" name="hotel_id[]">
+                    <select multiple class="chosen-multi-select" required name="hotel_id[]">
                         <?php
                         $sel_hotel_data = $bdetails->hotel_data;
                         $sel_hotel_data = json_decode($sel_hotel_data);
 
                         for($s_i=0;  $s_i < count($all_hotel); $s_i++){ ?>
                             <option value="<?php echo $all_hotel[$s_i]->hotel_id; ?>"  <?php if(in_array($all_hotel[$s_i]->hotel_id,$sel_hotel_data->hotel_id)){ echo "selected"; } ?> ><?php echo $all_hotel[$s_i]->hotel_title;?></option>
-                        <!--<option value="<?php echo $all_hotel[$s_i]->hotel_id; ?>"  <?php if(in_array($all_hotel[$s_i]->hotel_id,$sel_hotel_data->hotel_id)){ echo "selected"; } ?> ><?php echo $all_hotel[$s_i]->hotel_title.' ( '. $all_hotel[$s_i]->hotel_map_city.' )';?></option>-->
                         <?php } ?>
                     </select>
                 </div>
             </div>
+
+            
             
             <div class="form-group">
                 <label class="col-md-3 control-label">Booking Status</label>

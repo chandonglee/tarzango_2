@@ -1,5 +1,19 @@
 <style type="text/css">
+.menu-header{
+  position: absolute;
+    margin-left: -70px;
+    margin-right: 100px;
+}
 
+@media(min-width: 1600px){
+  .center{
+    margin-left: 120px !important;
+    z-index: 999;
+    margin-top: 20px;
+
+
+  }
+}
 .account_body .col-sm-12 .col-sm-10 {
      margin: 0px; 
      margin-top: 30px;
@@ -21,18 +35,18 @@
 }
 }
 
-
 </style>
 
 
+
 <div class="account">
-  <div class="container-main main_header">
+      <?php include $themeurl.'views/new_header.php';?>
+  <div class="container-main main_header" style="padding-top:110px">
      <div class="container">
       <div class="row">
        
-      <?php include $themeurl.'views/menu_header.php';?>
-            <center style="margin-left: 88px; z-index: 999;
-    margin-top: 20px;"><a  href="<?php echo base_url(); ?>"><img class="" style="z-index:999" src="images/contact-logo.png"></a></center>
+            <center class="center" style="margin-left: 88px; z-index: 999;
+    margin-top: 20px;"></center>
         <div class="col-sm-12 page-title">
           <h2 class="">Account</h2>
           <a  href="<?php echo base_url(); ?>" ><img style="position:relative;z-index:999;" src="images/arrow-blue.png"></a>
@@ -92,8 +106,11 @@
           <!-- TAB 1 -->
             <div id="bookings" class="tab-pane fade in active">
          
-            <p>You have 2 active bookings</p>
-            <?php include $themeurl.'views/account/bookings.php'; ?>
+            <p>You have <span class="active_boook">0</span> active bookings</p>
+            <?php 
+              $active_boook = 0;
+              include $themeurl.'views/account/bookings.php'; 
+              ?>
           </div>
           <!-- END OF TAB 1 -->
           <!-- TAB 2 -->
@@ -157,15 +174,18 @@
 
   //newsletter subscription
   $(".newsletter").click(function(){
-  var email = $(this).val();
+  var email = $('#user_email_data').val();
   var action = '';
   var msg = '';
-  if($(this).prop( "checked" )){
+  $('.newsletter').removeClass('news_active');
+  if($(this).data("issubscribed") == 1){
   action = 'add';
   msg = "<?php echo trans('0487');?>";
+  $(this).addClass('news_active');
   }else{
   action = 'remove';
   msg = "<?php echo trans('0489');?>";
+  $(this).addClass('news_active');
   }
   $.post("<?php echo base_url();?>account/newsletter_action", { email: email, action: action }, function(resp){
   $(".accountresult").html('<div class="alert alert-success">'+msg+'</div>').fadeIn("slow");

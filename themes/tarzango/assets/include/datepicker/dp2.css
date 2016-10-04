@@ -97,11 +97,22 @@
 }
 .datepicker table tr td.day:hover,
 .datepicker table tr td.day.focused {
-  background: #eee;
+  border: 0px;
+    color: #fff;
+    background: #3fcdff;
+    font-size: 15px;
+    
   cursor: pointer;
 }
 .datepicker table tr td.day {
-  border: 1px solid #e6e6e6;
+  background: #fff;
+    font-weight: normal;
+    color: #7e80a3;
+    font-size: 15px;
+    
+    border: 0px;
+    text-align: center;
+  border: none;
 }
 .datepicker table tr td.old,
 .datepicker table tr td.new {
@@ -211,6 +222,7 @@ fieldset[disabled] .datepicker table tr td.today.disabled.active,
 fieldset[disabled] .datepicker table tr td.today.disabled:hover.active {
   background-color: #ffdb99;
   border-color: #ffb733;
+
 }
 .datepicker table tr td.today:hover:hover {
   color: #000;
@@ -496,9 +508,11 @@ fieldset[disabled] .datepicker table tr td.selected.disabled:hover.active {
 .open .dropdown-toggle.datepicker table tr td.active:hover,
 .open .dropdown-toggle.datepicker table tr td.active.disabled,
 .open .dropdown-toggle.datepicker table tr td.active.disabled:hover {
-  color: #fff;
-  background-color: #333;
-  border-color: #333;
+  border: 0px;
+    color: #fff;
+    background: #3fcdff;
+    text-align: center;
+    font-size: 15px;
 }
 .datepicker table tr td.active:active,
 .datepicker table tr td.active:hover:active,
@@ -757,14 +771,25 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
   line-height: 1.428571429;
   -webkit-box-shadow: 0 2px 1px rgba(0,0,0,0.2);
   box-shadow: 0 2px 1px rgba(0,0,0,0.2);
-  padding: 7px 10px;
+  padding: 10px 15px;
   z-index: 9999;
 }
 .datepicker.dropdown-menu th,
 .datepicker.datepicker-inline th,
 .datepicker.dropdown-menu td,
 .datepicker.datepicker-inline td {
-  padding: 0px 4px;
+  padding: 0px 10px;
+}
+.datepicker.dropdown-menu th,
+.datepicker.datepicker-inline th{
+    font-size: 15px;
+    color: #373b71;
+      
+}
+.datepicker thead tr:first-child th, .datepicker tfoot tr th{
+  color: #3fcdff;
+    font-size: 15px;
+    
 }
 .datepicker thead tr:first-child th.prev:before,
 .datepicker thead tr:first-child th.next:before {
@@ -774,8 +799,23 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
   font-weight:normal;
   font-style:normal;
 }
+.datepicker thead tr:first-child th.prev {
+  background-image: url(../images/prev.png);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    content: ''
+}
+.datepicker thead tr:first-child th.next {
+  background-image: url(../images/next.png);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    content: ''
+}
 .datepicker thead tr:first-child th.prev:before {
-  content: '<';
+  content: ''
+}
+.datepicker thead tr:first-child th.next:before {
+  content: ''
 }
 .bootstrap-timepicker {
   position: relative;

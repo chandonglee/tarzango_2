@@ -150,7 +150,7 @@
 
       }).data('datepicker');
 
-var nowTemp2 = new Date,
+    var nowTemp2 = new Date,
     now2 = new Date(nowTemp2.getFullYear(), nowTemp2.getMonth(), nowTemp2.getDate(), 0, 0, 0, 0),
     checkin3 = $(".dpean3").datepicker({
         format: "mm/dd/yyyy",
@@ -171,6 +171,29 @@ var nowTemp2 = new Date,
         }
     }).on("changeDate", function() {
         checkout4.hide()
+    }).data("datepicker");
+
+    var nowTemp2 = new Date,
+    now3 = new Date(nowTemp2.getFullYear(), nowTemp2.getMonth(), nowTemp2.getDate(), 0, 0, 0, 0),
+    checkin5 = $(".dpean5").datepicker({
+        format: "mm/dd/yyyy",
+        onRender: function(e) {
+            return e.valueOf() < now3.valueOf() ? "disabled" : ""
+        }
+    }).on("changeDate", function(e) {
+        if (e.date.valueOf() > checkout6.date.valueOf()) {
+            var a = new Date(e.date);
+            a.setDate(a.getDate() + 1), checkout6.setValue(a)
+        }
+        checkin5.hide(), $(".dpean6")[0].focus()
+    }).data("datepicker"),
+    checkout6 = $(".dpean6").datepicker({
+        format: "mm/dd/yyyy",
+        onRender: function(e) {
+            return e.valueOf() <= checkin5.date.valueOf() ? "disabled" : ""
+        }
+    }).on("changeDate", function() {
+        checkout6.hide()
     }).data("datepicker");
 
   /* Expedia datepicker */

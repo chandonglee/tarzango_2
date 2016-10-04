@@ -33,6 +33,7 @@ class Account extends MX_Controller {
 				$this->data['phone'] = $this->load->get_var('phone');
 				$this->data['contactemail'] = $this->load->get_var('contactemail');
 				$defaultlang = pt_get_default_language();
+				$this->load->model('attraction/attraction_model');
 				if (empty ($this->data['lang_set'])) {
 						$this->data['lang_set'] = $defaultlang;
 				}
@@ -85,6 +86,12 @@ class Account extends MX_Controller {
 				}
 
 				$this->data['bookings'] = $this->accounts_model->get_my_bookings($this->loggedin);
+				
+				/*error_reporting(-1);*/
+				$this->data['attrbookings'] = $this->attraction_model->get_attr_my_bookings($this->loggedin);
+
+				/*echo json_encode($this->data['attrbookings']);
+				exit();*/
 				//$this->data['plinks'] = $this->bootpagination->dopagination('account/invoices', $rh['rows'], $perpage);
 				$this->data['is_subscribed'] = $this->newsletter_model->is_subscribed($this->data['profile'][0]->accounts_email);
 				$this->data['cancel_duration'] = $this->data['app_settings'][0]->booking_cancellation * 86400;

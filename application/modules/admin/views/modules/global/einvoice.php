@@ -1,482 +1,349 @@
 <style>
-.btn-primary{
-  background: url(<?php echo $theme_url; ?>img/btn-bg.jpg) repeat !important;
-  border: none;
-}
-body {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  margin: 0 !important;
-  width: 100% !important;
-  -webkit-text-size-adjust: 100% !important;
-  -ms-text-size-adjust: 100% !important;
-  -webkit-font-smoothing: antialiased !important;
-}
-.tableContent img {
-  border: 0 !important;
-  display: block !important;
-  outline: none !important;
-}
-a {
-  color: #fc5f5a;
-}
-p, h1 {
-  color: #fc5f5a;
-}
-a.link1 {
-}
-a.link2 {
-}
-.bigger {
-  font-size: 24px;
-}
-.bgBody {
-  background: #dddddd;
-}
-.bgItem {
-  background: #ffffff;
-}
-h2 {
-  color: #F34E32;
-  font-size: 24px;
-  margin: 0;
-  font-weight: normal;
-  font-family: sans-serif;
-  ;
-}
-p {
-  color: #967B76;
-  font-size: 14px;
-  margin: 0;
-  line-height: 20px;
-  font-family: sans-serif;
-}
-.reservation td, th {
-  padding: 10px !important;
-}
+  header {
+    background: linear-gradient(to left, #321d61, #1d2c68);
+    padding: 20px 0;
+  }
+  .fa {
+    padding-left: 7px;
+    font-size: 16px;
+  }
+  .main-pay {
+    -webkit-box-shadow: -1px 2px 7px 0px rgba(217,217,227,1);
+    -moz-box-shadow: -1px 2px 7px 0px rgba(217,217,227,1);
+    box-shadow: -1px 2px 7px 0px rgba(217,217,227,1);
+  }
+  .row {
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+  .pay-block {
+    text-align: center;
+    margin-top: 60px;
+  }
+  .pay-block h1 {
+    font-family: 'Conv_GothamNarrow-Book_0';
+    color: #fff;
+    font-size: 21px;
+    font-weight: normal;
+    margin: 0;
+    padding-bottom: 5px;
+  }
+  .pay-block p {
+    font-family: 'Conv_GothamNarrow-Book_0';
+    color: #fff;
+    font-size: 18px;
+    font-weight: normal;
+    margin-bottom: 50px;
+  }
+  .btn-primary {
+    text-align: center;
+    font-family: 'Gotham-Bold';
+    font-size: 15px;
+    color: #fff;
+    padding: 20px 12%;
+    background: #2cc6fd;
+    border-radius: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    letter-spacing: 1px;
+    display: inline-block;
+    margin: 0 10px 40px;
+  }
+  .menu {
+    width: 52px;
+  }
+  .menu-header {
+    position: absolute;
+    margin-left: -105px !important;
+    margin-top: -48px !important;
+  }
+  .inner-page-nav {
+    display: none;
+  }
+  .pay-header {
+    padding-bottom: 120px;
+  }
+  .menu-header {
+    margin-left: -100px !important;
+  }
+  .menu-header a {
+    margin-left: 110% !important;
+  }
 
-@media only screen and (max-width:480px) {
-table[class="MainContainer"], td[class="cell"] {
-  width: 100% !important;
-  height: auto !important;
-}
-td[class="specbundle"] {
-  width: 100% !important;
-  float: left !important;
-  font-size: 13px !important;
-  line-height: 17px !important;
-  display: block !important;
-  padding-bottom: 15px !important;
-  text-align: center !important;
-}
-td[class="specbundle2"] {
-  width: 90% !important;
-  float: left !important;
-  font-size: 13px !important;
-  line-height: 17px !important;
-  display: block !important;
-  padding-bottom: 10px !important;
-  padding-left: 5% !important;
-  padding-right: 5% !important;
-}
-td[class="specbundle3"] {
-  width: 85% !important;
-  float: left !important;
-  font-size: 13px !important;
-  line-height: 17px !important;
-  display: block !important;
-  padding-bottom: 10px !important;
-  padding-left: 10% !important;
-  padding-right: 5% !important;
-}
-td[class="spechide"] {
-  display: none !important;
-}
-img[class="banner"] {
-  width: 100% !important;
-  height: auto !important;
-}
-img[class="banner1"] {
-  width: 90% !important;
-  height: auto !important;
-}
-td[class="left_pad"] {
-  padding-left: 15px !important;
-  padding-right: 15px !important;
-}
-}
+  @media(min-width: 1000px) {
+  .img-responsive, .thumbnail > img, .thumbnail a > img, .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+    display: block;
+    height: 400px !important;
+    width: 100% !important;
+  }
+  }
 
-@media only screen and (max-width:540px) {
-table[class="MainContainer"], td[class="cell"] {
-  width: 100% !important;
-  height: auto !important;
-}
-td[class="specbundle"] {
-  width: 100% !important;
-  float: left !important;
-  font-size: 13px !important;
-  line-height: 17px !important;
-  display: block !important;
-  padding-bottom: 15px !important;
-  text-align: center !important;
-}
-td[class="specbundle2"] {
-  width: 90% !important;
-  float: left !important;
-  font-size: 13px !important;
-  line-height: 17px !important;
-  display: block !important;
-  padding-bottom: 10px !important;
-  padding-left: 5% !important;
-  padding-right: 5% !important;
-}
-td[class="specbundle3"] {
-  width: 85% !important;
-  float: left !important;
-  font-size: 13px !important;
-  line-height: 17px !important;
-  display: block !important;
-  padding-bottom: 10px !important;
-  padding-left: 10% !important;
-  padding-right: 5% !important;
-}
-td[class="spechide"] {
-  display: none !important;
-}
-img[class="banner"] {
-  width: 100% !important;
-  height: auto !important;
-}
-img[class="banner1"] {
-  width: 90% !important;
-  height: auto !important;
-}
-td[class="left_pad"] {
-  padding-left: 15px !important;
-  padding-right: 15px !important;
-}
-}
-.modal-content {
-  box-shadow: none !important;
-}
-.modal-footer {
-  background-color: #E3E3E3;
-}
-.btn-circle {
-  border-radius: 50%;
-  font-size: 54px;
-  padding: 0px 12px;
-}
-#rotatingImg {
-  display: none;
-}
-.panel-body {
-  padding: 15px;
-}
-.paybtn {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 1.428571429;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  cursor: pointer;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-  color: #222222;
-  background-color: #EEEEEE;
-  border-color: #DDDDDD;
-}
-.paybtn:hover {
-  background-color: #DDDDDD;
-  border-color: #AAAAAA;
-}
+  @media(min-width: 1600px) {
+  .img-responsive, .thumbnail > img, .thumbnail a > img, .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+    display: block;
+    height: 450px !important;
+    width: 100% !important;
+  }
+  }
 </style>
+<script src='<?php echo $theme_url; ?>js/custom.js'></script>
+<?php 
 
+/*echo json_encode($invoice);
+exit();*/
+if(isset($page_title_1)) {
+  /*$invoice = $invoice[0];*/
+  if($invoice->book_cancelnumber == null){
+    $invoice->status = 'unpaid';
+  }else{
+    $invoice->status = 'paid';
+  }
 
-<div class="bg_list_image">
-  <div class="modal-dialog modal-lg" style="z-index: 0">
-    <div class="modal-content" style="z-index: 1025;">
-      <div class="modal-body" style="padding:0px;">
-        <div class="center-block" style="padding-top:30px;">
-          <?php if(!empty($errormsg)){ ?>
-          <div class="alert alert-danger"><?php echo $errormsg; ?></div>
-          <?php  } ?>
-         
-        </div>
-        <hr>
+  $book_response = json_decode($invoice->book_response);
+  $Extra_data = $invoice->Extra_data;
+  $invoice->expiryUnixtime = strtotime(date('Y-m-d H:i:s', strtotime('+24 hours', strtotime($invoice->created_date))));
+  
+  //$invoice->expiryUnixtime = strtotime();
+ ?>
 
-         <?php //require $themeurl . 'views/invoice.php';?>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="bgBody">
-          <div class="movableContent" style="border: 0px; padding-top: 0px; position: relative;">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-              <tbody>
-                <tr>
-                  <td valign="top" width="600" style="padding:0px !important;"><div class="contentEditableContainer contentImageEditable">
-                      <div class="contentEditable" align="center"> <img class="banner" src="<?php echo $invoice[0]->book_thumbnail; ?>" alt="Featured image" height="400" width="100%" data-default="placeholder" data-max-width="600" border="0"> </div>
-                    </div></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="movableContent" style="border: 0px; padding-top: 0px; position: relative;">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-              <tbody>
-                <tr>
-                  <td  bgcolor="#0781ce" style="padding: 20px;" ><div class="contentEditableContainer contentTextEditable">
-                      <div class="contentEditable" align="center">
-                        <p style="color:#ffffff;font-style:italic;font-size: 16px;margin:0;font-family:sans-serif;line-height:22px;">Confirmation Number: <?php echo $invoice[0]->book_itineraryid;?></p>
-                      </div>
-                    </div></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="customZone" data-type="Textimage">
-            <div class="movableContent bgItem">
-              <table width="95%" border="0" cellspacing="0" cellpadding="0" align="center" >
-                <tr>
-                  <td height="42">&nbsp;</td>
-                  <td height="42">&nbsp;</td>
-                </tr>
-                <tr>
-                  <td valign="top" style="padding:0 0 0 0px;"><div class="contentEditableContainer contentTextEditable">
-                      <div class="contentEditable">
-                        <h2><?php echo $invoice[0]->book_hotel;?> </h2>
-                        </br>
-                        <p ><?php echo $invoice->hotel_details_extra['hotel_desc']; ?></p>
-                        <br>
-                        <span ><strong>Address : </strong><?php echo $invoice[0]->book_hotel;?> <?php echo $invoice[0]->book_location;?></span><br>
-                        <span class="st_rating" ><strong>Star rating : </strong><?php echo $invoice->stars;?></span> </div>
-                    </div></td>
-                </tr>
-              </table>
-            </div>
-          </div>
-          <div class="movableContent" style="border: 0px; padding-top: 0px; position: relative;">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
-              <tbody>
-                <tr>
-                  <td valign="top" width="20">&nbsp;</td>
-                  <td><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                      <tr>
-                        <td height="42">&nbsp;</td>
-                      </tr>
-                      <tr>
-                        <td align="left"><div class="contentEditableContainer contentTextEditable">
-                            <div class="contentEditable">
-                              <h2 style="color: #F34E32;font-size: 24px;margin: 0;font-weight: normal;font-family: sans-serif;">Guest Details</h2>
-                            </div>
-                          </div></td>
-                      </tr>
-                      <tr>
-                        <td  style="font-size:18px; margin-bottom:20px; padding: 6px !important;"><strong>Name : </strong><?php echo $invoice[0]->ai_first_name." ".$invoice[0]->ai_last_name; ?></td>
-                      </tr>
-                      <tr>
-                        <td align="left" valign="top" ><table class="reservation" border="1" style="border-collapse: collapse;font-size: 14px;padding: -1px;font-family: sans-serif;border: solid 1px #fff;background: #f2f2f2;" cellspacing="10px" cellpadding="10px" width="100%">
-                            <tbody>
-                              <tr>
-                                <td><strong>Confirmation No : </strong><?php echo $invoice[0]->book_itineraryid;?></td>
-                                <td><strong>No of Rooms : </strong>1</td>
-                              </tr>
-                              <tr>
-                                <td colspan="2"><strong>Room Name : </strong><?php echo $invoice[0]->book_roomname;?></td>
-                              </tr>
-                              <tr>
-                                <td><strong>Checkin Date : </strong><?php echo date("m/d/Y", strtotime($invoice[0]->book_checkin));?></td>
-                                <td><strong>Checkout Date : </strong><?php echo date("m/d/Y", strtotime($invoice[0]->book_checkout));?></td>
-                              </tr>
-                              <tr>
-                                <td><strong>Total Amount : </strong>$ <?php echo str_replace(".00",'',number_format($invoice[0]->book_total,2));?></td>
-                                <td><strong>No of Adults / Child : </strong> <?php $book_response = json_decode($invoice[0]->book_response); echo count($book_response->hotel->rooms[0]->paxes); ?></td>
-                              </tr>
-                              <?php if($invoice->couponRate > 0){ ?>
-                                <tr>
-                                  <td>
-                                      <strong><?php echo trans('0518');?> : </strong> <?php echo $invoice->couponRate; ?>%
-                                  </td>
-                                </tr>
-                              <?php } ?>
-                            </tbody>
-                          </table></td>
-                      </tr>
-                    </table></td>
-                  <td valign="top" width="20">&nbsp;</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="movableContent" style="border: 0px; padding-top: 0px; position: relative;">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
-              <tbody>
-                <tr>
-                  <td valign="top" width="20">&nbsp;</td>
-                  <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
-                      <tbody>
-                        <tr>
-                          <td valign="top" height="42"></td>
-                        </tr>
-                        <tr>
-                          <td align="center"><div class="contentEditableContainer contentTextEditable">
-                              <div class="contentEditable">
-                                <p style="color:#967B76;font-size: 26px;margin:0;font-family:sans-serif;">SIMILAR HOTELS</p>
-                              </div>
-                            </div></td>
-                        </tr>
-                        <tr>
-                          <td height="38"></td>
-                        </tr>
-                        <tr>
-                          <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
-                              <tbody>
-                                <tr>
-                                  <?php 
-                                      $top_hotel = $invoice->hotel_details_extra['top_hotel'];
-                                      $top_hotel_1 = "";
-                                      for ($i=0; $i < count($top_hotel) ; $i++) { 
-                                        $bb = $top_hotel;
-                                        /*echo json_encode($bb[$i]->slug);
-                                        exit();*/ ?>
-                                  <td width="170" valign="top" class="specbundle2"><a href="<?php echo $bb[$i]->slug; ?>" style="text-decoration: none;">
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                      <tbody>
-                                        <tr>
-                                          <td valign="top" width="170"><div class="contentEditableContainer contentImageEditable">
-                                              <div class="contentEditable" align="center"> <img src="<?php echo $bb[$i]->thumbnail; ?>"  width="170" height="120" data-default="placeholder" data-max-width="170"> </div>
-                                            </div></td>
-                                        </tr>
-                                        <tr>
-                                          <td align="center" style="padding:12px 0 0 0;" width="186" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                              <tbody>
-                                                <tr>
-                                                  <td align="center" valign="top"><div class="contentEditableContainer contentTextEditable">
-                                                      <div class="contentEditable">
-                                                        <p style="height:30px; width:88%;color:#967B76;font-size: 16px;margin:0;line-height: 18px;font-family:sans-serif;"> <?php echo $bb[$i]->title; ?></p>
-                                                      </div>
-                                                    </div></td>
-                                                </tr>
-                                                <tr>
-                                                  <td height="10"></td>
-                                                </tr>
-                                                <tr>
-                                                  <td align="center" valign="top"><div class="contentEditableContainer contentTextEditable">
-                                                      <div class="contentEditable">
-                                                        <p style="color:#fc5f5a;font-size: 24px;margin:0;font-family:sans-serif;"><?php echo $bb[$i]->currCode.$bb[$i]->price; ?></p>
-                                                      </div>
-                                                    </div></td>
-                                                </tr>
-                                              </tbody>
-                                            </table></td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                    </a></td>
-                                  <?php  //echo $top_hotel_1;
-                                      }
-                                    ?>
-                                </tr>
-                              </tbody>
-                            </table></td>
-                        </tr>
-                      </tbody>
-                    </table></td>
-                  <td valign="top" width="20">&nbsp;</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <hr>
-          <div class="movableContent" style="border: 0px; padding-top: 0px; position: relative;">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
-              <tbody>
-                <tr>
-                  <td valign="top" width="20">&nbsp;</td>
-                  <td><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                      <tr>
-                        <td height="42">&nbsp;</td>
-                      </tr>
-                      <tr>
-                        <td align="left"><div class="contentEditableContainer contentTextEditable">
-                            <div class="contentEditable">
-                              <h2>TARZANGO </h2>
-                            </div>
-                          </div></td>
-                      </tr>
-                      <tr>
-                        <td align="left" valign="top"><div class="contentEditableContainer contentTextEditable">
-                            <div class="contentEditable">
-                              <p >Going somewhere? Let Tarzango make your booking experience a swing’n good time!</p>
-                            </div>
-                          </div></td>
-                      </tr>
-                    </table></td>
-                  <td valign="top" width="20">&nbsp;</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <hr>
-          <div class="movableContent" style="border: 0px; padding-top: 0px; padding-bottom: 20px; position: relative;">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-              <tbody>
-                <tr>
-                  <td valign="top" width="600" style="padding:0px !important;"><div class="contentEditableContainer contentImageEditable">
-                      <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
-                        <tbody>
-                          <tr>
-                            <td class="spechide" valign="top" style="padding:0px !important;" ><div class="contentEditable" align="center"> <img class="banner" src="email_temp_img/footterHeader_1.png" alt="Footer Head" width="110" height="50" border="0" style="margin-right: -5px;"> <img class="banner" src="email_temp_img/footterHeader_1.png" alt="Footer Head" width="110" height="50" border="0" style="margin-right: -5px;"> <img class="banner1" src="email_temp_img/footterHeader_2.png" alt="Footer Head" width="380" height="50" border="0" style="margin-right: -5px;"> <img class="banner" src="email_temp_img/footterHeader_1.png" alt="Footer Head" width="110" height="50" border="0" style="margin-right: -5px;"> <img class="banner" src="email_temp_img/footterHeader_3.png" alt="Footer Head" width="110" height="50" border="0"> </div></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div></td>
-                </tr>
-                <tr>
-                  <td height="15" bgcolor="#EFEFEF"></td >
-                </tr>
-                <tr>
-                  <td bgcolor="#EFEFEF"><table width="100%" border="0" cellspacing="0" cellpadding="0">
-                      <tbody>
-                        <tr>
-                          <td valign="top" width="20">&nbsp;</td>
-                          <td><div class="contentEditableContainer contentImageEditable">
-                              <div class="contentEditable" align="center"> <a href="http://maps.google.com/?daddr=<?php echo $invoice->title;?>" target="_blank">
-                                <div id="mapDiv" style="width: 890px; height: 300px"></div>
-                                </a> </div>
-                            </div></td>
-                          <td valign="top" width="20">&nbsp;</td>
-                        </tr>
-                      </tbody>
-                    </table></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </table>
+<!-- list View block   -->
+<header class="pay-header">
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-1 col-md-1 col-sm-1  col-xs-6"> <a class="logo-pay" href="<?php echo base_url(); ?>"> <img src="images/pay-logo.png" > </a> </div>
+    <div class="col-lg-10 col-md-10 col-sm-10 hidden-xs"> </div>
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-6">
+      <div class="menu-icon">
+        <?php include $themeurl.'views/menu_header.php';?>
+        <script>
+            $(".close-button").click(function(){
+                $(".menu-dropdown").toggle();
+            });
+        </script> 
       </div>
     </div>
+  </div>
+  <div class="row">
+    <?php if($invoice->status == "unpaid"){ if(time() < $invoice->expiryUnixtime){  ?>
+    <div class="pay-block"> <img src="images/watch-icon.png">
+      <h1 class="wow fadeInLeft animated" id="countdown"></h1>
+      <p class=""><?php echo trans('0409');?> <b class="text-warning wow flash animted" style="color: #fe5050;"><?php echo trans('082');?></b></p>
+      <div class="form-group">
+        <?php if($payOnArrival){ ?>
+        <button class="btn-arrival arrivalpay" data-module="<?php echo $invoice->module; ?>" id="<?php echo $invoice->id;?>"><?php echo trans('0345');?></button>
+        <?php } if($singleGateway != "payonarrival"){ ?>
+        <button data-toggle="modal" style="display:none;"  data-target="#paynow" type="submit" class="btn btn-primary"><?php echo trans('0117');?></button>
+        <button data-toggle="modal" style="display:none;"  data-target="#paynow" type="button" id="gateway_pro" class="btn btn-primary"><?php echo trans('0117');?></button>
+        <div style="text-align:center;">
+          <div class="col-sm-5" style="color:transparent"> aasdsada </div>
+          <div class="col-sm-2">
+            <button  id="element_id_1470283648"></button>
+          </div>
+          <div class="col-sm-5" style="color:transparent"> aasdsada </div>
+        </div>
+        <?php } ?>
+      </div>
+    </div>
+    <?php }else{ ?>
+    <div class="pay-block">
+      <p class=""><?php echo trans('0409');?> <b class="text-warning wow flash animted" style="color: #fe5050;"><?php echo trans('0519');?></b></p>
+    </div>
+    <?php } }elseif($invoice->status == "reserved"){ ?>
+    <div class="pay-block">
+      <p class=""><?php echo trans('0409');?> <b class="text-warning wow flash animted" style="color: #fe5050;"><?php echo trans('0445');?></b></p>
+    </div>
+    <?php }elseif($invoice->status == "cancelled"){ ?>
+    <div class="pay-block">
+      <p class=""><?php echo trans('0409');?> <b class="text-warning wow flash animted" style="color: #fe5050;"><?php echo trans('0347');?></b></p>
+    </div>
+    <?php  }else{ ?>
+    <div class="pay-block"> <img src="images/status_paid.png">
+      <p class=""><?php echo trans('0409');?> <b class="text-warning wow flash animted" style="color: #58f53e;"><?php echo trans('081');?></b></p>
+      <h1 style="font-size: 30px; text-transform: uppercase; font-family:'Gotham-Bold'">Thank you for your Payment, you are all set</h1>
+    </div>
+    <?php } ?>
+  </div>
+</div>
+</header>
+<div class="paynow" >
+  <div class="paynow_body"> <img class="top-bg" src="images/paynow_top.png"> <img class="left-bg" src="images/membership-left-bg.png"> <img class="right-bg" src="images/membership-right-bg.png">
+    <div class="container" >
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="col-sm-1"> </div>
+          <div class="col-sm-10"  id="printcontent">
+            <div class="section1">
+              <div class="col-sm-12"> <img src="images/email-page-logo.png"> </div>
+              <div class="col-sm-6 left">
+                <h5>Tarzango</h5>
+                <h6>415-680-3008</h6>
+              </div>
+              <div class="col-sm-6 right">
+                <h5><?php echo $invoice->ai_first_name.' '.$invoice->ai_last_name;?></h5>
+                <h6><?php echo $invoice->ai_mobile;?></h6>
+              </div>
+              <div class="col-sm-6 left">
+                <p>Invoice Date:<span> <?php echo date("m/d/Y", strtotime($invoice->created_date)); ?></span></p>
+                <!-- <p>Due Date:<span> <?php echo $invoice->expiry;?></span></p>-->
+              </div>
+              <div class="col-sm-6 right">
+                <p>Invoice Number:<span> <?php echo $invoice->book_id; ?></span></p>
+                <p>Booking Confirmation:<span> <?php echo $invoice->book_itineraryid; ?></span></p>
+              </div>
+            </div>
+            <div class="section2">
+              <div class="stars"> 
+              <?php //echo $invoice->book_stars; ?>
+              
+              <?php for ($h_s=0; $h_s < $invoice->book_stars ; $h_s++) {  ?>
+                <i class="price-text-color fa fa-star"></i>
+              <?php } ?>
+              
+              <?php for ($h_s=$invoice->book_stars; $h_s < 5 ; $h_s++) {  ?>
+                <i class="fa fa-star"></i>
+              <?php } ?>
+
+               </div>
+              <h1><?php echo $invoice->book_hotel;?></h1>
+              <p class="left"><img src="images/checkin.png"> <?php echo $invoice->book_location;?> </p>
+             
+              <img class="img-responsive" src="<?php echo $invoice->book_thumbnail;?>"> </div>
+            <div class="section3">
+              <div class="details">
+                <div class="col-sm-4">
+                  <h6>CONFIRMATION #</h6>
+                  <h5><?php echo $invoice->book_itineraryid; ?></h5>
+                </div>
+                <div class="col-sm-4">
+                  <h6>ROOM RATE</h6>
+                  <h5>$ <?php echo number_format($invoice->book_roomtotal / $invoice->Extra_data->room); ?></h5>
+                </div>
+                <div class="col-sm-4">
+                  <h6>TOTAL AMOUNT</h6>
+                  <h5>$ <?php echo str_replace(".00",'',number_format($invoice->book_total,2));?></h5>
+                </div>
+              </div>
+              <div class="boxes">
+                <div class="box" style="margin-left:10px !important"> <img src="images/paynow_icon2.png">
+                  <h6>BOARD TYPE</h6>
+                  <h5><?php echo $book_response->hotel->rooms[0]->rates[0]->boardName; ?></h5>
+                </div>
+                <div class="box"> <img src="images/paynow_icon3.png">
+                  <h6>ROOMS</h6>
+                  <h5><?php echo $invoice->Extra_data->room; ?></h5>
+                </div>
+                <div class="box" style="margin-right:0% !important"> <img src="images/paynow_icon4.png">
+                  <h6>TYPE</h6>
+                  <h5><?php echo  character_limiter($invoice->book_roomname,5); ?></h5>
+                </div>
+              </div>
+              <div class="boxes">
+                <div class="box" style="margin-left:10px !important"> <img src="images/paynow_icon5.png">
+                  <h6>CHECK IN</h6>
+                  <h5><?php echo $invoice->book_checkin; ?></h5>
+                </div>
+                <div class="box "> <img src="images/paynow_icon5.png">
+                  <h6>CHECK OUT</h6>
+                  <h5><?php echo $invoice->book_checkout; ?></h5>
+                </div>
+                <div class="box last" style="margin-right:0% !important;"> <img src="images/paynow_icon5.png">
+                  <h6>YOU SAVED</h6>
+                  <h5><?php  if($Extra_data->normal_price){ echo "$ ".number_format($Extra_data->normal_price - $invoice->book_total,2); }else{ echo "$ 0"; } ?></h5>
+                </div>
+              </div>
+              <div class="user_details">
+                <h6>GUEST NAMES<span><?php echo $invoice->Extra_data->adults; ?> ADULTS
+                  <?php $chil = $Extra_data->child; if($chil){ echo $chil; ?>
+                  CHILDREN
+                  <?php } ?>
+                  </span></h6>
+                <ul>
+                  <?php
+
+                  $book_room = $invoice->Extra_data->room;
+                  $booking_adults = $invoice->Extra_data->adults;
+                  $room_per_guest = $booking_adults / $book_room;
+                  for ($r_i=0; $r_i < $book_room ; $r_i++) {       ?>
+                  <li class="title">
+                    <p>ROOM <?php echo $r_i + 1; ?></p>
+                  </li>
+                  <?php 
+                  for($g_d_a=0; $g_d_a < $room_per_guest; $g_d_a++){
+                ?>
+                  <li class="username">
+                    <h5 class="left"><?php echo $Extra_data->guest_name[$g_d_a+ $r_i]; ?></h5>
+                    <h5 class="right"><?php echo $Extra_data->guest_age[$g_d_a+ $r_i]; ?> Years</h5>
+                  </li>
+                  <?php } ?>
+                  <?php } ?>
+                  <?php if($chil > 0){  ?>
+                  <li class="title">
+                    <p>CHILD DETAILS</p>
+                  </li>
+                  <?php 
+                    for($c_i=0;$c_i<$chil;$c_i++){
+                  ?>
+                  <li class="username">
+                    <h5 class="left"><?php echo $Extra_data->child_name[$c_i]; ?></h5>
+                    <h5 class="right"><img src="images/paynow_icon6.png"> <?php echo $Extra_data->child_age[$c_i]; ?> Years</h5>
+                  </li>
+                  <?php }  ?>
+                </ul>
+                <?php } ?>
+                <div class="col-sm-12 cancellation"  style="border-bottom: 1px solid #e6e7ed; padding:20px">
+                  <h6>The cancellation policy</h6>
+                  </br>
+                  <p>Here at Tarzango, we offer a hassle free Cancellation Option. Last Minute change of plans? No problem mate! We allow 7 days prior to you arrival for cancellations, without any fees or penalties.*</p>
+                  </br>
+                  <p>For Cancellation Requests within 7 days of check in, any associated fees are at the hotel’s discretion. If applicable, we will refund 50% back to the cardholders card. Refunds will be issued between 24 to 48 hours after an email for cancellation has been sent and approved. Policy may vary for reservations consisting of 10 rooms or more.</p>
+                  </br>
+                  <p>To make a change to your reservation, please email: <span>booking@tarzango.com</span>. </p>
+                  </br>
+                  <p>Be sure to check your email within 24 hours for confirmation of your change.</p>
+                  </br>
+                  <p>To cancel your entire reservation, please email cancel@tarzango.com. Please note: We can only accept cancellation via writing to: <span>cancel@tarzango.com</span>. Cancelations will not be submitted via phone or chat, only through written email to <span>cancel@tarzango.com</span>.</p>
+                </div>
+                <div>
+                  <div class="col-sm-12"> <a class="button" id="pintbtn"><img src="images/paynow_icon8.png"> PRINT INVOICE</a> <a class="button" id="savepdf"><img src="images/paynow_icon8.png"> DOWNLOAD INVOICE</a>
+                    <?php if($invoice->status == "unpaid"){ ?>
+                    <div style="" class="button">
+                      <button id="element_id_1470283647"></button>
+                    </div>
+                    <?php } ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-1">
+              <?php if($extra_details->location != ''){ ?>
+              <div class="pay-type-block "> <span class="single-type pay-col" >
+                <h2> Pickup Details </h2>
+                <div class="pay-single-btn" style="width:100%; padding-left: 22px; text-align:left;"><?php echo $extra_details->location; ?></div>
+                </span> <span class="single-type pay-col" >
+                <h2> Pickup time </h2>
+                <div class="pay-single-btn" style="width:100%; padding-left: 22px; text-align:left;"><?php echo $extra_details->time; ?></div>
+                </span> </div>
+              <?php } ?>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <!-- Modal -->
+</div>
+
+<!-- Modal -->
 <div class="modal fade" id="paynow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header" style="margin-bottom: 0px;">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"><?php echo trans('0377');?></h4>
-      </div>
+        <img src="<?php echo $theme_url; ?>img/logo.png" class="img-responsive" alt="Home Logo"> </div>
       <div class="modal-body">
         <div role="form">
-          <div class="form-group">
+          <div class="form-group" style="display:none;">
             <label for="form-input" class="hidden-xs col-sm-2 control-label text-left" style="padding: 10px;font-size: 18px;"><?php echo trans('0154');?></label>
             <div class="col-sm-10 col-md-10 col-xs-12">
               <select class="form-control form selectx" name="gateway" id="gateway">
@@ -489,10 +356,13 @@ td[class="left_pad"] {
             </div>
             <div class="clearfix"></div>
           </div>
-          <div class="col-sm-12">
+          <div class="col-sm-12" > <b>Amount : </b> $<?php echo number_format($invoice->checkoutTotal,2);?>
             <hr>
             <center>
               <div  id="response"></div>
+              <div  id="response1" style="display:none;">
+                <button id="element_id_1470283648"></button>
+              </div>
             </center>
           </div>
           <div class="clearfix"></div>
@@ -557,8 +427,7 @@ td[class="left_pad"] {
                   </div>
                   <div class="col-md-3 go-left">
                     <label class="required go-right">&nbsp;</label>
-                    <img src="<?php echo base_url(); ?>assets/img/cc.png" class="img-responsive">
-                  </div>
+                    <img src="<?php echo base_url(); ?>assets/img/cc.png" class="img-responsive"> </div>
                 </div>
                 <div class="clearfix"></div>
                 <br>
@@ -582,7 +451,7 @@ td[class="left_pad"] {
     </div>
   </div>
 </div>
-
+<div id="imgs"> </div>
 <!-- 
 
  <script async defer
@@ -590,113 +459,339 @@ td[class="left_pad"] {
     </script>  
 
 -->
+<?php 
+$repl_arry = array(".",",");
+?>
+<script src="<?php echo $theme_url; ?>js/jspdf.min.js"></script> 
+<script src='<?php echo $theme_url; ?>js/html2canvas.js'></script> 
+<script src='<?php echo $theme_url; ?>js/canvas2image.js'></script> 
+<script type="text/javascript">
+
+  $(function() { 
+      $("#pintbtn").click(function() { 
+
+          html2canvas($("#printcontent"), {
+              onrendered: function(canvas) {
+                  theCanvas = canvas;
+                  
+                  var type = 'png',
+                  w = 800,
+                  h = 1550;
+                  $imgs = document.getElementById('imgs');
+                  //$imgs.append(Canvas2Image.convertToImage(canvas, w, h, type));
+                  img_data_p = Canvas2Image.convertToImage(canvas, w, h, type);
+                  
+                  
+                  var DocumentContainer = document.getElementById('imgs');
+                  var WindowObject = window.open('', 'PrintWindow', 'toolbars=no,scrollbars=yes,status=no,resizable=yes');
+
+                  WindowObject.document.writeln('<img src="'+img_data_p+'">');
+                  WindowObject.document.close();
+                  WindowObject.focus();
+                  WindowObject.print();
+                  WindowObject.close();
+                  
+              }
+          });
+      });
+       $("#savepdf").click(function() { 
+
+          html2canvas($("#printcontent"), {
+              onrendered: function(canvas) {
+                  theCanvas = canvas;
+                  //document.body.appendChild(canvas);
+                  //$('#img_val').val(canvas.toDataURL("image/png"));
+                  // Convert and download as image 
+                  //alert();
+                  //Canvas2Image.saveAsPNG(canvas); 
+                  //window.print(canvas);
+                  //Canvas2Image.convertToImage(canvas, 500, 500, type)
+                  var type = 'png',
+                  w = 800,
+                  h = 1550;
+                  $imgs = document.getElementById('imgs');
+                  //$imgs.append(Canvas2Image.convertToImage(canvas, w, h, type));
+                  img_data_p = Canvas2Image.convertToImage(canvas, w, h, type);
+                  //console.log(img_data_p);
+                  //var ffff = img_data_p.replace('<img src=​"','');
+                  //var ffff = ffff.replace('">​','');
+                  // window.print(img_data_p);
+                  // You'll need to make your image into a Data URL
+                  // Use http://dataurl.net/#dataurlmaker
+                  var imgData = img_data_p;
+                  var doc = new jsPDF();
+
+                  doc.addImage(imgData, 'png', 15, 15, 180, 275);
+                  doc.save('invoice.pdf');
+                  /*var DocumentContainer = document.getElementById('imgs');
+                  var WindowObject = window.open('', 'PrintWindow', 'toolbars=no,scrollbars=yes,status=no,resizable=yes');
+
+                  WindowObject.document.writeln('<img src="'+img_data_p+'">');
+                        
+
+                  WindowObject.document.close();
+                  WindowObject.focus();
+                  WindowObject.print();
+                  WindowObject.close();*/
+                  //pwin = window.open(img_data_p);
+                  //pwin.onload = function () {}
+                  //$("#paynow_body").append('<img id="my_img" src="'+Canvas2Image.convertToImage(canvas, 1366, 768, 'jpeg')+'">');
+                  // Clean up 
+                  //document.body.removeChild(canvas);
+              }
+          });
+      });
+  }); 
+
+  var PayStand = PayStand || {};
+  PayStand.checkouts = PayStand.checkouts || [];
+  PayStand.load = PayStand.load || function(){};
+  var checkout = {
+  api_key: "aiPjqMbXh79vnMDqBVeq1xtM6VIx0LGVfu4ifqQONbm8PrS2GRinF/TDsoMeqeHUJfJ6Xrp9FSGrn2ehugEX8/w",
+  //api_key: "aUGXTVXIQWzpuRpHZiBjJIs01C5HWowACqx5aOLFQ49xh2JnbGbkKwol1jR5MwY3kIkjHogLXwEpno1kkrQEM3w",
+  org_id: "15191",
+  //org_id: "760",
+  element_ids: ["element_id_1470283648"],
+  data_source: "org_defined",
+  checkout_type: "button",
+  button_options: {
+  button_type: "checkout",
+  button_name: "Pay Now",
+  input: false,
+  variants: false
+  },
+  amount: "<?php echo str_replace($repl_arry,'',number_format($invoice->book_total,2));?>",
+  //amount: "100",
+  items: [{
+  title: "Reservation Payment",
+  subtitle: "Payment to lock reservation in TarzanGo",
+  item_price: "<?php echo str_replace($repl_arry,'',number_format($invoice->book_total,2));?>",
+  //item_price: "100",
+  quantity: 1
+  }],
+  }
+  PayStand.checkoutComplete = function (data) {
+    $.ajax({
+        type: 'POST',
+        data:{pay_data : data , invoice_id : <?php echo $invoice->book_id; ?> , invoice_code : <?php echo $invoice->book_itineraryid; ?> },
+        url: '<?php echo base_url();?>invoice/booking_paid_paystand_hb',
+        cache: false,
+        beforeSend:function(){
+                  // show image here
+                  $(".popupBg1").show();
+                  $(".data").hide();
+        },
+        success: function(data)
+        {
+            console.log('final_data'+data);
+            location.reload(true);
+            //alert();
+        },
+        error: function(e)
+        {
+          alert(e.message);
+        }
+    });
+    console.log('update123->'+JSON.stringify(data));
+  };
+  PayStand.checkoutUpdated = function (data) {
+  };
+  PayStand.checkouts.push(checkout);
+  PayStand.script = document.createElement('script');
+  PayStand.script.type = 'text/javascript';
+  PayStand.script.async = true;
+  PayStand.script.src = 'https://app.paystand.com/js/gen/checkout.min.js';
+  //PayStand.script.src = 'https://sandbox.paystand.com/js/gen/checkout.min.js';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(PayStand.script, s);
+
+  
+  var PayStand = PayStand || {};
+  PayStand.checkouts = PayStand.checkouts || [];
+  PayStand.load = PayStand.load || function(){};
+  var checkout = {
+  api_key: "aiPjqMbXh79vnMDqBVeq1xtM6VIx0LGVfu4ifqQONbm8PrS2GRinF/TDsoMeqeHUJfJ6Xrp9FSGrn2ehugEX8/w",
+  //api_key: "aUGXTVXIQWzpuRpHZiBjJIs01C5HWowACqx5aOLFQ49xh2JnbGbkKwol1jR5MwY3kIkjHogLXwEpno1kkrQEM3w",
+  org_id: "15191",
+  //org_id: "760",
+  element_ids: ["element_id_1470283647"],
+  data_source: "org_defined",
+  checkout_type: "button",
+  button_options: {
+  button_type: "checkout",
+  button_name: "Pay Now",
+  input: false,
+  variants: false
+  },
+  amount: "<?php echo str_replace($repl_arry,'',number_format($invoice->book_total,2));?>",
+  //amount: "100",
+  items: [{
+  title: "Reservation Payment",
+  subtitle: "Payment to lock reservation in TarzanGo",
+  item_price: "<?php echo str_replace($repl_arry,'',number_format($invoice->book_total,2));?>",
+  //item_price: "100",
+  quantity: 1
+  }],
+  }
+  PayStand.checkoutComplete = function (data) {
+    $.ajax({
+        type: 'POST',
+        data:{pay_data : data , invoice_id : <?php echo $invoice->book_id; ?> , invoice_code : <?php echo $invoice->book_itineraryid; ?> },
+        url: '<?php echo base_url();?>invoice/booking_paid_paystand_hb',
+        cache: false,
+        beforeSend:function(){
+                  // show image here
+                  $(".popupBg1").show();
+                  $(".data").hide();
+        },
+        success: function(data)
+        {
+            console.log('final_data'+data);
+            location.reload(true);
+            //alert();
+        },
+        error: function(e)
+        {
+          alert(e.message);
+        }
+    });
+    console.log('update123->'+JSON.stringify(data));
+  };
+  PayStand.checkoutUpdated = function (data) {
+  };
+  PayStand.checkouts.push(checkout);
+  PayStand.script = document.createElement('script');
+  PayStand.script.type = 'text/javascript';
+  PayStand.script.async = true;
+  PayStand.script.src = 'https://app.paystand.com/js/gen/checkout.min.js';
+  //PayStand.script.src = 'https://sandbox.paystand.com/js/gen/checkout.min.js';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(PayStand.script, s);
+</script> 
 
 <script type="text/javascript">
- /*function initMap() {*/
-        var myLatLng = {lat: <?php echo $invoice->hotel_details_extra['hotel_latitude']; ?>, lng:<?php echo $invoice->hotel_details_extra['hotel_longitude']; ?>};
+   /*function initMap() {*/
+          
+       /* }*/
+    // set the date we're counting down to
+    // var target_date = new Date('<?php echo $invoice->expiryFullDate; ?>').getTime();
+    var target_date = <?php echo $invoice->expiryUnixtime * 1000; ?>;
+    var invoiceStatus = "<?php echo $invoice->status; ?>";
 
-        var map = new google.maps.Map(document.getElementById('mapDiv'), {
-          zoom: 12,
-          center: myLatLng
-        });
+    // variables for time units
+    var days, hours, minutes, seconds;
 
-        var marker = new google.maps.Marker({
-          position: myLatLng,
-          map: map,
-          title: 'Hello World!'
-        });
-     /* }*/
-  // set the date we're counting down to
-  // var target_date = new Date('<?php echo $invoice->expiryFullDate; ?>').getTime();
-  var target_date = <?php echo $invoice->expiryUnixtime * 1000; ?>;
-  var invoiceStatus = "<?php echo $invoice->status; ?>";
+    // get tag element
+    var countdown = document.getElementById('countdown');
+    var ccc = new Date().getTime();
 
-  // variables for time units
-  var days, hours, minutes, seconds;
+    if(invoiceStatus == "unpaid"){
 
-  // get tag element
-  var countdown = document.getElementById('countdown');
-  var ccc = new Date().getTime();
+        // update the tag with id "countdown" every 1 second
+        setInterval(function () {
 
-  if(invoiceStatus == "unpaid"){
+        // find the amount of "seconds" between now and target
+        var current_date = new Date().getTime();
 
-      // update the tag with id "countdown" every 1 second
-      setInterval(function () {
+        var seconds_left = (target_date - current_date) / 1000;
 
-      // find the amount of "seconds" between now and target
-      var current_date = new Date().getTime();
+        // do some time calculations
+        days = parseInt(seconds_left / 86400);
+        seconds_left = seconds_left % 86400;
 
-      var seconds_left = (target_date - current_date) / 1000;
+        hours = parseInt(seconds_left / 3600);
+        seconds_left = seconds_left % 3600;
 
-      // do some time calculations
-      days = parseInt(seconds_left / 86400);
-      seconds_left = seconds_left % 86400;
+        minutes = parseInt(seconds_left / 60);
+        seconds = parseInt(seconds_left % 60);
 
-      hours = parseInt(seconds_left / 3600);
-      seconds_left = seconds_left % 3600;
+        // format countdown string + set tag value
+        countdown.innerHTML = '<span class="days">' + days +  ' <b><?php echo trans("0440");?></b></span> <span class="hours">' + hours + ' <b><?php echo trans("0441");?></b></span> <span class="minutes">'
+        + minutes + ' <b><?php echo trans("0442");?></b></span> <span class="seconds">' + seconds + ' <b><?php echo trans("0443");?></b></span>';
 
-      minutes = parseInt(seconds_left / 60);
-      seconds = parseInt(seconds_left % 60);
+        }, 1000);
 
-      // format countdown string + set tag value
-      countdown.innerHTML = '<span class="days">' + days +  ' <b><?php echo trans("0440");?></b></span> <span class="hours">' + hours + ' <b><?php echo trans("0441");?></b></span> <span class="minutes">'
-      + minutes + ' <b><?php echo trans("0442");?></b></span> <span class="seconds">' + seconds + ' <b><?php echo trans("0443");?></b></span>';
-
-      }, 1000);
-
-  }
+    }
 
 
-$(function(){
-    $(".submitresult").hide();
-    loadPaymethodData();
+    $(function(){
+      $(".submitresult").hide();
+      loadPaymethodData();
 
-    $(".arrivalpay").on("click",function(){
-      var id = $(this).prop("id");
-      var module = $(this).data("module");
-      var check = confirm("<?php echo trans('0483')?>");
-      if(check){
-        $.post("<?php echo base_url();?>invoice/updatePayOnArrival", {id: id,module: module}, function(resp){
-          location.reload();
-        });
-      }
+      $(".arrivalpay").on("click",function(){
+        var id = $(this).prop("id");
+        var module = $(this).data("module");
+        var check = confirm("<?php echo trans('0483')?>");
+        if(check){
+          $.post("<?php echo base_url();?>invoice/updatePayOnArrival", {id: id,module: module}, function(resp){
+            location.reload();
+          });
+        }
 
-    });
+      });
 
-    $('#response').on('click','input[type="image"],input[type="submit"]',function(){
-      setTimeout(function(){
-      $("#response").html("<div id='rotatingDiv'></div>");
-      }, 500)
-
-
-    });
-
-    $("#gateway").on("change",function(){
-      var gateway = $(this).val();
-      $("#response").html("<div id='rotatingDiv'></div>");
-      $.post("<?php echo base_url();?>invoice/getGatewaylink/<?php echo $invoice->id?>/<?php echo $invoice->code;?>", {gateway: gateway}, function(resp){
-        /*console.log(resp);*/
-       var response = $.parseJSON(resp);
-       console.log(response);
-       if(response.iscreditcard == "1"){
-        $(".creditcardform").fadeIn("slow");
-        $("#creditcardgateway").val(response.gateway);
-        $("#response").html("");
-
-      }
-      if(response.gateway == "paystand"){
-          $(".creditcardform").hide();
-          var paystand = '<a class="paystand_lick"  href="https://tarzango.paystand.com/" target="_blank" ><img src="<?php echo base_url()."assets/img/paystand_logo.png"; ?>"></a><script>$(".paystand_lick").click(function(){$(this).remove();$("body").removeClass("modal-open");$("#paynow").css("display","none");$(".modal-backdrop").css("display","none"); });<\/script>';
-          $("#response").html(paystand);
-       }else{
-         $(".creditcardform").hide();
-         $("#response").html(response.htmldata);
-       }
+      $('#response').on('click','input[type="image"],input[type="submit"]',function(){
+        setTimeout(function(){
+        $("#response").html("<div id='rotatingDiv'></div>");
+        }, 500)
 
 
       });
-    })
-  });
+
+      $("#gateway_pro").on("click",function(){
+        var gateway = 'paypalpaymentspro';
+        $("#response1").hide();
+        $("#response").html("<div id='rotatingDiv'></div>");
+        $.post("<?php echo base_url();?>invoice/getGatewaylink/<?php echo $invoice->id?>/<?php echo $invoice->code;?>", {gateway: gateway}, function(resp){
+          console.log(resp);
+           var response = $.parseJSON(resp);
+           console.log(response);
+           if(response.iscreditcard == "1"){
+            $(".creditcardform").fadeIn("slow");
+            $("#creditcardgateway").val(response.gateway);
+            $("#response").html("");
+
+          }else if(response.gateway == "paystand"){
+              $(".creditcardform").hide();
+              $("#response").hide();
+              $("#response1").show();
+           }else{
+             $(".creditcardform").hide();
+
+             $("#response").html(response.htmldata);
+           }
+
+
+        });
+      })
+
+      $("#gateway").on("change",function(){
+        var gateway = $(this).val();
+        $("#response1").hide();
+        $("#response").html("<div id='rotatingDiv'></div>");
+        $.post("<?php echo base_url();?>invoice/getGatewaylink/<?php echo $invoice->id?>/<?php echo $invoice->code;?>", {gateway: gateway}, function(resp){
+          console.log(resp);
+           var response = $.parseJSON(resp);
+           console.log(response);
+           if(response.iscreditcard == "1"){
+            $(".creditcardform").fadeIn("slow");
+            $("#creditcardgateway").val(response.gateway);
+            $("#response").html("");
+
+          }else if(response.gateway == "paystand"){
+              $(".creditcardform").hide();
+              $("#response").hide();
+              $("#response1").show();
+           }else{
+             $(".creditcardform").hide();
+
+             $("#response").html(response.htmldata);
+           }
+
+
+        });
+      })
+    });
 
   function expcheck(){
           $(".submitresult").html("").fadeOut("fast");
@@ -748,7 +843,7 @@ $(function(){
         $("#response").html("");
        }if(response.gateway == "paystand"){
           $(".creditcardform").hide();
-          var paystand = '<a class="paystand_lick"  href="https://tarzango.paystand.com/" target="_blank" ><img src="<?php echo base_url()."assets/img/paystand_logo.png"; ?>"></a><script>$(".paystand_lick").click(function(){$(this).remove();$("body").removeClass("modal-open");$("#paynow").css("display","none");$(".modal-backdrop").css("display","none"); });<\/script>';
+          var paystand = '';
           $("#response").html(paystand);
        }else{
        $(".creditcardform").hide();
@@ -763,3 +858,4 @@ $(function(){
 
       }
 </script>
+<?php }?>

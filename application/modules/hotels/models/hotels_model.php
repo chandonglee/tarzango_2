@@ -48,6 +48,42 @@ class Hotels_model extends CI_Model {
 				return $this->db->get('pt_hotels')->result();
 		}
 
+// Get all hb hotels detail STP
+		function hb_hotel_detail($id = null) {
+				$this->db->select('iHotelID, sThumbnail');
+				if (!empty ($id)) {
+						$this->db->where( $id );
+				}
+				return $this->db->get('pt_hbhotels')->row_array();
+		}
+
+		function hb_hotel_detail_all($hb_hotel_code = null) {
+				$this->db->select('iHbHotelID, sThumbnail');
+				$this->db->where_in( 'iHbHotelID' , $hb_hotel_code );
+				$data = $this->db->get('pt_hbhotels')->result();
+				/*echo $this->db->last_query();
+				exit();*/
+				return $data;
+		}
+
+// Get all hb hotels room detail STP
+		function hb_hotel_room_detail($id = null) {
+				$this->db->select('sRoomName, sRoomImage');
+				if (!empty ($id)) {
+						$this->db->where( $id );
+				}
+				return $this->db->get('pt_hbrooms')->result();
+		}
+
+// Get all hb hotels images STP
+		function hb_hotel_images($id = null) {
+				$this->db->select('sHbHotelImage');
+				if (!empty ($id)) {
+						$this->db->where( $id );
+				}
+				return $this->db->get('pt_hbhotelimages')->result();
+		}
+
 // get all data of single hotel by slug
 		function get_hotel_data($hotelslug) {
 				$this->db->select('pt_hotels.*');
@@ -801,11 +837,13 @@ $this->db->join('pt_hotel_images','pt_hotels.hotel_id = pt_hotel_images.himg_hot
 			$adults = $arrayInfo['adults'];
 			$child = $arrayInfo['child'];
 			$room = $arrayInfo['room'];
+			$orderby = '';
 			/*exit();*/
 			/*error_reporting(E_ALL);*/
 				$data = array();
 
-                $searchtxt = $cityid;// $this->input->get('searching');
+                /*$searchtxt = $cityid;*/
+                // $this->input->get('searching');
                 if(empty($checkin)){
                 	$checkin = $this->input->get('checkin');
                 }
@@ -821,6 +859,7 @@ $this->db->join('pt_hotel_images','pt_hotels.hotel_id = pt_hotel_images.himg_hot
 				$types = $this->input->get('type');
 
                 //$hotelslist = $lists['hotels'];
+                $offset ='';
 				if ($offset != null) {
 						$offset = ($offset == 1) ? 0 : ($offset * $perpage) - $perpage;
 				}
@@ -981,6 +1020,200 @@ $this->db->join('pt_hotel_images','pt_hotels.hotel_id = pt_hotel_images.himg_hot
 				return $final_hotel_data;
 		}
 
+
+		function search_hotels_by_lat_lang_for_attr($hotel_latitude, $hotel_longitude,$arrayInfo) {
+			/*echo "Asdas";
+			exit();*/
+
+			/*echo json_encode($arrayInfo);*/
+			$checkIn = $arrayInfo['checkIn'];
+			$checkOut = $arrayInfo['checkOut'];
+			$adults = $arrayInfo['adults'];
+			$child = $arrayInfo['child'];
+			$room = $arrayInfo['room'];
+			$orderby = '';
+			/*exit();*/
+			/*error_reporting(E_ALL);*/
+				$data = array();
+
+                /*$searchtxt = $cityid;*/
+                // $this->input->get('searching');
+                if(empty($checkin)){
+                	$checkin = $this->input->get('checkin');
+                }
+
+                if(empty($checkout)){
+                	$checkout = $this->input->get('checkout');
+                }
+				
+				$adult = $this->input->get('adults');
+				$child = $this->input->get('child');
+				$stars = $this->input->get('rating');
+				$sprice = $this->input->get('price');
+				$types = $this->input->get('type');
+
+                //$hotelslist = $lists['hotels'];
+                $offset ='';
+				if ($offset != null) {
+						$offset = ($offset == 1) ? 0 : ($offset * $perpage) - $perpage;
+				}
+				$this->db->select('pt_hotels.*,pt_rooms.room_basic_price as price,pt_hotels_translation.trans_title,
+			   ( 3959 * acos( cos( radians('.number_format($hotel_latitude,1).') ) * cos( radians( pt_hotels.hotel_latitude ) ) 
+			   * cos( radians(pt_hotels.hotel_longitude) - radians('.number_format($hotel_longitude,1).')) + sin(radians('.number_format($hotel_latitude,1).')) 
+			   * sin( radians(pt_hotels.hotel_latitude)))) AS distance ');
+				$this->db->select_avg('pt_reviews.review_overall', 'overall');
+				$this->db->having('distance <=', '50');
+
+				//$this->db->like('pt_hotels.hotel_latitude', number_format($hotel_latitude,1));
+				//$this->db->like('pt_hotels.hotel_longitude', number_format($hotel_longitude,1));
+
+				/*$this->db->where('MATCH (pt_hotels.hotel_title) AGAINST ("'. $searchtxt .'")', NULL, false);
+				$this->db->or_where('MATCH (pt_hotels_translation.trans_title) AGAINST ("'. $searchtxt .'")', NULL, false);
+				$this->db->or_where('MATCH (pt_hotels.hotel_city) AGAINST ("'. $searchtxt .'")', NULL, false);
+				*/
+
+                	/*$this->db->like('pt_hotels.hotel_title', $searchtxt);
+				    $this->db->or_like('pt_hotels_translation.trans_title', $searchtxt);
+				    $this->db->or_like('pt_hotels.hotel_city', $searchtxt);*/
+
+			 if (!empty ($stars)) {
+						$this->db->having('pt_hotels.hotel_stars >=', $stars);
+				}
+				if ($orderby == "za") {
+						$this->db->order_by('pt_hotels.hotel_title', 'desc');
+				}
+				elseif ($orderby == "az") {
+						$this->db->order_by('pt_hotels.hotel_title', 'asc');
+				}
+				elseif ($orderby == "oldf") {
+						$this->db->order_by('pt_hotels.hotel_id', 'asc');
+				}
+				elseif ($orderby == "newf") {
+						$this->db->order_by('pt_hotels.hotel_id', 'desc');
+				}
+				elseif ($orderby == "ol") {
+						$this->db->order_by('pt_hotels.hotel_order', 'asc');
+				}
+				elseif ($orderby == "p_lh") {
+						$this->db->order_by('pt_hotels.hotel_basic_price', 'asc');
+				}
+				elseif ($orderby == "p_hl") {
+						$this->db->order_by('pt_hotels.hotel_basic_price', 'desc');
+				}
+				elseif ($orderby == "s_lh") {
+						$this->db->order_by('pt_hotels.hotel_stars', 'asc');
+				}
+				elseif ($orderby == "s_hl") {
+						$this->db->order_by('pt_hotels.hotel_stars', 'desc');
+				}
+				if (!empty ($types)) {
+						$this->db->where_in('pt_hotels.hotel_type', $types);
+				}
+				if (!empty ($sprice)) {
+						$sprice = str_replace(";", ",", $sprice);
+						$sprice = explode(",", $sprice);
+						$minp = $sprice[0];
+						$maxp = $sprice[1];
+						$this->db->where('pt_rooms.room_basic_price >=', $minp);
+						$this->db->where('pt_rooms.room_basic_price <=', $maxp);
+				}
+				$this->db->join('pt_hotels_translation', 'pt_hotels.hotel_id = pt_hotels_translation.item_id', 'left');
+				$this->db->group_by('pt_hotels.hotel_id');
+                $this->db->join('pt_rooms', 'pt_hotels.hotel_id = pt_rooms.room_hotel', 'left');
+			    $this->db->join('pt_reviews', 'pt_hotels.hotel_id = pt_reviews.review_itemid', 'left');
+				$this->db->having('pt_hotels.hotel_status', 'Yes');
+				
+				if(!empty($perpage)){
+			
+				$query = $this->db->get('pt_hotels', $perpage, $offset);	
+			
+				}else{
+			
+				$query = $this->db->get('pt_hotels');	
+			
+				}
+				/*echo $this->db->last_query();
+				exit();*/
+
+				$hotel_data = $query->result();
+				/*echo"<br>";
+				echo json_encode($hotel_data);
+
+				exit();*/
+				$final_hotel_data = array();
+
+				/*error_reporting(E_ALL);*/
+				/*$this->data['amenities'] = $this->hotels_lib->getHotelAmenities();
+				echo json_encode($this->data['amenities']);
+				
+				exit();*/
+				 $this->load->library('hotels/hotels_lib');
+
+				$image_base_url = base_url().'uploads/images/hotels/slider/';
+				for ($i=0; $i < count($hotel_data) ; $i++) { 
+					$final_hotel_data['hotels'][$i]->id = $hotel_data[$i]->hotel_id;
+
+					$this->db->where("himg_hotel_id",$hotel_data[$i]->hotel_id);
+		            $query = $this->db->get("pt_hotel_images");
+		            $result = $query->result();  
+		            
+		            //$rooms_data_ckin_ckout = $this->hotels_lib->hotel_rooms($hotel_data[$i]->hotel_id,$checkIn,$checkOut);
+		            
+		            
+					$final_hotel_data['hotels'][$i]->title = $hotel_data[$i]->hotel_title;
+					$final_hotel_data['hotels'][$i]->thumbnail = $image_base_url.$hotel_data[$i]->thumbnail_image;
+
+					/*echo $hotel_data[$i]->hotel_city;
+					echo "<br>";*/
+					$locationInfoUrl = pt_LocationsInfo($hotel_data[$i]->hotel_city);
+					
+					$countryName = url_title($locationInfoUrl->country, 'dash', true);
+					$cityName = url_title($locationInfoUrl->city, 'dash', true);
+
+					$slug = base_url().'hotels/'.$countryName.'/'.$cityName.'/'.$hotel_data[$i]->hotel_slug.'?checkin='.$checkIn.'&checkOut='.$checkOut.'&adults='.$adults.'&child='.$child.'&room='.$room;
+					/*exit();*/
+					//$slug = $hotel_data[$i]->hotel_slug;
+					//$this->data['baseUrl'].'hbhotel/'.$code.'?adults='.$adults.'&checkin='.$checkIn.'&checkout='.$checkOut.$this->data['agesApendUrl'];
+
+					$final_hotel_data['hotels'][$i]->slug = $slug;
+					$final_hotel_data['hotels'][$i]->currCode = '$';
+					//if($rooms_data_ckin_ckout[0]->price == null ){
+
+						$final_hotel_data['hotels'][$i]->price = $hotel_data[$i]->price;
+					/*}else{
+						$final_hotel_data['hotels'][$i]->price = $rooms_data_ckin_ckout[0]->price;
+						
+					}*/
+					$final_hotel_data['hotels'][$i]->location = $hotel_data[$i]->hotel_map_city;
+					$final_hotel_data['hotels'][$i]->longitude = $hotel_data[$i]->hotel_longitude;
+					$final_hotel_data['hotels'][$i]->latitude = $hotel_data[$i]->hotel_latitude;
+					$final_hotel_data['hotels'][$i]->distance = $hotel_data[$i]->distance;
+					$final_hotel_data['hotels'][$i]->desc = $hotel_data[$i]->hotel_desc;
+					/*$final_hotel_data['hotels'][$i]->desc = '';*/
+					/*$final_hotel_data['hotels'][$i]->desc = $hotel_data[$i]->hotel_amenities;*/
+
+					$final_Star = '';
+					for ($star_i=0; $star_i < 5 ; $star_i++) { 
+						if($star_i < $hotel_data[$i]->hotel_stars){
+							$final_Star .= '<i class="price-text-color fa fa-star"></i>';
+						}else{
+							$final_Star .= '<i class="fa fa-star"></i>';
+						}
+					}
+
+					$final_hotel_data['hotels'][$i]->stars = $final_Star;
+					$final_hotel_data['hotels'][$i]->tripAdvisorRatingImg = '';
+					$final_hotel_data['hotels'][$i]->tripAdvisorRating = '';
+					//$final_hotel_data['hotels'][$i]->room_Data = $rooms_data_ckin_ckout;
+					$final_hotel_data['hotels'][$i]->all_img = $result;
+				}
+				/*exit();*/
+				/*$data['all'] = $query->result();
+				$data['rows'] = $query->num_rows();*/
+				/*echo json_encode($final_hotel_data);
+				exit();*/
+				return $final_hotel_data;
+		}
 
 		function search_hotels_by_lat_lang_gb($hotel_latitude, $hotel_longitude,$arrayInfo) {
 			/*echo "Asdas";
@@ -1180,6 +1413,84 @@ $this->db->join('pt_hotel_images','pt_hotels.hotel_id = pt_hotel_images.himg_hot
 				return $final_hotel_data;
 		}
 
+
+		function search_hotels_by_lat_lang_gb_1($hotel_ids) {
+			
+			$datetime = new DateTime('tomorrow');
+	        $datetime->modify('+1 day');
+	        $checkIn =  $datetime->format('m/d/Y');
+
+	        $datetime = new DateTime('tomorrow');
+	        $datetime->modify('+2 day');
+	        $checkOut =  $datetime->format('m/d/Y');
+
+			$adults = 1;
+			$child = '';
+			$room = 1;
+			
+			$data = array();
+			
+			$this->db->select('pt_hotels.*,pt_rooms.room_basic_price as price,pt_hotels_translation.trans_title');
+			$this->db->select_avg('pt_reviews.review_overall', 'overall');
+			$this->db->join('pt_hotels_translation', 'pt_hotels.hotel_id = pt_hotels_translation.item_id', 'left');
+			$this->db->group_by('pt_hotels.hotel_id');
+            $this->db->join('pt_rooms', 'pt_hotels.hotel_id = pt_rooms.room_hotel', 'left');
+		    $this->db->join('pt_reviews', 'pt_hotels.hotel_id = pt_reviews.review_itemid', 'left');
+			$this->db->having('pt_hotels.hotel_status', 'Yes');
+			if (!empty ($hotel_ids)) {
+				$this->db->where_in('pt_hotels.hotel_id ', $hotel_ids);
+			}
+		
+			$query = $this->db->get('pt_hotels');	
+		
+		
+			$hotel_data = $query->result();
+			
+			$final_hotel_data = array();
+
+			$image_base_url = base_url().'uploads/images/hotels/slider/';
+			for ($i=0; $i < count($hotel_data) ; $i++) { 
+				$final_hotel_data[$i]->id = $hotel_data[$i]->hotel_id;
+	            
+	            $final_hotel_data[$i]->title = $hotel_data[$i]->hotel_title;
+				$final_hotel_data[$i]->thumbnail = $image_base_url.$hotel_data[$i]->thumbnail_image;
+
+				
+				$locationInfoUrl = pt_LocationsInfo($hotel_data[$i]->hotel_city);
+				
+				$countryName = url_title($locationInfoUrl->country, 'dash', true);
+				$cityName = url_title($locationInfoUrl->city, 'dash', true);
+
+				$slug = base_url().'hotels/'.$countryName.'/'.$cityName.'/'.$hotel_data[$i]->hotel_slug.'?checkin='.$checkIn.'&checkOut='.$checkOut.'&adults='.$adults.'&child='.$child.'&room='.$room;
+				
+				$final_hotel_data[$i]->slug = $slug;
+				$final_hotel_data[$i]->currCode = '$';
+				
+
+				$final_hotel_data[$i]->book_roomtotal = $hotel_data[$i]->price;
+				
+				$final_hotel_data[$i]->location = $hotel_data[$i]->hotel_map_city;
+				$final_hotel_data[$i]->longitude = $hotel_data[$i]->hotel_longitude;
+				$final_hotel_data[$i]->latitude = $hotel_data[$i]->hotel_latitude;
+				$final_hotel_data[$i]->book_location = str_replace("-", ' ', $cityName);
+				
+				$final_Star = '';
+				for ($star_i=0; $star_i < 5 ; $star_i++) { 
+					if($star_i < $hotel_data[$i]->hotel_stars){
+						$final_Star .= '<i class="price-text-color fa fa-star"></i>';
+					}else{
+						$final_Star .= '<i class="fa fa-star"></i>';
+					}
+				}
+
+				$final_hotel_data[$i]->stars = $final_Star;
+				$final_hotel_data[$i]->tripAdvisorRatingImg = '';
+				$final_hotel_data[$i]->tripAdvisorRating = '';
+				
+			}
+			
+			return $final_hotel_data;
+		}
 
 
 
