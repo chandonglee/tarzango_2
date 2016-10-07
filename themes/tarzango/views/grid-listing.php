@@ -399,6 +399,8 @@ if($room <= 0){
                   <option value="9" <?php if($room == 9){ echo "selected"; } ?> >9</option>
                   <option value="10" <?php if($room == 10){ echo "selected"; } ?> >10</option>
                 </select>
+                <span class="rm_sel">Room</span>
+
               </div>
             </div>
             <div class="col-sm-3">
@@ -568,7 +570,7 @@ if($room <= 0){
                   <button class="sort" data-sort="distance">Distance</button>
                 </div>
               </div>
-              <div class="col-sm-9 view-options clearfix" style="width: 73.5%">
+              <div class="col-sm-9 view-options " style="width: 73.5%">
                 <?php  ?>
                 <a class="inner-view" id="box-listing" href="<?php echo $complete_url1; ?>"><img src="images/header-list-icon.png"></a>
                

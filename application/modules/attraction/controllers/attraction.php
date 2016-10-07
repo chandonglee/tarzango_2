@@ -237,6 +237,7 @@ class Attraction extends MX_Controller
         /*echo json_encode($attr_data);
         exit();*/
         $this->data['invoice'] = $attr_data;
+        $this->data['id'] = $id;
     	$this->theme->view('attraction/invoice', $this->data);
 
          
@@ -246,7 +247,7 @@ class Attraction extends MX_Controller
         $pay_data = $this->input->post('pay_data');
         $pt_attr_booking_id = $this->input->post('pt_attr_booking_id');
         $booking_ref_no = $this->input->post('booking_ref_no');
-
+        $this->attraction_model->attraction_paid_email($pt_attr_booking_id);
         $this->attraction_model->update_payment_status($pay_data,$pt_attr_booking_id,$booking_ref_no);
 
     }

@@ -170,9 +170,10 @@ class attractionback extends MX_Controller {
 						
 					}else{
 
-						/*if($status == 'paid'){
-							
-						}*/
+						if($status == 'paid'){
+							$this->attraction_model->attraction_paid_email($pt_attr_booking_id);
+						}
+						/*exit();*/
 						
 						$data = array(
 									'booking_status' => $status,

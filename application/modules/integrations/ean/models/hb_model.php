@@ -127,6 +127,8 @@ class Hb_model extends CI_Model{
                /* print_r($insertdata);
                 exit();*/
                 $aaa = $this->insert_booking_final($insertdata);
+                /*echo $this->db->last_query();
+                exit();*/
                 $this->db->where('book_itineraryid',$itid);
                 $res = $this->db->get('pt_ean_booking')->result();
                 $rrr = json_decode($res);

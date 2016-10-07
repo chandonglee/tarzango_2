@@ -1,3 +1,111 @@
+@font-face {
+	font-family: 'gotham_light_test';
+	src: local('☺'), url('../fonts/gotham-light_test.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'gotham_light_test';
+	src: url('../fonts/gotham_light_test.eot');
+	src: local('☺'), url('../fonts/gotham_light.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Conv_GothamNarrow-Medium_0';
+	src: url('../fonts/GothamNarrow-Medium_0.eot');
+	src: local('☺'), url('../fonts/GothamNarrow-Medium_0.woff') format('woff'), url('../fonts/GothamNarrow-Medium_0.ttf') format('truetype'), url('../fonts/GothamNarrow-Medium_0.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Conv_GothamNarrow-Book_0';
+	src: url('../fonts/GothamNarrow-Book_0.eot');
+	src: local('☺'), url('../fonts/GothamNarrow-Book_0.woff') format('woff'), url('../fonts/GothamNarrow-Book_0.ttf') format('truetype'), url('../fonts/GothamNarrow-Book_0.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Conv_GothamNarrow-Bold_0';
+	src: url('../fonts/GothamNarrow-Bold_0.eot');
+	src: local('☺'), url('../fonts/GothamNarrow-Bold_0.woff') format('woff'), url('../fonts/GothamNarrow-Bold_0.ttf') format('truetype'), url('../fonts/GothamNarrow-Bold_0.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Apercu-Bold';
+	src: url('../fonts/Apercu-Bold.eot?#iefix') format('embedded-opentype'), url('../fonts/Apercu-Bold.otf') format('opentype'), url('../fonts/Apercu-Bold.woff') format('woff'), url('../fonts/Apercu-Bold.ttf') format('truetype'), url('../fonts/Apercu-Bold.svg#Apercu-Bold') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Apercu-Light';
+	src: url('../fonts/Apercu-Light.eot?#iefix') format('embedded-opentype'), url('../fonts/Apercu-Light.woff') format('woff'), url('../fonts/Apercu-Light.ttf') format('truetype'), url('../fonts/Apercu-Light.svg#Apercu-Light') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Apercu-Regular';
+	src: url('../fonts/Apercu-Regular.eot?#iefix') format('embedded-opentype'), url('../fonts/Apercu-Regular.otf') format('opentype'), url('../fonts/Apercu-Regular.woff') format('woff'), url('../fonts/Apercu-Regular.ttf') format('truetype'), url('../fonts/Apercu-Regular.svg#Apercu-Regular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Gotham-Bold';
+	src: url('../fonts/Gotham-Bold.eot?#iefix') format('embedded-opentype'), url('../fonts/Gotham-Bold.otf') format('opentype'), url('../fonts/Gotham-Bold.woff') format('woff'), url('../fonts/Gotham-Bold.ttf') format('truetype'), url('../fonts/Gotham-Bold.svg#Gotham-Bold') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'ProximaNova-Bold';
+	src: url('../fonts/ProximaNova-Bold.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'ProximaNovaA-Regular';
+	src: url('../fonts/ProximaNovaA-Regular.eot?#iefix') format('embedded-opentype'), url('../fonts/ProximaNovaA-Regular.otf') format('opentype'), url('../fonts/ProximaNovaA-Regular.woff') format('woff'), url('../fonts/ProximaNovaA-Regular.ttf') format('truetype'), url('../fonts/ProximaNovaA-Regular.svg#ProximaNovaA-Regular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'ProximaNovaA-Light';
+	src: url('../fonts/ProximaNovaA-Light.eot?#iefix') format('embedded-opentype'), url('../fonts/ProximaNovaA-Light.otf') format('opentype'), url('../fonts/ProximaNovaA-Light.woff') format('woff'), url('../fonts/ProximaNovaA-Light.ttf') format('truetype'), url('../fonts/ProximaNovaA-Light.svg#ProximaNovaA-Light') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: gotham_bold;
+	src: url(../fonts/Gotham-Bold.otf);
+}
+@font-face {
+	font-family: apercu_bold;
+	src: url(../fonts/Apercu-Bold.otf);
+}
+@font-face {
+	font-family: 'Apercu-Light';
+	src: url(../fonts/Apercu-Light.otf);
+}
+@font-face {
+	font-family: apercu_regular;
+	src: url(../fonts/Apercu-Regular.otf);
+}
+@font-face {
+	font-family: gotham_medium;
+	src: url(../fonts/GothamNarrow-Medium_0.otf);
+}
+@font-face {
+	font-family: proximanova_light;
+	src: url(../fonts/ProximaNovaA-Light.otf);
+}
+@font-face {
+	font-family: proximanova_regular;
+	src: url(../fonts/ProximaNovaA-Regular.otf);
+}
+@font-face {
+	font-family: proximanova_bold;
+	src: url(../fonts/ProximaNova-Bold.otf);
+}
 /* membership steps */
 
 /*.membership_steps_body .left-bg {
@@ -10,7 +118,9 @@
 	right: 0px;
 	bottom: 0;
 }*/
-
+.bg-none {
+	background: none !important;
+}
 .no-padding {
 	padding: 0px !important;
 }
@@ -81,6 +191,9 @@ label.agreement {
 label.agreement a {
 	color: #373b71;
 	text-decoration: underline;
+}
+.img-responsive01 {
+	max-width: 100%;
 }
 label.agreement input {
 	left: 50px !important;
@@ -1784,16 +1897,18 @@ footer .contact-info .single p span, footer ul > li > a, .input-group .form-cont
 	font-family: 'ProximaNovaA-Light';
 }
 a.pink-btn {
+	z-index: 999999999 !important;
 	background: #1cc0fb;
 	color: #fff;
 	font-size: 14px;
-	padding: 10px 30px;
+	letter-spacing: 2px;
+	padding: 22px 75px;
 	display: inline-block;
 	margin: 40px auto;
-	border-radius: 5px;
+	border-radius: 6px;
 	box-shadow: 1px 1px 1px rgba(138,158,212,0.4);
 	text-transform: uppercase;
-	font-family: 'Apercu-Bold';
+	font-family: 'Apercu-Regular';
 }
 a.pink-btn:hover {
 	color: #333;
@@ -2305,7 +2420,12 @@ header.header-section .sorting .col-sm-1.view-option a img {
 	margin: 15px 0px 15px 10px;
 }
 /* new header */
-
+.width12 {
+	width: 1230px;
+}
+.new-b {
+	background-image: none;
+}
 .container-main.main_header.new {
 	background-image: none;
 	padding: 0px 15px;
@@ -2412,6 +2532,9 @@ header.header-section .sorting .col-sm-1.view-option a img {
 	padding: 15px 20px !important;
 	line-height: 30px !important;
 }
+.search-section select option {
+	border-right: 1px solid #d2d5e1 !important;
+}
 .search-section input::-webkit-input-placeholder {
  color: #373b71;
  font-size: 17px;
@@ -2421,9 +2544,13 @@ header.header-section .sorting .col-sm-1.view-option a img {
 	border: 0px !important;
 }
 .search-section select {
+	/*-webkit-appearance: none;
+	-moz-appearance: none;*/
 	-webkit-appearance: none;
 	-moz-appearance: none;
+	appearance: none;
 	text-indent: 1px;
+	text-overflow: '';
 }
 .search-section select {
 	background-image: url(../images/field-arrow-down.png);
@@ -3636,8 +3763,86 @@ h3.slider-line {
 	padding: 50px 0 30px 0;
 }
 }
+.clearfix {
+	border: medium none;
+	clear: both;
+	float: none;
+	font-size: 0;
+	height: 0;
+	line-height: 0;
+}
+.container-fluid.how-section {
+	background: url(../img/Group-booking-bg.png) no-repeat;
+	background-size: 100% 100%;
+	min-height: 400px;
+	text-align: center;
+	padding: 40px 0;
+}
+.why-tsrzango .how-section h4 {
+	font-size: 38px;
+	color: rgb(255, 255, 255);
+	font-weight: lighter;
+	text-align: center;
+	margin-bottom: 0px;
+	letter-spacing: 1px;
+	font-family: Apercu-Light;
+	padding-bottom: 15px;
+}
+.vip-membership .description {
+	width: 128% !important;
+}
+.ptop70 {
+	padding-top: 70px;
+}
+img {
+	max-width: 100%;
+}
+.modal-title {
+	font-family: 'Gotham-Bold';
+	color: #4867aa;
+	font-size: 28px;
+	display: inherit;
+}
 
 @media (max-width: 767px) {
+#resetemail {
+	height: 60px !important;
+}
+.modal-title {
+	font-size: 24px;
+}
+.detail-btn {
+	padding-left: 7px !important;
+	padding-right: 7px !important;
+}
+.offer_data {
+	margin-top: 30px;
+}
+.group_booking_body #slider {
+	height: 760px !important;
+}
+.width12 {
+	width: 100%;
+}
+#slider .card {
+	width: 100%;
+}
+.group_booking_body .section5 .box h1 {
+	min-height: inherit !important;
+}
+.checkbox-bg {
+	width: 90% !important;
+}
+.checkbox-bg .sel_txt {
+	width: 78%;
+	text-align: center;
+}
+.sel_txt_chk {
+	position: relative !important;
+}
+.container-fluid.how-section {
+	padding-bottom: 0px;
+}
 .check-box {
 	background: #f0f0f4;
 	padding: 10px;
@@ -4072,14 +4277,16 @@ h3.slider-line {
 	text-align: center;
 	display: inline-block;
 }
+#slider .navigation {
+	display: none;
+}
 /***********Footer**********/
 
 footer {
 	float: left;
 	width: 100%;
-	background: url(../images/home_footer_bg.png);
-	background-repeat: no-repeat;
-	background-size: 100% 100%;
+	background: url(../images/home_footer_bg.jpg) repeat-x center bottom;
+	margin-top: -1px;/*background-size: 100% 100%;*/
 }
 .footer-above {
 	float: left;
@@ -4165,6 +4372,7 @@ footer {
 	width: 100%;
 	min-height: 150px;
 	padding: 4% 0px;
+	text-align: left;
 }
 .footer-bottom .col-sm-3 a {
 	color: #fff;
@@ -4187,8 +4395,7 @@ footer {
 	color: #fff;
 	line-height: 42px;
 	margin-bottom: 0px;
-	font-family: 'Apercu-Light';
-	letter-spacing: 1px;
+	font-family: 'Apercu-Light';/*letter-spacing: 1px;*/
 }
 .footer-bottom .col-sm-3 p img {
 	padding: 0px 3px 0px 3px;
@@ -4536,6 +4743,16 @@ header .btn-serch-icon {
 	background: url(../images/pay-bg.png);
 	background-size: contain;
 }
+.rm_sel {
+	margin-top: -42px;
+	display: block;
+	position: relative;
+	left: 60px;
+	width: 60px;
+	color: #150E4D;
+	font-size: 17px;
+	font-family: 'Apercu-Regular';
+}
 /* hotal list -block */
 .default-block {
 	margin-top: 0px;
@@ -4873,11 +5090,6 @@ textarea {
 	font-size: 22px;
 	line-height: 30px;
 	margin: 0px;
-}
-.contact .office-map {
-	float: left;
-	width: 100%;
-	padding: 0px 40px;
 }
 .contact .office {
 	padding: 0px 15px;
@@ -5370,12 +5582,9 @@ textarea {
 	opacity: 0.7;
 }
 .our_team_cover .our_team_inner_ul {
-	float: left;
+	/*float: left;*/
 	list-style: outside none none;
-	margin: 70px 0 0;
-	padding: 0;
-	width: 100%;
-	max-width: 780px;
+	margin-top: 70px;/*max-width: 780px;*/
 }
 .our_team_cover .our_team_inner_ul > li {
 	float: left;
@@ -5507,8 +5716,7 @@ textarea {
 	margin: 40px 40px 20px 80px !important;
 }
 .our_team_cover .our_team_inner_ul {
-	margin: 0px !important;
-	padding: 15px !important;
+	margin-top: 30px !important;
 }
 .blog_post .blog_post_body .col-sm-10 .section2 ul li input {
 	width: 75% !important;
@@ -6732,6 +6940,9 @@ header .form-control {
 }
 
 @media (max-width: 767px) {
+.updateprofile {
+	width: 100%;
+}
 .tarzango-address {
 	margin-bottom: 20px;
 }
@@ -6796,7 +7007,7 @@ header .form-control {
 .innerpage {
 	float: left;
 	width: 100%;
-	min-height: 1200px;
+	min-height: 1000px;
 }
 .innerpage .top-bg {
 	position: absolute;
@@ -6863,11 +7074,9 @@ header .form-control {
 	width: 100%;
 }
 .contact {
-	background-image: url(../images/contact_body.png);
+	background: url(../images/contact_body.jpg) no-repeat center top;
 	float: left;
 	width: 100%;
-	background-repeat: no-repeat;
-	background-size: 100% 100%;
 }
 .container-main.main_header {
 	background-image: url(../images/contact_header.jpg);
@@ -6991,8 +7200,6 @@ textarea {
 	margin: 0px;
 }
 .contact .office-map {
-	float: left;
-	width: 100%;
 	padding: 0px 40px;
 }
 .contact .office {
@@ -7096,8 +7303,6 @@ textarea {
 }
 .container {
 	padding-top: 0px !important;
-	padding-left: 0px !important;
-	padding-right: 0px !important;
 }
 .contact-address {
 	margin-left: -15px !important;
@@ -7300,7 +7505,7 @@ select {
 	width: 60%;
 	padding-right: 10%
 }
-.Services_page_main .Services_page_cover .service_cont ul li .service_left h3 {
+.Services_page_main .Services_page_cover .service_cont h3 {
 	font-size: 38px;
 	color: #342d6c;
 	font-family: 'Apercu-Light';
@@ -7308,7 +7513,7 @@ select {
 	float: left;
 	width: 100%;
 }
-.Services_page_main .Services_page_cover .service_cont ul li .service_left p {
+.Services_page_main .Services_page_cover .service_cont p {
 	font-size: 16px;
 	color: #2c3748;
 	line-height: 28px;
@@ -7316,7 +7521,7 @@ select {
 	float: left;
 	width: 100%;
 }
-.Services_page_main .Services_page_cover .service_cont ul li .service_left a {
+.Services_page_main .Services_page_cover .service_cont ul li .service_left a, .learn-more, .service_btn {
 	font-size: 14px;
 	color: #fff;
 	letter-spacing: 2.4px;
@@ -7436,10 +7641,8 @@ select {
 /* Membership-perks */
 
 .member_ship {
-	background-image: url(../images/membership_bg.png);
-	background-repeat: no-repeat;
-	background-size: 100% 100%;
-	float: left;
+	/*background: url(../images/membership_bg.png) no-repeat top center fixed;*/
+	/*float: left;*/
 	width: 100%;
 }
 .member_ship .membership_signin_page {
@@ -7451,7 +7654,10 @@ select {
 	float: left;
 	width: 100%;
 	text-align: center;
-	margin-bottom: 70px;
+	position: relative;
+	z-index: 1;
+	border-bottom: 1px solid #FFF;
+	padding-bottom: 70px;
 }
 .member_ship .membership_signin_page .membership_header h3 {
 	float: left;
@@ -7475,17 +7681,21 @@ select {
 	float: left;
 	width: 100%;
 	text-align: left;
+	margin-top: -1px;
 }
 .member_ship .membership_perks .accordion {
 	float: left;
 	width: 100%;
 }
+.accordion:frist-child h3 {
+ border-top: none;
+}
 .member_ship .membership_perks .accordion .Acc_head {
 	font-size: 20px;
 	color: #2c3748;
 	font-family: 'Apercu-Bold';
-	padding: 40px 0 50px;
-	border-bottom: 1px solid #eae8f0;
+	padding: 40px 0;
+	border-top: 1px solid #eae8f0;
 	margin: 0;
 	padding-right: 70px;
 	position: relative;
@@ -7508,13 +7718,13 @@ select {
 }
 .member_ship .membership_perks .accordion .Acc_head.ui-accordion-header-active:after {
 	transform: rotate(45deg);
-	-webkit-transition: all 0.6s ease-in-out;
-	-moz-transition: all 0.6s ease-in-out;
-	-o-transition: all 0.6s ease-in-out;
-	transition: all 0.6s ease-in-out;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
 }
 .member_ship .membership_perks .accordion .Acc_head.ui-accordion-header-active {
-	padding-bottom: 10px;
+	/*padding-bottom: 10px;*/
 	border-bottom: 0;
 }
 .member_ship .membership_perks .accordion .Acc_head span {
@@ -7535,8 +7745,7 @@ select {
 	font-family: 'Apercu-Light';
 }
 .member_ship .membership_perks .accordion .acc_cont.ui-accordion-content-active p {
-	padding-bottom: 40px;
-	border-bottom: 1px solid #eae8f0;
+	padding-bottom: 40px;/*border-bottom: 1px solid #eae8f0;*/
 }
 .member_ship .upgrade_membership {
 	float: left;
@@ -8569,9 +8778,7 @@ header.header-section .logo p {
 .group_booking_body .section1 {
 	float: left;
 	width: 100%;
-	background-image: url(../images/group_booking_bg1.png);
-	background-repeat: no-repeat;
-	background-size: 100% 100%;
+	background: url(../images/group_booking_bg1.png) repeat-x center bottom;
 	height: 500px;
 }
 .group_booking_body .section1 .col-sm-9 {
@@ -8587,7 +8794,7 @@ header.header-section .logo p {
 	padding-top: 10px;
 	float: left;
 	color: #2c3748;
-	font-size: 19px;
+	font-size: 18px;
 	font-family: 'Apercu-Light';
 }
 .group_booking_body .section2 {
@@ -8688,26 +8895,26 @@ header.header-section .logo p {
 .group_booking_body .section5 {
 	float: left;
 	width: 100%;
-	background-image: url(../images/group_booking_bg4.png);
-	background-repeat: no-repeat;
-	background-size: 100% 100%;
+	background: #f3f5fa url(../images/group_booking_bg4.png) repeat-x center center;
 	padding: 25px 0px;
-	background-color: #f3f5fa;
 }
 .group_booking_body .section5 h1 {
 	font-family: 'Apercu-Light';
 	font-size: 34px;
 	color: #2c3748;
 	text-align: center;
-	margin: 50px 0px 70px 0px;
+	margin: 30px 0px;
 }
 .group_booking_body #slider {
 	position: relative;
 	/*overflow: hidden;*/
 	margin: 20px 0 0 0;
 	border-radius: 4px;
-	width: 390px;
-	height: 600px;
+	/*width: 390px;*/
+	height: 540px;
+}
+.submit-button .btn {
+	margin-left: 0px;
 }
 .group_booking_body #slider ul {
 	position: relative;
@@ -8725,7 +8932,7 @@ header.header-section .logo p {
 	width: 390px;
 	height: 600px;
 }
-.group_booking_body .section5 {
+/*.group_booking_body .section5 {
 	float: left;
 	width: 100%;
 	background-image: url(../images/group_booking_bg4.png);
@@ -8733,16 +8940,17 @@ header.header-section .logo p {
 	background-size: 100% 100%;
 	padding: 25px 0px;
 	background-color: #f3f5fa;
-}
+}*/
 .group_booking_body .section5 ul li .col-sm-4 {
 	width: 100%;
 }
-.group_booking_body .section5 .box {
+.group_booking_body .section5 .box, .jcarousel .box {
 	background: #FFF;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	overflow: hidden;
+	text-align: left;
 	/*background-image: url(../images/group_booking_icon8.png);
 	background-repeat: no-repeat;
 	background-size: 100% 100%;*/
@@ -8753,13 +8961,13 @@ header.header-section .logo p {
 	-moz-box-shadow: #dfe1e8 0px 2px 3px;
 	box-shadow: #dfe1e8 0px 2px 3px;
 }
-.group_booking_body .section5 .box p {
+.group_booking_body .section5 .box p, .jcarousel .box p {
 	font-size: 15px;
 	font-family: 'Apercu-Regular';
 	color: #b2b4b8;
 	margin: 10px 0px;
 }
-.group_booking_body .section5 .box h1 {
+.group_booking_body .section5 .box h1, .jcarousel .box h1 {
 	font-size: 41px;
 	font-family: 'Apercu-Bold';
 	color: #2c3748;
@@ -8767,14 +8975,19 @@ header.header-section .logo p {
 	text-align: left;
 	min-height: 96px;
 }
-.group_booking_body .section5 .box h2 {
+.group_booking_body .section5 .box h2, .jcarousel .box h2 {
 	float: left;
 	font-size: 35px;
 	font-family: 'Apercu-Light';
 	color: #3bb4f8;
 	margin: 10px 0px;
 }
-.group_booking_body .section5 .box h2 span {
+.jcarousel .box h2 {
+	font-size: 32px;
+}
+.gr-bg {
+}
+.group_booking_body .section5 .box h2 span, .jcarousel .box h2 span {
 	font-family: 'Apercu-Regular';
 	font-size: 16px;
 	color: #abaeb2;
@@ -8892,10 +9105,14 @@ header.header-section .logo p {
 }
 .checkbox-bg .sel_txt_chk {
 	height: 40px !important;
+	margin-left: 5px !important;
 }
 .checkbox-bg .sel_txt {
 	margin-top: 0px;
-	line-height: 44px;
+	line-height: 45px;
+	text-align: center;
+	width: 80%;
+	padding-right: 0;
 }
 /****************Header**********/
 
@@ -10213,6 +10430,9 @@ input {
 	padding: 10px 20px !important;
 	color: #373b71 !important;
 }
+#comment-form input[type="text"] {
+	height: 60px !important;
+}
 textarea {
 	padding: 10px 20px !important;
 }
@@ -10385,11 +10605,10 @@ header.header-navigation-section .links {
 }
 .group_booking_body .section1 {
 	float: left;
-	width: 100%;
-	background-image: url(../images/group_booking_bg1.png);
+	width: 100%;/*background-image: url(../images/group_booking_bg1.png);
 	background-repeat: no-repeat;
 	background-size: auto 100%;
-	height: 320px;
+	height: 320px;*/
 }
 .group_booking_body .section1 .col-sm-7 h1 {
 	color: #2c3748;
@@ -10609,13 +10828,12 @@ header.header-section .logo p {
 	margin-top: 30px;
 	margin-bottom: 10px;
 	font-size: 30px;
-	color: #2c3748;
-	font-family: proximanova_bold;
+	color: #2c3748;/*font-family: proximanova_bold;*/
 }
 .membership_body .col-sm-10 .col-sm-12 p {
 	font-size: 22px;
 	color: #2c3748;
-	font-family: proximanova_regular;
+	/*font-family: proximanova_regular;*/
 	line-height: 30px;
 }
 .membership_steps_body .col-sm-10 .col-sm-12 h3 {
@@ -10950,6 +11168,7 @@ header.header-navigation-section .links a.col-sm-2 {
 }
 .group_booking_body #slider {
 	margin: 20px auto 0 auto;
+	width: 100% !important;
 }
 .group_booking_body #slider ul li {
 	width: 300px;
@@ -11307,13 +11526,52 @@ header.header-navigation-section .links a.col-sm-2 {
 	padding: 7px 0;
 	margin: 0px;
 }
+.footer-above .container {
+	text-align: left;
+}
  @media screen and (max-width: 767px) {
 /*********jmk*******/
-.footer-bottom .col-sm-6 p{
-	line-height:22px;
-	}
+.member_ship {
+	margin-left: 0px !important;
+}
+.col-sm-4.pull-right {
+	width: 100%;
+	text-align: center;
+}
+.plm {
+	float: left;
+}
+.why-tsrzango .how-section h4 {
+	font-size: 18px !important;
+	text-align: center !important;
+}
+.vip-membership .description {
+	width: 100% !important;
+}
+.pink-btn {
+	float: none !important;
+}
+.ptop70 {
+	padding-top: 2px;
+}
+.inner-section {
+	padding: 0 !important;
+}
+.page-title h2 {
+	font-size: 32px;
+	margin-top: 50px;
+}
+.footer-bottom .col-sm-6 p {
+	line-height: 22px;
+}
 .group_booking_body .section7 {
-	padding: 20px 0;
+	padding: 20px 0 0 0;
+}
+.footer-bottom .col-sm-6 p {
+	font-size: 13px;
+}
+.footer-bottom .text-center {
+	text-align: left;
 }
 .section7 .col-sm-7 h1 {
 	width: auto !important;
@@ -11372,18 +11630,17 @@ header.header-navigation-section .links a.col-sm-2 {
 }
 .inner-section .header-navigation-section {
 	display: block !important;
-	height: 15px;
+	/*height: 15px;*/
 	padding: 0 !important;
 	position: absolute;
-	right: 25px !important;
-	top: 107px !important;
-	width: 25px;
+	right: 0px !important;
+	top: 107px !important;/*width: 25px;*/
 }
 .inner-section .header-navigation-section img.menu {
 	margin: 0 !important;
 }
 .inner-section .container-main.main_header.new {
-	background-image: url("../images/contact_header.jpg") !important;
+	/*background-image: url("../images/contact_header.jpg") !important;*/
 	padding: 0 !important;
 	position: absolute !important;
 }
@@ -11405,13 +11662,16 @@ header.header-navigation-section .links a.col-sm-2 {
 	font-size: 26px;
 }
 .inner-section .close-button.down {
-	transform: rotate(0deg);
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
 }
 .inner-section .menu-dropdown {
 	z-index: 9999;
 	background-position: center center;
 	margin: -20px -15px 0;
-	right: -20px !important;
+	right: -10px !important;
 	top: 0;
 	width: 335px !important;
 }
@@ -11499,10 +11759,17 @@ header.header-navigation-section .links a.col-sm-2 {
 	padding-right: 15px !important;
 }
 footer {
-	background: rgba(0, 0, 0, 0) url("../img/home_footer_bg.png") no-repeat scroll center center / cover;
+	/*background: rgba(0, 0, 0, 0) url("../img/home_footer_bg.png") no-repeat;
+	background-position: center;
+	background-size: cover;*/
 	font-weight: 500;
 	letter-spacing: 1px;
 	text-align: left;
+}
+.footer-above .container, .footer-bottom .container {
+	padding-top: 0px !important;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
 }
 .footer-above .footer-menu-1 ul li, .footer-above .footer-menu-2 ul li {
 	margin-bottom: 10px;

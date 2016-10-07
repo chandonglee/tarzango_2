@@ -26,6 +26,7 @@ class Ean extends MX_Controller {
                     $this->numberofresults = $this->settings[0]->front_listings;
                     $this->load->library("ean_lib");
                     $this->load->library("hb_lib");
+                    $this->load->library("car_hb_lib");
                     $this->load->model("ean_model");
                     $this->load->model("hb_model");
                     $this->load->helper("ean_front");
@@ -560,7 +561,7 @@ class Ean extends MX_Controller {
                     $arrayInfo['maxRate'] = $maxp;
                 }
 
-                $is_hb = 1;
+                $is_hb = 2;
 
                 $local_hotels = $this->ci->hotels_model->search_hotels_by_lat_lang($arrayInfo['lat'], $arrayInfo['long'],$arrayInfo+$arrayinfo1);
 
@@ -580,7 +581,7 @@ class Ean extends MX_Controller {
 
                         $key_val = 0;
                        // for ($hb_r=0; $hb_r < count($resultData2->hotels->hotels) ; $hb_r++) { 
-                        for ($hb_r=0; $hb_r < 20 ; $hb_r++) { 
+                        for ($hb_r=0; $hb_r < 2 ; $hb_r++) { 
 
                             $checkIn = date("Y-m-d", strtotime($arrayInfo['checkIn'])) ;
                             $checkOut = date("Y-m-d", strtotime($arrayInfo['checkOut'])) ;
@@ -684,7 +685,7 @@ class Ean extends MX_Controller {
                         }
                         //$abc = $final_hb_data['hotels'] + $local_hotels['hotels'];
 
-                        
+                        $abc = $local_hotels['hotels'];
                         $sort_Data = usort($abc, "custom_sort");
                         $final_data = $abc;
 
@@ -694,6 +695,11 @@ class Ean extends MX_Controller {
                         $result = $this->getResultInObjects($resultData,$this->data['checkin'],$this->data['checkout'],$adultString,$this->data['agesApendUrl']);
                         $final_data = $result->hotels;
                 }	
+
+                $abc = $local_hotels['hotels'];
+                $sort_Data = usort($abc, "custom_sort");
+                $final_data = $abc;
+
             }
 
         }else {
@@ -707,7 +713,8 @@ class Ean extends MX_Controller {
     }
 
     function ajax_call_car_list(){
-       
+    
+        
 
       $allcountries = $this->countries_model->get_all_countries();
 
@@ -715,15 +722,7 @@ class Ean extends MX_Controller {
 
       $pickup_date  = date('Ymd',strtotime($this->input->get("pickup_date")));
 
-      $fulladdress = explode(',', $this->input->get("fulladdress"));
-      $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
-    
-        for($i = 0; $i<count($allcountries);$i++) {
-            if ($allcountries[$i]->short_name == $fulladdress[3]) {
-                $ccode = $allcountries[$i]->iso2;
-                exit();
-            }
-        }
+   
 
       $pickup_time_hour = $this->input->get("pickup_time_hour");
       $pickup_time_min = $this->input->get("pickup_time_min");
@@ -747,66 +746,113 @@ class Ean extends MX_Controller {
       $location_latitude = $this->input->get("location_latitude");
       $location_longitude = $this->input->get("location_longitude");
 
-      $address = $this->input->get("address");
-      $hoteltitle = $this->input->get("hoteltitle");
+      $address = $this->input->get("fulladdress");
       $hotellocaion = $this->input->get("hotellocaion");
 
+
+      $hoteltitle = $this->input->get("hoteltitle");
       $hoteltitle = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%-]/s', '', $hoteltitle);
 
-      $username = "TESTCHAINS";
-      $password = "TESTCHAINS";
+      $fulladdress = explode(',', $this->input->get("fulladdress"));
+
+      if ( count($fulladdress) == 4 ){
+        //print_r($allcountries);
+        $countrycode = $fulladdress[3];
+        $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
+
+        for($i = 0; $i<count($allcountries);$i++) {
+            //echo $allcountries[$i]->short_name.'<br>';
+                if ($allcountries[$i]->short_name == trim($countrycode)) {
+                    
+                    $ccode = $allcountries[$i]->iso2;
+                    break;
+                }
+          }
+
+      } else {
+        $loc = explode(' - ', $fulladdress[1]);
+        $ccode = trim($loc[1]);
+        $zipcode = filter_var($loc[0], FILTER_SANITIZE_NUMBER_INT);
+      }
+
       
+      
+
+        /*$arrayInfo = array();
+
+        $arrayInfo['pickup_date'] = date('Ymd',strtotime($this->input->get("pickup_date")));
+        $arrayInfo['pickup_time_hour'] = $this->input->get("pickup_time_hour");
+        $arrayInfo['pickup_time_min'] =  $this->input->get("pickup_time_min");
+        $arrayInfo['adult'] = $this->input->get("adult");
+        $arrayInfo['child'] = $this->input->get("child");
+        $arrayInfo['pickup_terminal'] = $this->input->get("pickup_terminal");
+        $arrayInfo['location_latitude'] = $this->input->get("location_latitude");
+        $arrayInfo['location_longitude'] = $this->input->get("location_longitude");
+        $arrayInfo['hoteltitle'] = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%-]/s', '', $hoteltitle);
+        $arrayInfo['address'] = $this->input->get("address");
+        $arrayInfo['hotellocaion'] = $this->input->get("hotellocaion");
+        $arrayInfo['zipcode'] = $zipcode;
+        $arrayInfo['ccode'] = $ccode;
+        $onway_data = $this->car_hb_lib->Carlist_oneway($arrayInfo);
+        echo $onway_data;
+        exit();*/
+
+
+        $username = "TESTCHAINS";
+        $password = "TESTCHAINS";
+      
+
       if ( $BookType == "oneway") {
 
             $request = '<TransferValuedAvailRQ echoToken="DummyEchoToken"
-    sessionId="134132121"
-    xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages TransferValuedAvailRQ.xsd"
-    version="2013/12">
-    <Language>ENG</Language>
-    <Credentials>
-        <User>'.$username.'</User>
-        <Password>'.$password.'</Password>
-    </Credentials>
-    <AvailData type="IN">
-        <ServiceDate date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'" />
-        <Occupancy>
-            <AdultCount>'.$adult.'</AdultCount>
-            <ChildCount>'.$child.'</ChildCount>
-            <GuestList>';
+            sessionId="134132121"
+            xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages TransferValuedAvailRQ.xsd"
+            version="2013/12">
+            <Language>ENG</Language>
+            <Credentials>
+                <User>'.$username.'</User>
+                <Password>'.$password.'</Password>
+            </Credentials>
+            <AvailData type="IN">
+                <ServiceDate date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'" />
+                <Occupancy>
+                    <AdultCount>'.$adult.'</AdultCount>
+                    <ChildCount>'.$child.'</ChildCount>
+                    <GuestList>';
 
         
-        if ( $adult > 0){
+            if ( $adult > 0){
 
-            for($ad=0; $ad < $adult; $ad++){
-                $request .= '<Customer type="AD">30</Customer>';
+                for($ad=0; $ad < $adult; $ad++){
+                    $request .= '<Customer type="AD">30</Customer>';
+                }
             }
-        }
 
-        if ( $child > 0){
-            for($ch = 0; $ch < $child; $ch ++){
-                $request .= '<Customer type="CH"></Customer>';
+            if ( $child > 0){
+                for($ch = 0; $ch < $child; $ch ++){
+                    $request .= '<Customer type="CH"></Customer>';
+                }
             }
-        }
 
-    $request .='</GuestList>
-        </Occupancy>
-        <PickupLocation xsi:type="ProductTransferTerminal">
-            <Code>'.$pickup_terminal.'</Code>
-            <DateTime date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'" />
-        </PickupLocation>
-        <DestinationLocation xsi:type="ProductTransferGPSPoint">
-            <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
-            <Description>'.$hoteltitle.'</Description>
-            <Address>'.$address.'</Address>
-            <City>'.$hotellocaion.'</City>
-            <ZipCode>'.$zipcode.'</ZipCode>
-            <Country>'.$ccode.'</Country>
-        </DestinationLocation>
-    </AvailData>
-    <ReturnContents>Y</ReturnContents>
-</TransferValuedAvailRQ>';
+            $request .='</GuestList>
+                </Occupancy>
+                <PickupLocation xsi:type="ProductTransferTerminal">
+                    <Code>'.$pickup_terminal.'</Code>
+                    <DateTime date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'" />
+                </PickupLocation>
+                <DestinationLocation xsi:type="ProductTransferGPSPoint">
+                    <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
+                    <Description>'.$hoteltitle.'</Description>
+                    <Address>'.$address.'</Address>
+                    <City>'.$hotellocaion.'</City>
+                    <ZipCode>'.$zipcode.'</ZipCode>
+                    <Country>'.$ccode.'</Country>
+                </DestinationLocation>
+            </AvailData>
+            <ReturnContents>Y</ReturnContents>
+            </TransferValuedAvailRQ>';
 
             $ch2=curl_init();
 
@@ -850,58 +896,58 @@ class Ean extends MX_Controller {
 
          
             $request = '<TransferValuedAvailRQ xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages ../xsd/TransferValuedAvailRQ.xsd"
-    xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  sessionId="sldfghliadghla" echoToken="TransferValuedAvailRQ" version="2013/12" >
-    <Language>ENG</Language>
-    <Credentials>
-        <User>'.$username.'</User>
-        <Password>'.$password.'</Password>
-    </Credentials>
-    <ExtraParamList />
-    <AvailData type="IN">
-        <ServiceDate date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'"/>
-        <Occupancy>
-            <AdultCount>'.$adult.'</AdultCount>
-            <ChildCount>'.$child.'</ChildCount>            
-            <GuestList>';
+                xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  sessionId="sldfghliadghla" echoToken="TransferValuedAvailRQ" version="2013/12" >
+                <Language>ENG</Language>
+                <Credentials>
+                    <User>'.$username.'</User>
+                    <Password>'.$password.'</Password>
+                </Credentials>
+                <ExtraParamList />
+                <AvailData type="IN">
+                    <ServiceDate date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'"/>
+                    <Occupancy>
+                        <AdultCount>'.$adult.'</AdultCount>
+                        <ChildCount>'.$child.'</ChildCount>            
+                        <GuestList>';
 
         
-        if ( $adult > 0){
+                        if ( $adult > 0){
 
-            for($ad=0; $ad<$adult;$ad++){
-                $request .= '<Customer type="AD"></Customer>';
-            }
-        }
+                            for($ad=0; $ad<$adult;$ad++){
+                                $request .= '<Customer type="AD"></Customer>';
+                            }
+                        }
 
-        if ( $child > 0){
-            for($ch = 0; $ch < $child; $ch ++){
-                $request .= '<Customer type="CH"></Customer>';
-            }
-        }
+                        if ( $child > 0){
+                            for($ch = 0; $ch < $child; $ch ++){
+                                $request .= '<Customer type="CH"></Customer>';
+                            }
+                        }
 
-    $request .='</GuestList>
-        </Occupancy>
-        <PickupLocation xsi:type="ProductTransferTerminal">
-            <Code>'.$pickup_terminal.'</Code>
-            <DateTime date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'"/>
-        </PickupLocation>
-        <DestinationLocation xsi:type="ProductTransferGPSPoint">
-            <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
-            <Description>'.$hoteltitle.'</Description>
-            <Address>'.$address.'</Address>
-            <City>'.$hotellocaion.'</City>
-            <ZipCode>'.$zipcode.'</ZipCode>
-            <Country>'.$ccode.'</Country>
-        </DestinationLocation>
-    </AvailData>
-    <AvailData type="OUT">
+        $request .='</GuestList>
+            </Occupancy>
+            <PickupLocation xsi:type="ProductTransferTerminal">
+                <Code>'.$pickup_terminal.'</Code>
+                <DateTime date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'"/>
+            </PickupLocation>
+            <DestinationLocation xsi:type="ProductTransferGPSPoint">
+                <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
+                <Description>'.$hoteltitle.'</Description>
+                <Address>'.$address.'</Address>
+                <City>'.$hotellocaion.'</City>
+                <ZipCode>'.$zipcode.'</ZipCode>
+                <Country>'.$ccode.'</Country>
+            </DestinationLocation>
+        </AvailData>
+        <AvailData type="OUT">
         <ServiceDate date="'.$dropoff_date.'" time="'.$drp_time_hour.$drp_time_min.'"/>
         <Occupancy>
             <AdultCount>'.$adult.'</AdultCount>
             <ChildCount>'.$child.'</ChildCount>
             <GuestList>';
 
-        
+
         if ( $adult > 0){
 
             for($ad=0; $ad<$adult;$ad++){
@@ -915,23 +961,25 @@ class Ean extends MX_Controller {
             }
         }
 
-    $request .='</GuestList>
-        </Occupancy>
-        <PickupLocation xsi:type="ProductTransferGPSPoint">
-            <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
-            <Description>'.$hoteltitle.'</Description>
-            <Address>'.$address.'</Address>
-            <City>'.$hotellocaion.'</City>
-            <ZipCode>'.$zipcode.'</ZipCode>
-            <Country>'.$ccode.'</Country>
-        </PickupLocation>
-        <DestinationLocation xsi:type="ProductTransferTerminal">
-            <Code>'.$drop_terminal.'</Code>
-            <DateTime date="'.$dropoff_date.'" time="'.$drp_time_hour.$drp_time_min.'"/>
-        </DestinationLocation>
-    </AvailData>
-    <ReturnContents>Y</ReturnContents>
-</TransferValuedAvailRQ>';
+            $request .='</GuestList>
+                </Occupancy>
+                <PickupLocation xsi:type="ProductTransferGPSPoint">
+                    <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
+                    <Description>'.$hoteltitle.'</Description>
+                    <Address>'.$address.'</Address>
+                    <City>'.$hotellocaion.'</City>
+                    <ZipCode>'.$zipcode.'</ZipCode>
+                    <Country>'.$ccode.'</Country>
+                </PickupLocation>
+                <DestinationLocation xsi:type="ProductTransferTerminal">
+                    <Code>'.$drop_terminal.'</Code>
+                    <DateTime date="'.$dropoff_date.'" time="'.$drp_time_hour.$drp_time_min.'"/>
+                </DestinationLocation>
+            </AvailData>
+            <ReturnContents>Y</ReturnContents>
+        </TransferValuedAvailRQ>';
+
+             
 
             $ch2=curl_init();
 
@@ -967,9 +1015,36 @@ class Ean extends MX_Controller {
 
         }
 
+                $my_file = 'outdata.json';
+
+              $handle = fopen($my_file, 'w+');
+              fwrite($handle, str_replace('@', '', json_encode($final_data)));
+              fclose($handle);
+
         echo str_replace('@', '', json_encode($final_data));
     }
 
+    }
+
+    function ajax_call_car_list_xml(){
+        
+        if (file_exists($_SERVER['DOCUMENT_ROOT']."/assets/car.xml")) {
+         $file_xml_path =  $_SERVER['DOCUMENT_ROOT']."/assets/car.xml";
+        $xml = file_get_contents($file_xml_path);
+        // replace '&' followed by a bunch of letters, numbers
+        // and underscores and an equal sign with &amp;
+        $xml = preg_replace('#&(?=[a-z_0-9]+=)#', '_', $xml);
+        $xml = str_replace('&', '', $xml);
+        /* print_r($xml);
+        exit();*/
+        $final_data = simplexml_load_string($xml);
+        //print_r($sxe);
+        $final_data = json_encode($final_data);
+        echo $final_data = str_replace('@', '', $final_data);
+
+        } else {
+        exit('Failed to open test.xml.');
+        }
     }
 
     function ajax_call_car_services_in(){
@@ -980,15 +1055,7 @@ class Ean extends MX_Controller {
 
       $pickup_date  = date('Ymd',strtotime($this->input->get("pickup_date")));
 
-      $fulladdress = explode(',', $this->input->get("fulladdress"));
-      $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
-    
-        for($i = 0; $i<count($allcountries);$i++) {
-            if ($allcountries[$i]->short_name == $fulladdress[3]) {
-                $ccode = $allcountries[$i]->iso2;
-                exit();
-            }
-        }
+   
 
       $pickup_time_hour = $this->input->get("pickup_time_hour");
       $pickup_time_min = $this->input->get("pickup_time_min");
@@ -1012,11 +1079,34 @@ class Ean extends MX_Controller {
       $location_latitude = $this->input->get("location_latitude");
       $location_longitude = $this->input->get("location_longitude");
 
-      $address = $this->input->get("address");
-      $hoteltitle = $this->input->get("hoteltitle");
+      $address = $this->input->get("fulladdress");
       $hotellocaion = $this->input->get("hotellocaion");
 
+
+      $hoteltitle = $this->input->get("hoteltitle");
       $hoteltitle = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%-]/s', '', $hoteltitle);
+
+      $fulladdress = explode(',', $this->input->get("fulladdress"));
+
+      if ( count($fulladdress) == 4 ){
+        //print_r($allcountries);
+        $countrycode = $fulladdress[3];
+        $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
+
+        for($i = 0; $i<count($allcountries);$i++) {
+            //echo $allcountries[$i]->short_name.'<br>';
+                if ($allcountries[$i]->short_name == trim($countrycode)) {
+                    
+                    $ccode = $allcountries[$i]->iso2;
+                    break;
+                }
+          }
+
+      } else {
+        $loc = explode(' - ', $fulladdress[1]);
+        $ccode = trim($loc[1]);
+        $zipcode = filter_var($loc[0], FILTER_SANITIZE_NUMBER_INT);
+      }
 
       $username = "TESTCHAINS";
       $password = "TESTCHAINS";
@@ -1034,30 +1124,30 @@ class Ean extends MX_Controller {
 
 
             $request = '<ServiceAddRQ echoToken="DummyEchoToken"
-    xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages ../xsd/ServiceAddRQ.xsd" version="2013/12" >
-    <Language>ENG</Language>
-    <Credentials>
-        <User>'.$username.'</User>
-        <Password>'.$password.'</Password>
-    </Credentials>
-    <Service availToken="'.$availtotken.'" transferType="IN" xsi:type="ServiceTransfer">
-        <ContractList>
-            <Contract>
-                <Name>'.$contract.'</Name>
-                <IncomingOffice code="'.$contractcode.'"/>
-            </Contract>
-        </ContractList>
-        <DateFrom date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'"/>
-        <TransferInfo xsi:type="ProductTransfer">
-            <Code>'.$tranCode.'</Code>
-            <Type code="'.$tranType.'"></Type>
-            <VehicleType code="'.$tranVehicleType.'"></VehicleType>
-        </TransferInfo>
-        <Paxes>
-            <AdultCount>'.$adult.'</AdultCount>
-            <ChildCount>'.$child.'</ChildCount>
-            <GuestList>';
+                xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages ../xsd/ServiceAddRQ.xsd" version="2013/12" >
+                <Language>ENG</Language>
+                <Credentials>
+                    <User>'.$username.'</User>
+                    <Password>'.$password.'</Password>
+                </Credentials>
+                <Service availToken="'.$availtotken.'" transferType="IN" xsi:type="ServiceTransfer">
+                    <ContractList>
+                        <Contract>
+                            <Name>'.$contract.'</Name>
+                            <IncomingOffice code="'.$contractcode.'"/>
+                        </Contract>
+                    </ContractList>
+                    <DateFrom date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'"/>
+                    <TransferInfo xsi:type="ProductTransfer">
+                        <Code>'.$tranCode.'</Code>
+                        <Type code="'.$tranType.'"></Type>
+                        <VehicleType code="'.$tranVehicleType.'"></VehicleType>
+                    </TransferInfo>
+                    <Paxes>
+                        <AdultCount>'.$adult.'</AdultCount>
+                        <ChildCount>'.$child.'</ChildCount>
+                        <GuestList>';
 
         
         if ( $adult > 0){
@@ -1073,22 +1163,23 @@ class Ean extends MX_Controller {
             }
         }
 
-    $request .='</GuestList>
-        </Paxes>
-        <PickupLocation xsi:type="ProductTransferTerminal">
-            <Code>'.$pickup_terminal.'</Code>
-        </PickupLocation>
-        <DestinationLocation xsi:type="ProductTransferGPSPoint">
-            <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
-            <Description>'.$hoteltitle.'</Description>
-            <Address>'.$address.'</Address>
-            <City>'.$hotellocaion.'</City>
-            <ZipCode>'.$zipcode.'</ZipCode>
-            <Country>'.$ccode.'</Country>
-        </DestinationLocation>
-    </Service>
-</ServiceAddRQ>';
+            $request .='</GuestList>
+                </Paxes>
+                <PickupLocation xsi:type="ProductTransferTerminal">
+                    <Code>'.$pickup_terminal.'</Code>
+                </PickupLocation>
+                <DestinationLocation xsi:type="ProductTransferGPSPoint">
+                    <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
+                    <Description>'.$hoteltitle.'</Description>
+                    <Address>'.$address.'</Address>
+                    <City>'.$hotellocaion.'</City>
+                    <ZipCode>'.$zipcode.'</ZipCode>
+                    <Country>'.$ccode.'</Country>
+                </DestinationLocation>
+            </Service>
+        </ServiceAddRQ>';
 
+       
             $ch2=curl_init();
 
             $httpHeader2 = array(
@@ -1135,19 +1226,11 @@ class Ean extends MX_Controller {
 
       $pickup_date  = date('Ymd',strtotime($this->input->get("pickup_date")));
 
-      $fulladdress = explode(',', $this->input->get("fulladdress"));
-      $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
-    
-        for($i = 0; $i<count($allcountries);$i++) {
-            if ($allcountries[$i]->short_name == $fulladdress[3]) {
-                $ccode = $allcountries[$i]->iso2;
-                exit();
-            }
-        }
+   
 
       $pickup_time_hour = $this->input->get("pickup_time_hour");
       $pickup_time_min = $this->input->get("pickup_time_min");
-      $pickup_country = $this->input->get("pickup_country");
+      
       $pickup_terminal = $this->input->get("pickup_terminal");
 
       $drop_terminal = $this->input->get("drop_terminal");
@@ -1157,92 +1240,132 @@ class Ean extends MX_Controller {
       $drp_time_hour = $this->input->get("drp_time_hour");
       $drp_time_min = $this->input->get("drp_time_min");
 
-      $drop_country = $this->input->get("drop_country");
-      $drop_dest = $this->input->get("drop_dest");
-      $drop_zone = $this->input->get("drop_zone");
-      $drop_acco = $this->input->get("drop_acco");
 
       $child = $this->input->get("child");
       $adult = $this->input->get("adult");
       $location_latitude = $this->input->get("location_latitude");
       $location_longitude = $this->input->get("location_longitude");
 
-      $address = $this->input->get("address");
-      $hoteltitle = $this->input->get("hoteltitle");
+      $address = $this->input->get("fulladdress");
       $hotellocaion = $this->input->get("hotellocaion");
 
+
+      $hoteltitle = $this->input->get("hoteltitle");
       $hoteltitle = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%-]/s', '', $hoteltitle);
 
+      $fulladdress = explode(',', $this->input->get("fulladdress"));
+
+      if ( count($fulladdress) == 4 ){
+        //print_r($allcountries);
+        $countrycode = $fulladdress[3];
+        $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
+
+        for($i = 0; $i<count($allcountries);$i++) {
+            //echo $allcountries[$i]->short_name.'<br>';
+                if ($allcountries[$i]->short_name == trim($countrycode)) {
+                    
+                    $ccode = $allcountries[$i]->iso2;
+                    break;
+                }
+          }
+
+      } else {
+        $loc = explode(' - ', $fulladdress[1]);
+        $ccode = trim($loc[1]);
+        $zipcode = filter_var($loc[0], FILTER_SANITIZE_NUMBER_INT);
+      }
+      
       $username = "TESTCHAINS";
       $password = "TESTCHAINS";
 
 
-      $contract = $this->input->get("contract");
+    $contract = $this->input->get("contract");
+
+    $outdata = file_get_contents ('outdata.json');
+    $json = json_decode($outdata, true);
+
+    for($j=0;$j<count($json['ServiceTransfer']);$j++){
+        if ( $json['ServiceTransfer'][$j]['attributes']['transferType'] == "OUT"){
+                        
+            if ( $json['ServiceTransfer'][$j]['ContractList']['Contract']['Name'] == $contract){
+               $newcode = $json['ServiceTransfer'][$j]['TransferInfo']['Code'];
+            }
+        }
+    }
+
       $contractcode = $this->input->get("contractcode");
       $availtotken = $this->input->get("availtotken");
       
       $tranCode = $this->input->get("tranCode");
       $tranType = $this->input->get("tranType");
       $tranVehicleType = $this->input->get("tranVehicleType");
+      $ptocken = $this->input->get("ptocken");
 
         if (!empty ($pickup_date)) {
 
 
             $request = '<ServiceAddRQ echoToken="DummyEchoToken"
-    xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages ../xsd/ServiceAddRQ.xsd" purchaseToken="O4280643426" version="2013/12" >
-    <Language>ENG</Language>
-    <Credentials>
-        <User>'.$username.'</User>
-        <Password>'.$password.'</Password>
-    </Credentials>
-    <Service availToken="'.$availtotken.'" transferType="OUT" xsi:type="ServiceTransfer">
-        <ContractList>
-            <Contract>
-                <Name>'.$contract.'</Name>
-                <IncomingOffice code="'.$contractcode.'"/>
-            </Contract>
-        </ContractList>
-        <DateFrom date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'" />
-        <TransferInfo xsi:type="ProductTransfer">
-            <Code>'.$tranCode.'</Code>
-            <Type code="'.$tranType.'"></Type>
-            <VehicleType code="'.$tranVehicleType.'"></VehicleType>
-        </TransferInfo>
-        <Paxes>
-            <AdultCount>'.$adult.'</AdultCount>
-            <ChildCount>'.$child.'</ChildCount>
-            <GuestList>';
+                xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages ../xsd/ServiceAddRQ.xsd" purchaseToken="'.$ptocken.'" version="2013/12" >
+                <Language>ENG</Language>
+                <Credentials>
+                    <User>'.$username.'</User>
+                    <Password>'.$password.'</Password>
+                </Credentials>
+                <Service availToken="'.$availtotken.'" transferType="OUT" xsi:type="ServiceTransfer">
+                    <ContractList>
+                        <Contract>
+                            <Name>'.$contract.'</Name>
+                            <IncomingOffice code="'.$contractcode.'"/>
+                        </Contract>
+                    </ContractList>
+                    <DateFrom date="'.$dropoff_date.'" time="'.$drp_time_hour.$drp_time_min.'" />
+                    <TransferInfo xsi:type="ProductTransfer">
+                        <Code>'.$newcode.'</Code>
+                        <Type code="'.$tranType.'"></Type>
+                        <VehicleType code="'.$tranVehicleType.'"></VehicleType>
+                    </TransferInfo>
+                    <Paxes>
+                        <AdultCount>'.$adult.'</AdultCount>
+                        <ChildCount>'.$child.'</ChildCount>
+                        <GuestList>';
 
         
-        if ( $adult > 0){
+                        if ( $adult > 0){
 
-            for($ad=0; $ad<$adult;$ad++){
-                $request .= '<Customer type="AD"></Customer>';
-            }
-        }
+                            for($ad=0; $ad<$adult;$ad++){
+                                $request .= '<Customer type="AD"></Customer>';
+                            }
+                        }
 
-        if ( $child > 0){
-            for($ch = 0; $ch < $child; $ch ++){
-                $request .= '<Customer type="CH"></Customer>';
-            }
-        }
+                        if ( $child > 0){
+                            for($ch = 0; $ch < $child; $ch ++){
+                                $request .= '<Customer type="CH"></Customer>';
+                            }
+                        }
 
-    $request .='</GuestList>
-        </Paxes>
-        <PickupLocation xsi:type="ProductTransferGPSPoint">
-            <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
-            <Description>'.$hoteltitle.'</Description>
-            <Address>'.$address.'</Address>
-            <City>'.$hotellocaion.'</City>
-            <ZipCode>'.$zipcode.'</ZipCode>
-            <Country>'.$ccode.'</Country>
-        </PickupLocation>
-        <DestinationLocation xsi:type="ProductTransferTerminal">
-            <Code>'.$drop_terminal.'</Code>
-        </DestinationLocation>
-    </Service>
-</ServiceAddRQ>';
+            $request .='</GuestList>
+                </Paxes>
+                <PickupLocation xsi:type="ProductTransferGPSPoint">
+                    <Coordinates latitude="'.$location_latitude.'" longitude="'.$location_longitude.'" />
+                    <Description>'.$hoteltitle.'</Description>
+                    <Address>'.$address.'</Address>
+                    <City>'.$hotellocaion.'</City>
+                    <ZipCode>'.$zipcode.'</ZipCode>
+                    <Country>'.$ccode.'</Country>
+                </PickupLocation>
+                <DestinationLocation xsi:type="ProductTransferTerminal">
+                    <Code>'.$drop_terminal.'</Code>
+                </DestinationLocation>
+            </Service>
+        </ServiceAddRQ>';
+
+           /* $my_file = 'carRequestOut.txt';
+
+              $handle = fopen($my_file, 'w+');
+              fwrite($handle, $request);
+              fclose($handle);
+              $final_data1 = simplexml_load_string($request);*/
 
             $ch2=curl_init();
 
@@ -1284,30 +1407,64 @@ class Ean extends MX_Controller {
 
     function ajax_call_car_save(){
        
+      $allcountries = $this->countries_model->get_all_countries();
+
       $BookType = $this->input->get("BookType");
 
       $pickup_date  = date('Ymd',strtotime($this->input->get("pickup_date")));
 
+   
+
       $pickup_time_hour = $this->input->get("pickup_time_hour");
       $pickup_time_min = $this->input->get("pickup_time_min");
-      $pickup_country = $this->input->get("pickup_country");
+      
       $pickup_terminal = $this->input->get("pickup_terminal");
+
+      $drop_terminal = $this->input->get("drop_terminal");
      
       $dropoff_date = date('Ymd',strtotime($this->input->get("dropoff_date")));
       
       $drp_time_hour = $this->input->get("drp_time_hour");
       $drp_time_min = $this->input->get("drp_time_min");
 
-      $drop_country = $this->input->get("drop_country");
-      $drop_dest = $this->input->get("drop_dest");
-      $drop_zone = $this->input->get("drop_zone");
-      $drop_acco = $this->input->get("drop_acco");
 
       $child = $this->input->get("child");
       $adult = $this->input->get("adult");
       $location_latitude = $this->input->get("location_latitude");
       $location_longitude = $this->input->get("location_longitude");
 
+      $address = $this->input->get("fulladdress");
+      $hotellocaion = $this->input->get("hotellocaion");
+
+
+      $hoteltitle = $this->input->get("hoteltitle");
+
+      $pickup_flight_code = $this->input->get("pickup_flight_code");
+      $drp_flight_code = $this->input->get("drp_flight_code");
+
+      $hoteltitle = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%-]/s', '', $hoteltitle);
+
+      $fulladdress = explode(',', $this->input->get("fulladdress"));
+
+      if ( count($fulladdress) == 4 ){
+        //print_r($allcountries);
+        $countrycode = $fulladdress[3];
+        $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
+
+        for($i = 0; $i<count($allcountries);$i++) {
+            //echo $allcountries[$i]->short_name.'<br>';
+                if ($allcountries[$i]->short_name == trim($countrycode)) {
+                    
+                    $ccode = $allcountries[$i]->iso2;
+                    break;
+                }
+          }
+
+      } else {
+        $loc = explode(' - ', $fulladdress[1]);
+        $ccode = trim($loc[1]);
+        $zipcode = filter_var($loc[0], FILTER_SANITIZE_NUMBER_INT);
+      }
       $username = "TESTCHAINS";
       $password = "TESTCHAINS";
 
@@ -1323,65 +1480,69 @@ class Ean extends MX_Controller {
       $ptocken = $this->input->get("ptocken");
       $psui = $this->input->get("psui");
 
+      $purchasenewtoken = $this->input->get("purchasenewtoken");
+      $supi1 = $this->input->get("supi1");
+      $supi2 = $this->input->get("supi2");
+
         if (!empty ($pickup_date)) {
 
 
             $request = '<PurchaseConfirmRQ
-    xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages PurchaseConfirmRQ.xsd" echoToken="DummyEchoToken" version="2013/12" >
-    <Language>ENG</Language>
-    <Credentials>
-        <User>'.$username.'</User>
-        <Password>'.$password.'</Password>
-    </Credentials>
-    <ConfirmationData purchaseToken="O4280643426">
-        <Holder type="AD">
-            <CustomerId>1</CustomerId>
-            <Age>30</Age>
-            <Name>Name</Name>
-            <LastName>Lastname</LastName>
-        </Holder>
-        <AgencyReference>Test Agency Ref</AgencyReference>
-        <ConfirmationServiceDataList>
-            <ServiceData SPUI="51#T#1" xsi:type="ConfirmationServiceDataTransfer">
-                <CustomerList>
-                    <Customer type="AD">
+                xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages PurchaseConfirmRQ.xsd" echoToken="DummyEchoToken" version="2013/12" >
+                <Language>ENG</Language>
+                <Credentials>
+                    <User>'.$username.'</User>
+                    <Password>'.$password.'</Password>
+                </Credentials>
+                <ConfirmationData purchaseToken="'.$purchasenewtoken.'">
+                    <Holder type="AD">
                         <CustomerId>1</CustomerId>
                         <Age>30</Age>
-                        <Name>Name</Name>
-                        <LastName>Lastname</LastName>
-                    </Customer>
-                </CustomerList>
-                <ArrivalTravelInfo>
-                    <ArrivalInfo xsi:type="ProductTransferTerminal">
-                        <Code>AGP</Code>
-                        <DateTime date="20161016" time="0950" />
-                    </ArrivalInfo>
-                    <TravelNumber>TN1111</TravelNumber>
-                </ArrivalTravelInfo >
-                <DestinationLocationDescription>Med Playa Hotel Riviera</DestinationLocationDescription>
-            </ServiceData>
-            <ServiceData SPUI="51#T#2" xsi:type="ConfirmationServiceDataTransfer">
-                <CustomerList>
-                    <Customer type="AD">
-                        <CustomerId>2</CustomerId>
-                        <Age>30</Age>
-                        <Name>Name</Name>
-                        <LastName>Lastname</LastName>
-                    </Customer>
-                </CustomerList>
-                <PickupLocationDescription>Med Playa Hotel Riviera</PickupLocationDescription>
-                <DepartureTravelInfo>
-                    <DepartInfo xsi:type="ProductTransferTerminal">
-                        <Code>AGP</Code>
-                        <DateTime date="20161023" time="0950" />
-                    </DepartInfo>
-                    <TravelNumber>TN1111</TravelNumber>
-                </DepartureTravelInfo>
-            </ServiceData>
-        </ConfirmationServiceDataList>
-    </ConfirmationData>
-</PurchaseConfirmRQ>';
+                        <Name>Mayru</Name>
+                        <LastName>Solanki</LastName>
+                    </Holder>
+                    <AgencyReference>7733</AgencyReference>
+                    <ConfirmationServiceDataList>
+                        <ServiceData SPUI="'.$supi1.'" xsi:type="ConfirmationServiceDataTransfer">
+                            <CustomerList>
+                                <Customer type="AD">
+                                   <CustomerId>1</CustomerId>
+                                    <Age>30</Age>
+                                    <Name>Mayru</Name>
+                                    <LastName>Solanki</LastName>
+                                </Customer>
+                            </CustomerList>
+                            <ArrivalTravelInfo>
+                                <ArrivalInfo xsi:type="ProductTransferTerminal">
+                                    <Code>'.$pickup_terminal.'</Code>
+                                    <DateTime date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'" />
+                                </ArrivalInfo>
+                                <TravelNumber>'.$pickup_flight_code.'</TravelNumber>
+                            </ArrivalTravelInfo >
+                            <DestinationLocationDescription>'.$hoteltitle.'</DestinationLocationDescription>
+                        </ServiceData>
+                        <ServiceData SPUI="'.$supi2.'" xsi:type="ConfirmationServiceDataTransfer">
+                            <CustomerList>
+                                <Customer type="AD">
+                                    <CustomerId>2</CustomerId>
+                                    <Age>30</Age>
+                                    <Name>Name</Name>
+                                    <LastName>Lastname</LastName>
+                                </Customer>
+                            </CustomerList>
+                            <PickupLocationDescription>'.$hoteltitle.'</PickupLocationDescription>
+                            <DepartureTravelInfo>
+                                <DepartInfo xsi:type="ProductTransferTerminal">
+                                    <Code>'.$drop_terminal.'</Code>
+                                    <DateTime date="'.$dropoff_date.'" time="'.$drp_time_hour.$drp_time_min.'" />
+                                </DepartInfo>
+                                <TravelNumber>'.$drp_flight_code.'</TravelNumber>
+                            </DepartureTravelInfo>
+                        </ServiceData>
+                    </ConfirmationServiceDataList>
+                </ConfirmationData>
+            </PurchaseConfirmRQ>';
 
             $ch2=curl_init();
 
@@ -1817,7 +1978,7 @@ class Ean extends MX_Controller {
                                                                     $final_hb_data['hotels'][$hb_h]->all_img = $thumbnail1;
                                                                     $old_location = $final_hb_data['hotels'][$hb_h]->location;
                                                                     $location = $hb_image_data->hotels[$hb_i]->address->content." ".$old_location;
-                                                                    $final_hb_data['hotels'][$hb_h]->location = $location." ".$hb_image_data->hotels[$hb_i]->postalCode;
+                                                                    $final_hb_data['hotels'][$hb_h]->location = $location.",".$hb_image_data->hotels[$hb_i]->postalCode;
 
 
                                                             }
@@ -3132,8 +3293,14 @@ class Ean extends MX_Controller {
                     exit();*/
                     $ne_facilities = array();
                     $description = "";
+                    $address = '';
+                    $postalCode = '';
+                    $countryCode = '';
                     if(isset($Hotel_details->hotel)){
                             $description = $Hotel_details->hotel->description->content;
+                            $address = $Hotel_details->hotel->destination->name->content;
+                            $countryCode = $Hotel_details->hotel->destination->countryCode;
+                            $postalCode = $Hotel_details->hotel->postalCode;
                             $facilities_ary = $Hotel_details->hotel->facilities;
                             //echo count($facilities_ary);
                             for ($i=0; $i < count($facilities_ary) ; $i++) { 
@@ -3146,7 +3313,9 @@ class Ean extends MX_Controller {
                     $result = $this->hb_lib->HotelImage_list($arrayInfo);
                     /*echo json_encode($result);
                     exit();*/
-
+                    /*echo json_encode($Hotel_details);
+                    echo "<br>";
+                    echo "<br>";*/
                     if(count($result->hotels) > 0){
 
                             $hotel_data = $result->hotels[0];
@@ -3154,9 +3323,10 @@ class Ean extends MX_Controller {
                             $hb_data['id'] = $hotel_data->code;
                             $hb_data['title'] = $hotel_data->name->content;
                             $hb_data['desc'] = '';
-                            $hb_data['location'] = $hotel_data->address->content.' '.$hotel_data->city->content;
+                            $hb_data['location'] = $hotel_data->address->content.' '.$address . ' '.$postalCode;
+                            /*exit();*/
                             $hb_data['lowRate'] = '50';
-                            $address = $hotel_data->address->content." ".$hotel_data->postalCode." ".$hotel_data->city->content;
+                            $address = $hotel_data->address->content." ".$hotel_data->postalCode." ".$hotel_data->city->content.' - '.$countryCode;
                             $hb_data['hotelAddress'] = $address;
                             $hb_data['latitude'] = $hotel_data->coordinates->latitude;
                             $hb_data['longitude'] = $hotel_data->coordinates->longitude;
@@ -3337,6 +3507,17 @@ class Ean extends MX_Controller {
                     exit();*/
                     /*echo json_encode($this->data['module']);
                     exit();*/
+
+                    $location = explode(',', $this->data['module']->location);
+            
+                    
+                    $cityname = trim($location[1]);
+                    $cityname = explode('-', $cityname);
+                    $cityname = trim($cityname[0]);
+                   
+                      if ( $cityname[0] != ""){
+                        $this->data['terminal'] = $this->hotels_model->hotel_terminal(strtolower($cityname));
+                      }
 
                     $this->session->set_userdata('check_rate',1);
                     $this->theme->view('details', $this->data);

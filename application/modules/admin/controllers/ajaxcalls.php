@@ -729,7 +729,7 @@ class Ajaxcalls extends MX_Controller {
 				$this->load->model('admin/bookings_model');
 				$user = $this->session->userdata('pt_logged_customer');
 				if($this->input->post('member_add')){
-						$this->add_member_whenbook($user);
+					$this->add_member_whenbook($user);
 				}
 				echo json_encode($this->bookings_model->do_booking($user));
 		}
@@ -745,6 +745,9 @@ class Ajaxcalls extends MX_Controller {
 					echo json_encode($bookingResult);
 				}
 		}
+
+
+		
 
 		function attrprocessBookinglogged() {
 			

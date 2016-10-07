@@ -3,138 +3,107 @@
 </div>
 </div>
 <style type="text/css">
-
-
-@media(min-width: 1600px){
-  .center{
-    margin-left: 120px !important;
-    z-index: 999;
-    margin-top: 20px;
-
-
-  }
+@media(min-width: 1600px) {
+.center {
+	margin-left: 120px !important;
+	z-index: 999;
+	margin-top: 20px;
 }
-.container-fluid inner-page-nav{
+}
+.container-fluid inner-page-nav {
 	display: none !important;
 }
-footer{
-	
+footer {
 	min-height: 480px;
 	height: auto;
 }
-footer .row .col-sm-12{
+footer .row .col-sm-12 {
 	padding-top: 50px;
 }
-
 </style>
-			<?php include 'new_header.php';?>
+<?php include 'new_header.php';?>
 <div class="membership">
-  
-<div class="contact" style="margin-top:85px">
-  <div class="container-main main_header" >
-    <div class="container">
-      <div class="row">
-       
-            <center class="center" style="margin-left: 88px; z-index: 999;
-    margin-top: 20px;"></center>
-          
-         
-     
-        <div class="col-sm-12 page-title">
-          <h2 class="">Membership</h2>
-          <a  href="<?php echo base_url(); ?>" ><img style="position:relative;z-index:999;" src="images/arrow-blue.png"></a>
+  <div class="contact" style="margin-top:85px">
+    <div class="container-main main_header" >
+      <div class="container">
+        <div class="row">
+          <center class="center" style="margin-left: 88px; z-index: 999;
+    margin-top: 20px;">
+          </center>
+          <div class="col-sm-12 page-title">
+            <h2 class="">Membership</h2>
+            <a  href="<?php echo base_url(); ?>" ><img style="position:relative;z-index:999;" src="images/arrow-blue.png"></a> </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="membership_body" > <img class="left-bg" src="images/membership-left-bg.png"> <img class="right-bg" src="images/membership-right-bg.png">
+    <div class="container">
+      <div class="row">
+
+          <div class="col-sm-1 hidden-xs"> </div>
+          <div class="col-sm-10 col-xs-12">
+            <div class="col-sm-12 text-center"> <img class="img-responsive" src="images/memb1.png">
+              <h3>Become a Member</h3>
+              <p>We provide a modern way for Group Travelers to book large room blocks.</p>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+              <div class="free-plan">
+                <h4>Starter Membership</h4>
+                <h3>$0 / month</h3>
+                <h5>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h5>
+              </div>
+              <div class="get-started"> <a href="<?php echo base_url().'login'; ?>">
+                <button type="button" class="btn">GET STARTED</button>
+                </a> </div>
+              <div class="info-box"> <img class="img-responsive" src="images/memb2.png">
+                <p>Get access to hotels at a discounted price</p>
+              </div>
+              <div class="info-box"> <img class="img-responsive" src="images/memb3.png">
+                <p>Keep track of your bookings</p>
+              </div>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+              <div class="paid-plan">
+                <h4>VIP Membership</h4>
+                <h3>$19 / month</h3>
+                <h5>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </h5>
+              </div>
+              <div class="get-started">
+                <?php if($this->_ci->session->userdata('pt_logged_customer')) { ?>
+                <button  id="element_id_1470283648" type="button">Already a member</button>
+                <?php }else{ ?>
+                <a href="<?php echo base_url().'membership-step'; ?>" >
+                <button type="button" class="btn">GET STARTED</button>
+                </a>
+                <?php } ?>
+              </div>
+              <div class="info-box"> <img class="img-responsive" src="images/memb4.png">
+                <p>Take a additional 10% off all Bookings</p>
+              </div>
+              <div class="info-box"> <img class="img-responsive" src="images/memb5.png">
+                <p>Cut the line & enjoy VIP check in - selected hotels</p>
+              </div>
+              <div class="info-box"> <img class="img-responsive" src="images/memb6.png">
+                <p>Complimentary upgraded Rooms - selected hotels</p>
+              </div>
+              <div class="info-box"> <img class="img-responsive" src="images/memb7.png">
+                <p>Airport to Hotel Drop off in SUV - selected cities</p>
+              </div>
+              <div class="info-box"> <img class="img-responsive" src="images/memb8.png">
+                <p>Dedicated concierge rep to assist with making reservations & planning your stay</p>
+              </div>
+              <div class="info-box"> <img class="img-responsive" src="images/memb9.png">
+                <p>Front in the line access to Air and rental cars "Coming Soon"</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-1 hidden-xs"> </div>
+        </div>
+
+    </div>
   </div>
-	<div class="membership_body" >
-	<img class="left-bg" src="images/membership-left-bg.png">
-	<img class="right-bg" src="images/membership-right-bg.png">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="col-sm-1">
-					
-					</div>
-					<div class="col-sm-10 col-xs-12">
-						<div class="col-sm-12 text-center">
-							<img class="img-responsive" src="images/memb1.png">
-							<h3>Become a Member</h3>
-							<p>We provide a modern way for Group Travelers to book large room blocks.</p>
-						</div>
-						<div class="col-sm-6 col-xs-12">
-							<div class="free-plan">
-								<h4>Starter Membership</h4>
-								<h3>$0 / month</h3>
-								<h5>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h5>
-							</div>
-							<div class="get-started">
-								<a href="<?php echo base_url().'login'; ?>"><button type="button" class="btn">GET STARTED</button></a>
-							</div>
-							<div class="info-box">
-								<img class="img-responsive" src="images/memb2.png">
-								<p>Get access to hotels at a discounted price</p>
-							</div>
-							<div class="info-box">
-								<img class="img-responsive" src="images/memb3.png">
-								<p>Keep track of your bookings</p>
-							</div>
-						</div>
-						<div class="col-sm-6 col-xs-12">
-							<div class="paid-plan">
-								<h4>VIP Membership</h4>
-								<h3>$19 / month</h3>
-								<h5>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </h5>
-							</div>
-							<div class="get-started">
-							<?php if($this->_ci->session->userdata('pt_logged_customer')) { ?>
-								<button  id="element_id_1470283648" type="button">Already a member</button>
-
-								<?php }else{ ?>
-								<a href="<?php echo base_url().'membership-step'; ?>" >
-								<button type="button" class="btn">GET STARTED</button>
-								</a>
-								<?php } ?>
-							</div>
-							<div class="info-box">
-								<img class="img-responsive" src="images/memb4.png">
-								<p>Take a additional 10% off all Bookings</p>
-							</div>
-							<div class="info-box">
-								<img class="img-responsive" src="images/memb5.png">
-								<p>Cut the line & enjoy VIP check in - selected hotels</p>
-							</div>
-							<div class="info-box">
-								<img class="img-responsive" src="images/memb6.png">
-								<p>Complimentary upgraded Rooms - selected hotels</p>
-							</div>
-							<div class="info-box">
-								<img class="img-responsive" src="images/memb7.png">
-								<p>Airport to Hotel Drop off in SUV - selected cities</p>
-							</div>
-							<div class="info-box">
-								<img class="img-responsive" src="images/memb8.png">
-								<p>Dedicated concierge rep to assist with making reservations & planning your stay</p>
-							</div>
-							<div class="info-box">
-								<img class="img-responsive" src="images/memb9.png">
-								<p>Front in the line access to Air and rental cars "Coming Soon"</p>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-1">
-					
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
 </div>
-
-
-
 <script type="text/javascript">
   var PayStand = PayStand || {};
   PayStand.checkouts = PayStand.checkouts || [];

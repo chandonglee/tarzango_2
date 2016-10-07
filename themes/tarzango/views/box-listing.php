@@ -356,6 +356,7 @@ window.onclick = function(event) {
                   <option value="9" <?php if($room == 9){ echo "selected"; } ?> >9</option>
                   <option value="10" <?php if($room == 10){ echo "selected"; } ?> >10</option>
                 </select>
+                <span class="rm_sel">Room</span>
               </div>
             </div>
             <div class="col-sm-3">

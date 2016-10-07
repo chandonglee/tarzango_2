@@ -426,7 +426,7 @@ class Hb_lib {
 
             return $this->apiCall($url,$hotel_beds_post);
 
-          }
+          }          
 
           function Hotel_details($hotel_code){
            

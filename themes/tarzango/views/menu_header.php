@@ -32,7 +32,7 @@
     <div class="">
           <div> 
             <div class="col-sm-1 menu pull-right">
-            <img class="open menu" style="display:none" src="images/menu.png">
+           
             <img src="images/acc_icon.png" class="close-button" style="display:block"></img>
           </div>
    

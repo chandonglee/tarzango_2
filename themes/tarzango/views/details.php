@@ -1,6 +1,12 @@
 </div>
 </div>
+<?php if($appModule != "ean"){ ?>
+<script src="<?php echo base_url(); ?>assets/js/car_booking.js"></script>
+<?php }else{ ?>
+<script src="<?php echo base_url(); ?>assets/js/car_hbbooking.js"></script>
+<?php } ?>
 <?php 
+
 /*error_reporting(E_ALL);*/
 $CI = &get_instance(); 
 $user_id =  $CI->session->userdata('pt_logged_customer');
@@ -15,9 +21,11 @@ if($user_id != ''){
  }else{
   $R_user_type = "_f_no_login";
 }
-//print_r($module);
-/*
-echo json_encode($module);
+
+ 
+/*print_r($module);
+*/
+/*echo json_encode($module);
 exit();*/
 include 'header_search.php'; ?>
 
@@ -96,6 +104,14 @@ include 'header_search.php'; ?>
     text-align: center;
     background: #deddea !important;
   }
+  #vip_car_details {
+    background: #f1f1f8;
+    padding: 60px 10px;
+    padding-bottom: 0px !important;
+    overflow: scroll;
+    height: 1170px;
+    overflow-x: hidden;
+}
 </style>
 <?php
 $overall_rating = $tripadvisor->rating;
@@ -218,7 +234,7 @@ $ranking_out_of = $tripadvisor->num_reviews;
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4 side-popups" style="width: 35%;position: absolute;right: -1%;height: 100%
      !important ;top:-50px;background: #f1f1f8;">
-      <form method="get">
+      <form method="get" id="newcheckin">
         <div class="check-out-form col-lg-12 col-md-12 col-sm-12">
           <div class="amount-detail-page"> <span class="price-detail set_avg_rate"> $ 100 </span><span class="night-detail"> total </span> <span class="slas-detail">/ </span> <span class="night-detail"> <?php echo $diff; ?> nights </span> </div>
           <div class="col-lg-6 col-md-6 col-sm-6">
@@ -270,7 +286,7 @@ $ranking_out_of = $tripadvisor->num_reviews;
             text-transform: none !important;
           }
         </style>
-        <div id="vip_drop_select" class="check-out-form col-lg-12 col-md-12 col-sm-12 book_extra_hide" style="display:none;">
+        <div id="vip_drop_select" class="check-out-form col-lg-12 col-md-12 col-sm-12 book_extra_hide vip_drop_select" style="display:none;">
                   
           <form id="vip_details_select" action="" onsubmit="return false">
           <input type="hidden" name="invoiceUrl" id="invoiceUrl" value="">
@@ -293,7 +309,7 @@ $ranking_out_of = $tripadvisor->num_reviews;
                                 </div>
                                 
               </div>
-              <button type="submit" style="letter-spacing:1.5px;margin-top: 20px;width: 92%; margin-left: 4%;"  class="btn btn-action btn-lg detail-btn completebook" name="<?php if(empty($usersession)){ echo "login";}else{ echo "logged"; } ?>"  onclick="return completebook_vip_btn('<?php echo base_url();?>','<?php echo trans('0159')?>');">CONFIRM THIS BOOKING</button>
+              <button type="submit" style="letter-spacing:1.5px;margin-top: 20px;width: 92%; margin-left: 4%;"  class="btn btn-action btn-lg detail-btn completebook" name="<?php if(empty($usersession)){ echo "login";}else{ echo "logged"; } ?>"  onclick="return bookSummerytest();">CONFIRM THIS BOOKING</button>
               <?php if($user_id && $R_user_type == '_f_vip_member'){ ?>
                 <input type="hidden" name="member_add" value="1">
               <?php } ?>
@@ -303,10 +319,23 @@ $ranking_out_of = $tripadvisor->num_reviews;
          <div id="vip_drop_details" class="check-out-form col-lg-12 col-md-12 col-sm-12 book_extra_hide" style="display:none;">
                   
           <form id="vip_details" action="" onsubmit="return false">
+
+          <div id="car_book_att">
+
+          </div>
           <?php
             $location = explode(',', $module->location);
+            
+            if (count($location) == 3){
+              $cityname = $location[0];  
+            } else {
+              $cityname = trim($location[1]);
+              $cityname = explode('-', $cityname);
+              $cityname = trim($cityname[0]);
+            }
+            
           ?>
-            <input type="hidden" name="cityname" id="cityname" value="<?php echo $location[0];?>">
+            <input type="hidden" name="cityname" id="cityname" value="<?php echo $cityname?>">
               <div class="col-sm-11 col-xs-11 vip_perks" style="background:#fff; margin-left:4%; border:1px solid #d3d4e0 !important;">
 
               <div class="form-group ">
@@ -621,7 +650,9 @@ $ranking_out_of = $tripadvisor->num_reviews;
                            
                     </form>
                   </div>
-                    <button type="submit"  class="btn btn-action btn-lg  completebook" name="<?php if(empty($usersession)){ echo "login";}else{ echo "logged"; } ?>"  onclick="return completebook('<?php echo base_url();?>','<?php echo trans('0159')?>');">CONTINUE THIS BOOKING</button>
+                    
+            <button type="submit"  class="btn btn-action btn-lg  completebook" name="<?php if(empty($usersession)){ echo "login";}else{ echo "logged"; } ?>"  onclick="return completebook('<?php echo base_url();?>','<?php echo trans('0159')?>');">CONTINUE THIS BOOKING</button>
+   
                   <!--
                   <p class="or">OR</p>
                   <a class="col-sm-6 facebook">
@@ -638,6 +669,95 @@ $ranking_out_of = $tripadvisor->num_reviews;
           </div>
         </div>
 
+        <div class="book_extra_hide booksummary" style="display:none;">
+          <div class="col-sm-12 col-xs-12 left-section">
+                  <h3>Booking Summary</h3>
+
+                  <div class="hoteltitle">
+                    <h2><?php echo $module->title;?></h2>
+                    <p>Accommodation</p>
+                    <p id="nightsrate"></p>
+                  </div>
+
+                  <div class="booktotal">
+                    <p>Booking total $ <?php echo $set_avg_rate; ?></p>
+                  </div>
+
+                   <div class="col-sm-6 col-xs-6 left-section"> 
+                      <label>BOARD TYPE </label>
+                      <p>All inclusive</p>
+                   </div>
+
+                   <div class="col-sm-6 col-xs-6"> 
+                      <label>ROOMS </label>
+                      <p><?php echo $room;?></p>
+                   </div>
+                   <div class="clearfix"></div>
+
+                   <div class="col-sm-6 col-xs-6 left-section"> 
+                      <label>CHECK IN </label>
+                      <p><?php echo $checkin;?></p>
+                   </div>
+
+                   <div class="col-sm-6 col-xs-6"> 
+                      <label>CHECK OUT </label>
+                      <p><?php echo $checkOut;?></p>
+                   </div>
+                   <div class="clearfix"></div>
+                   <div class="col-sm-6 col-xs-6 left-section"> 
+                    <p>TYPE</p>
+                    <p id="roomType"></p>
+                   </div>
+
+                   <div class="col-sm-6 col-xs-6"> 
+                    <p>YOU SAVED</p>
+                    <p id="savePrice"></p>
+                   </div>
+                   <div class="clearfix"></div>
+
+                   <div class="remark">
+                      <label>REMARK FOR THE HOTEL</label>
+
+                       <div class="form-group">
+                        <textarea class="form-control" id="add_note" name="add_note" placeholder="Confirm Password"> </textarea>
+                      </div>
+                    <p>The remarks for the establishment are for reference only. 
+Tarzango cannot guarantee them.</p>
+                   </div>
+
+                  <div class="remark">
+                    <label>Contract Remark</label>
+                    <p class="red">in the event of cancellation after 23:59 PM 29/09/2016 
+the following charges will be applied $ <?php echo $set_avg_rate;?> 
+cancellation charges described above will not apply 
+during1 hour from the creation time of the booking. 
+during this time you may cancel the booking online with 
+no fees. Automatically, after those 1 hours the described 
+cancellation policy will be applied.</p>
+
+<p>If you cancel after 12pm on arrivel day, the hotel cancellation 
+penalty will apply. Date and time is cancluated based on local time 
+in the destination.</p>
+                  </div> 
+
+                  <div class="attansion">
+                      <p>ATTENTION: THIS BOOKING WILL INCUR CANCELLATION
+FEES AS FROM THE MOMENT IT IS CONFIRMED</p>
+                  <input type="checkbox" required="" name="attantion" id="attantion" value="yes">Yes, I want to book and accept the cancellation policy
+                  <span id="err_term"></span>
+                 <label>Booking Total $ <?php echo $set_avg_rate; ?></label> 
+            </div>
+
+                  <div class="confirm" id="confirmvip">
+
+
+                    <button type="submit"  class="btn btn-action btn-lg  completebook" name="<?php if(empty($usersession)){ echo "login";}else{ echo "logged"; } ?>"  onclick="return completebook_confirm('<?php echo base_url();?>','<?php echo trans('0159')?>');">CONFIRM THE BOOKING</button>
+
+
+                  </div>
+
+          </div>
+        </div>
         <?php
         //print_r($usersession);
          if(!empty($usersession)){ ?>
@@ -721,7 +841,16 @@ $ranking_out_of = $tripadvisor->num_reviews;
               
 </form>
 
+<form id="carbookingdetails" class="hidden-xs hidden-sm" action="" onsubmit="return false">
+  <input type="hidden" name="user_id" value="<?php echo $user_id;?>">
+</form>
+
 <script type="text/javascript">
+
+$("#selectDropOff").click(function(){
+    $("#vip_drop_select").hide();
+    $("#vip_drop_details").show();
+ });
 
 function mypop(id){
      
@@ -733,17 +862,16 @@ function mypop(id){
 
    $("#selectFrom").click(function(){
  
+
       var pickup_date  = "<?php echo $checkin;?>";
       var pickup_time_hour = $("#flight_pickup_time_hour").val();
-      var pickup_time_min = $("#flight_pickup_time_min").val();
-      var pickup_country = "ES";
+      var pickup_time_min = $("#flight_pickup_time_min").val();      
       var pickup_terminal = $("#flight_pickup_terminal").val();
-//      var pickup_terminal = "AGP";
       var drop_terminal = $("#flight_dep_terminal").val();
       var dropoff_date = "<?php echo $checkOut;?>";
       var drp_time_hour = $("#flight_drp_time_hour").val();
       var drp_time_min = $("#flight_drp_time_min").val();
-      var drop_country = "ES";
+
       var drop_dest = "";
       var drop_zone = "";
       var drop_acco = "";
@@ -759,10 +887,35 @@ function mypop(id){
 
       var BookType = $("input[name='BookType']:checked").val();
 
-           
+      var flag = 0;
+      var n = 0;
+    $(".error").text('');
+    
+    if ( $("#pickup_flight_code").val() == "") {
+        $("#err_arr_code").text('Please enter arrival flight code');
+        flag ++;
+        return false;
+    } else if ( $("#flight_pickup_terminal").val() == "") {
+        $("#err_arr_term").text('Please select terminal');
+        flag ++;
+        return false;
+    } else if ( $("#drp_flight_code").val() == "" && BookType != "oneway") {
+        $("#err_drp_code").text('Please enter departure flight code');
+        flag ++;
+        return false;
+    } else if ( $("#flight_dep_terminal").val() == "" && BookType != "oneway") {
+        $("#err_drp_term").text('Please select terminal');
+        flag ++;
+        return false;
+    } else {
+        flag = 0;
+    }
+
+    if (flag == 0) {
+
       $.ajax({
         type: 'GET',
-        data:{pickup_date:pickup_date,pickup_time_hour:pickup_time_hour,pickup_time_min:pickup_time_min,pickup_country:pickup_country,pickup_terminal:pickup_terminal,dropoff_date:dropoff_date,drp_time_hour:drp_time_hour,drp_time_min:drp_time_min,drop_country:drop_country,drop_dest:drop_dest,drop_zone:drop_zone,drop_acco:drop_acco,child:child,adult:adult,location_latitude:location_latitude,location_longitude:location_longitude,BookType:BookType,hoteltitle:hoteltitle,hotellocaion:hotellocaion,drop_terminal:drop_terminal,address:address,fulladdress:fulladdress},
+        data:{pickup_date:pickup_date,pickup_time_hour:pickup_time_hour,pickup_time_min:pickup_time_min,pickup_terminal:pickup_terminal,dropoff_date:dropoff_date,drp_time_hour:drp_time_hour,drp_time_min:drp_time_min,drop_dest:drop_dest,drop_zone:drop_zone,drop_acco:drop_acco,child:child,adult:adult,location_latitude:location_latitude,location_longitude:location_longitude,BookType:BookType,hoteltitle:hoteltitle,hotellocaion:hotellocaion,drop_terminal:drop_terminal,address:address,fulladdress:fulladdress},
         url: '<?php echo base_url(); ?>'+'ean/ajax_call_car_list',
         cache: false,
         beforeSend:function(){
@@ -770,13 +923,12 @@ function mypop(id){
           $(".divLoading").show();
            //$('#result_data').hide();
         },
-        success: function(data)
-        {
+        success: function(data){
          
-           $(".divLoading").hide();
-          //console.log(data);
+          $(".divLoading").hide();
+          //console.log(data);          
           response = $.parseJSON(data);
-
+                    
           var fullname = '';  
           var services = '';  
           var contract = "";
@@ -784,141 +936,168 @@ function mypop(id){
           var availtotken = "";
           var contractcode = '';
           var cnt = 1;
-          var HTML_DATA = '<div class="section5"><div class="container"> <div class="row">  <div class="col-sm-12"><h2>Select car for Airport to Hotel</h2><div class="col-sm-4">';
+          var HTML_DATA = '<div class="section5"><div> <div class="row">  <div class="col-sm-12"><div>';
 
-            if (!response.ErrorList.Error){
+          if (typeof response.ErrorList == 'undefined'){
+
+            $("#vip_car_details").html('');
 
             $.each(response.ServiceTransfer, function(index, element) {
 
+              
               //console.log(element.TransferSpecificContent);
               if (element.attributes.transferType == "IN"){
 
-              HTML_DATA += "<div class='col-sm-12'>";
-              $.each(element.TransferInfo.ImageList.Image, function(index, element1) {
-                //console.log(element1.Type);
-                if ( element1.Type == 'S') {
-                    HTML_DATA += "<div class='col-sm-6'><img src='"+element1.Url+"'></div><div class='col-sm-6'><h3></h3></div></div>";
+                  HTML_DATA += "<div class=''>";
+                  
+                  $.each(element.TransferInfo.ImageList.Image, function(index, element1) {
+
+                    //console.log(element1.Type);
+                    if(element1.Type == 'S'){
+                      HTML_DATA += "<div class=''><img src='"+element1.Url+"'></div><div class=''><h3></h3></div></div>";
+                    }
+                    
+                  });
+
+                  $.each(element.ProductSpecifications.MasterServiceType, function(index, element2) {
+                    
+                        fullname += element2.name +' - ';
+                   
+                  });
+
+                  $.each(element.ProductSpecifications.MasterProductType, function(index, element3) {
+                    
+                        fullname += element3.name + ' - ';
+                   
+                  });
+
+                  $.each(element.ProductSpecifications.MasterVehicleType, function(index, element4) {
+                    
+                        fullname += element4.name;
+                   
+                  });
+
+                  HTML_DATA += "<div class=''><h3>"+fullname+"</h3></div>";
+                  fullname = '';
+
+                  if (typeof element.TransferInfo.TransferSpecificContent.MaximumNumberStops != "undefined"){
+                        //  console.log(element.TransferInfo.TransferSpecificContent.MaximumNumberStops.attributes.maxstops);                
+                        HTML_DATA += "<div class=''><label class=''>Maximum stops : </label><h3>"+element.TransferInfo.TransferSpecificContent.MaximumNumberStops.attributes.maxstops+"</h3></div>";                           
+                  }
+
+                  if (typeof element.ProductSpecifications.TransferGeneralInfoList.TransferBulletPoint){
+                      services += "<uL>";
+                     
+                      $.each(element.ProductSpecifications.TransferGeneralInfoList.TransferBulletPoint, function(index, element5) {
+                      
+                          //console.log(element5.Description);
+                        services += "<li>"+element5.Description+"</li>";
+                   
+                      });
+
+                      services += "</ul>";
+                      HTML_DATA += "<div class=''>"+services+"</div>";
+                      services = '';
+
+                      desc = "<ul>";
+
+                      $.each(element.ProductSpecifications.TransferGeneralInfoList.TransferBulletPoint, function(index, element7) {
+                    
+                          desc += "<li>"+element7.Description+"</li>";
+                   
+                      });
+
+                      $.each(element.TransferInfo.TransferSpecificContent.GenericTransferGuidelinesList.TransferBulletPoint, function(index, element8) {
+                    
+                        desc += "<li>"+element8.DetailedDescription+"</li>";
+                   
+                      });
+
+                      desc += "</ul>";
+                        
+
+                      HTML_DATA += "<div class=''><button type='button' onclick='mypop("+cnt+")' data-target='#carfulldetails"+cnt+"' class='btn btn-action btn-block chk reserve-btn op_modal'>View More Details</button></a></div><div class='modal fade' id='carfulldetails"+cnt+"' role='dialog'><div class='modal-dialog modal-lg'> <div class='modal-content'><div class='modal-body'><h3>General Information"+desc+"</div></div></div></div></div>";
+                      //console.log(element.Currency.Sellin gPrice);                                   
+
+                  } 
+                      
+
+                  //console.log(element.ContractList.Contract.IncomingOffice.attributes.code);
+
+                  var contract = element.ContractList.Contract.Name;
+                  var contractcode = element.ContractList.Contract.IncomingOffice.attributes.code;
+                  var availtotken = element.attributes.availToken;
+
+                  var tranCode = element.TransferInfo.Code;
+                  var tranType = element.TransferInfo.Type.attributes.code;
+                  var tranVehicleType = element.TransferInfo.VehicleType.attributes.code;
+
+                  if ( BookType == 'oneway'){
+                    var onclickevent = "car_hotel_airport_in";
+                  } else {
+                    var onclickevent = "car_hotel_airport_out";
+                  }
+
+                  HTML_DATA += "<div class=''><p>Net Price $ : "+element.SellingPrice+"</p><button class='nextcarlist' onclick='"+onclickevent+"("+cnt+")' type='button'>SELECT</button><input type='hidden' id='contractcode"+cnt+"' name='contractcode' value='"+contractcode+"'><input type='hidden' id='availtotken"+cnt+"' name='availtotken' value='"+availtotken+"' ><input type='hidden' id='contract"+cnt+"' name='contract' value='"+contract+"'><input type='hidden' id='tranCode"+cnt+"' name='tranCode' value='"+tranCode+"'><input type='hidden' id='tranType"+cnt+"' name='tranType' value='"+tranType+"'><input type='hidden' id='tranVehicleType"+cnt+"' name='tranVehicleType' value='"+tranVehicleType+"'></div>";
+
+                  $("#carbookingdetails").append("<input type='hidden' id='contractcode"+cnt+"' name='contractcode' value='"+contractcode+"'><input type='hidden' id='availtotken"+cnt+"' name='availtotken' value='"+availtotken+"' ><input type='hidden' id='contract"+cnt+"' name='contract' value='"+contract+"'><input type='hidden' id='tranCode"+cnt+"' name='tranCode' value='"+tranCode+"'><input type='hidden' id='tranType"+cnt+"' name='tranType' value='"+tranType+"'><input type='hidden' id='tranVehicleType"+cnt+"' name='tranVehicleType' value='"+tranVehicleType+"'>");
+
+                  cnt ++;
+                  desc = '';
+
+              } else {
+
+                if ( element.attributes.transferType == "OUT" && n == 0) {
+                  n ++;
+                  HTML_DATA += "No car found. Please tri again.<div style='margin-top:15px;'><button type='button'  class='btn btn-action btn-lg  completebook'  onclick='return bookSummery();''>CONTINUE THE BOOKING</button></div>";
                 }
-                
-              });
-
-              $.each(element.ProductSpecifications.MasterServiceType, function(index, element2) {
-                
-                    fullname += element2.name +' - ';
-               
-              });
-
-              $.each(element.ProductSpecifications.MasterProductType, function(index, element3) {
-                
-                    fullname += element3.name + ' - ';
-               
-              });
-
-              $.each(element.ProductSpecifications.MasterVehicleType, function(index, element4) {
-                
-                    fullname += element4.name;
-               
-              });
-
-              HTML_DATA += "<div class='col-sm-6'><h3>"+fullname+"</h3></div>";
-              fullname = '';
-
-              if (typeof element.TransferInfo.TransferSpecificContent.MaximumNumberStops != "undefined") {
-                           //  console.log(element.TransferInfo.TransferSpecificContent.MaximumNumberStops.attributes.maxstops);                
-                    HTML_DATA += "<div class='col-sm-6'><label class=''>Maximum stops : </label><h3>"+element.TransferInfo.TransferSpecificContent.MaximumNumberStops.attributes.maxstops+"</h3></div>";                           
               }
-
-              if (typeof element.ProductSpecifications.TransferGeneralInfoList.TransferBulletPoint){
-                  services += "<uL>";
-                  $.each(element.ProductSpecifications.TransferGeneralInfoList.TransferBulletPoint, function(index, element5) {
-                  
-                      //console.log(element5.Description);
-                    services += "<li>"+element5.Description+"</li>";
-               
-                });
-
-                  services += "</ul>";
-                  HTML_DATA += "<div class='col-sm-6'>"+services+"</div>";
-                  services = '';
-
-                  desc = "<ul>";
-                  $.each(element.ProductSpecifications.TransferGeneralInfoList.TransferBulletPoint, function(index, element7) {
-                
-                    desc += "<li>"+element7.Description+"</li>";
-               
-                });
-
-                  $.each(element.TransferInfo.TransferSpecificContent.GenericTransferGuidelinesList.TransferBulletPoint, function(index, element8) {
-                
-                    desc += "<li>"+element8.DetailedDescription+"</li>";
-               
-                });
-
-                  desc += "</ul>";
-                  
-
-                  HTML_DATA += "<div class='col-sm-6'><button type='button' onclick='mypop("+cnt+")' data-target='#carfulldetails"+cnt+"' class='btn btn-action btn-block chk reserve-btn op_modal'>View More Details</button></a></div><div class='modal fade' id='carfulldetails"+cnt+"' role='dialog'><div class='modal-dialog modal-lg'> <div class='modal-content'><div class='modal-body'><h3>General Information"+desc+"</div></div></div></div></div>";
-                    //console.log(element.Currency.Sellin gPrice);
-                  
-
-              }
-                
-
-             // console.log(element.ContractList.Contract.IncomingOffice.attributes.code);
-
-             var contract = element.ContractList.Contract.Name;
-             var contractcode = element.ContractList.Contract.IncomingOffice.attributes.code;
-             var availtotken = element.attributes.availToken;
-
-             var tranCode = element.TransferInfo.Code;
-             var tranType = element.TransferInfo.Type.attributes.code;
-             var tranVehicleType = element.TransferInfo.VehicleType.attributes.code;
-
-             if ( BookType == 'oneway'){
-                  var onclickevent = "car_hotel_one";
-             } else {
-                  var onclickevent = "car_hotel_airport";
-             }
-
-              HTML_DATA += "<div class='col-sm-6'>Net Price $ : "+element.SellingPrice+"<button class='nextcarlist' onclick='"+onclickevent+"("+cnt+")' type='button'>SELECT</button><input type='hidden' id='contractcode"+cnt+"' name='contractcode' value='"+contractcode+"'><input type='hidden' id='availtotken"+cnt+"' name='availtotken' value='"+availtotken+"' ><input type='hidden' id='contract"+cnt+"' name='contract' value='"+contract+"'><input type='hidden' id='tranCode"+cnt+"' name='tranCode' value='"+tranCode+"'><input type='hidden' id='tranType"+cnt+"' name='tranType' value='"+tranType+"'><input type='hidden' id='tranVehicleType"+cnt+"' name='tranVehicleType' value='"+tranVehicleType+"'></div>";
-              cnt ++;
-              desc = '';
-            }
 
             });
           
           } else {
-              HTML_DATA += "No car search found. Please tri again.";    
+
+              HTML_DATA += "No car found. Please tri again.<div style='margin-top:15px;'><button type='button'  class='btn btn-action btn-lg  completebook'  onclick='return bookSummery();''>CONTINUE THE BOOKING</button></div>";
           }
         
           HTML_DATA += '</div></div></div></div>';
 
+          $('html, body').animate({
+              scrollTop: $('#detail-slider').offset().top + 500
+          }, 'slow');
+
           $("#vip_drop_details").hide();
           $("#vip_car_details").show();
           $("#vip_car_details").html(HTML_DATA);
-
         }         
              
       });
+    }
   });
   
-   function car_hotel_airport(id){
+  function bookSummery(){
+    $('html, body').animate({
+        scrollTop: $('#detail-slider').offset().top + 500
+    }, 'slow');
+
+    $('#vip_car_details').hide();
+    $(".booksummary").show();
+  }
+
+  function car_hotel_airport_out(id){
  
        var pickup_date  = "<?php echo $checkin;?>";
       var pickup_time_hour = $("#flight_pickup_time_hour").val();
-      var pickup_time_min = $("#flight_pickup_time_min").val();
-      var pickup_country = "ES";
+      var pickup_time_min = $("#flight_pickup_time_min").val();      
       var pickup_terminal = $("#flight_pickup_terminal").val();
-//      var pickup_terminal = "AGP";
       var drop_terminal = $("#flight_dep_terminal").val();
       var dropoff_date = "<?php echo $checkOut;?>";
       var drp_time_hour = $("#flight_drp_time_hour").val();
       var drp_time_min = $("#flight_drp_time_min").val();
-      var drop_country = "ES";
-      var drop_dest = "";
-      var drop_zone = "";
-      var drop_acco = "";
-     
+
+      var pickup_flight_code = $("#pickup_flight_code").val()
+      var drp_flight_code = $("#drp_flight_code").val()
+
       var child = <?php echo $child;?>;
       var adult = <?php echo $adults;?>;
       var location_latitude = '<?php echo $module->latitude;?>';
@@ -939,94 +1118,359 @@ function mypop(id){
       var tranVehicleType = $("#tranVehicleType"+id).val()
 
       
-      //------------------------------------------Services Add IN------------------------------
-    
+        //------------------------------------------Services Add IN------------------------------
+        
+        var ptocken = "";
+        var psui = "";
 
-      $.ajax({
-        type: 'GET',
-        data:{contract:contract,contractcode:contractcode,availtotken:availtotken,tranCode:tranCode,tranType:tranType,tranVehicleType:tranVehicleType,child:child,adult:adult,pickup_date:pickup_date,pickup_time_hour:pickup_time_hour,pickup_time_min:pickup_time_min,pickup_country:pickup_country,pickup_terminal:pickup_terminal,dropoff_date:dropoff_date,drp_time_hour:drp_time_hour,drp_time_min:drp_time_min,drop_country:drop_country,drop_dest:drop_dest,drop_zone:drop_zone,drop_acco:drop_acco,child:child,adult:adult,location_latitude:location_latitude,location_longitude:location_longitude,BookType:BookType,hoteltitle:hoteltitle,hotellocaion:hotellocaion,drop_terminal:drop_terminal,address:address,fulladdress:fulladdress},
-        url: '<?php echo base_url(); ?>'+'ean/ajax_call_car_services_in',
-        cache: false,
-        beforeSend:function(){
-          // show image here
-          // $(".divLoading").show();
-           //$('#result_data').hide();
-        },
-        success: function(data)
-        {
-         
-          // $(".divLoading").hide();
-          console.log('In-----------------');
-          response = $.parseJSON(data);
-          console.log(response);  
-  
-        }         
-             
-      });
-
-
-      //------------------------------------------Services Add OUt------------------------------
-    
-
-     $.ajax({
-        type: 'GET',
-        data:{contract:contract,contractcode:contractcode,availtotken:availtotken,tranCode:tranCode,tranType:tranType,tranVehicleType:tranVehicleType,child:child,adult:adult,pickup_date:pickup_date,pickup_time_hour:pickup_time_hour,pickup_time_min:pickup_time_min,pickup_country:pickup_country,pickup_terminal:pickup_terminal,dropoff_date:dropoff_date,drp_time_hour:drp_time_hour,drp_time_min:drp_time_min,drop_country:drop_country,drop_dest:drop_dest,drop_zone:drop_zone,drop_acco:drop_acco,child:child,adult:adult,location_latitude:location_latitude,location_longitude:location_longitude,BookType:BookType,hoteltitle:hoteltitle,hotellocaion:hotellocaion,drop_terminal:drop_terminal,address:address,fulladdress:fulladdress},
-        url: '<?php echo base_url(); ?>'+'ean/ajax_call_car_services_out',
-        cache: false,
-        beforeSend:function(){
-          // show image here
-          // $(".divLoading").show();
-           //$('#result_data').hide();
-        },
-        success: function(data)
-        {
-         
-          // $(".divLoading").hide();
-          console.log('Out-----------------');
-          response = $.parseJSON(data);
-          console.log(response);
-          
-
-          var ptocken = response.Purchase.attributes.purchaseToken;
-          var psui = response.Purchase.ServiceList.Service.attributes.SPUI;
-
-            //------------------------------------------Purchase Confirm------------------------------
-
-              $.ajax({
-                type: 'GET',
-                data:{contract:contract,contractcode:contractcode,availtotken:availtotken,tranCode:tranCode,tranType:tranType,tranVehicleType:tranVehicleType,child:child,adult:adult,pickup_date:pickup_date,pickup_time_hour:pickup_time_hour,pickup_time_min:pickup_time_min,pickup_country:pickup_country,pickup_terminal:pickup_terminal,dropoff_date:dropoff_date,drp_time_hour:drp_time_hour,drp_time_min:drp_time_min,drop_country:drop_country,drop_dest:drop_dest,drop_zone:drop_zone,drop_acco:drop_acco,child:child,adult:adult,location_latitude:location_latitude,location_longitude:location_longitude,BookType:BookType,ptocken:ptocken,psui:psui},
-                url: '<?php echo base_url(); ?>'+'ean/ajax_call_car_save',
-                cache: false,
-                beforeSend:function(){
-                  // show image here
-                  // $(".divLoading").show();
-                   //$('#result_data').hide();
-                },
-                success: function(data)
-                {
+        $.ajax({
+          type: 'GET',
+          data:{contract:contract,contractcode:contractcode,availtotken:availtotken,tranCode:tranCode,tranType:tranType,tranVehicleType:tranVehicleType,child:child,adult:adult,pickup_date:pickup_date,pickup_time_hour:pickup_time_hour,pickup_time_min:pickup_time_min,pickup_terminal:pickup_terminal,dropoff_date:dropoff_date,drp_time_hour:drp_time_hour,drp_time_min:drp_time_min,location_latitude:location_latitude,location_longitude:location_longitude,BookType:BookType,hoteltitle:hoteltitle,hotellocaion:hotellocaion,drop_terminal:drop_terminal,address:address,fulladdress:fulladdress},
+          url: '<?php echo base_url(); ?>'+'ean/ajax_call_car_services_in',
+          cache: false,
+          beforeSend:function(){
+             $(".divLoading").show();
+          },
+          success: function(data)
+          {
                  
                   // $(".divLoading").hide();
-                  //console.log(data);
-                  response = $.parseJSON(data);
-                  console.log(response);
-                  
-                  //console.log(response.Purchase.attributes.purchaseToken);
-                  //console.log(response.Purchase.ServiceList.Service.attributes.SPUI);
+                  console.log('In-----------------');
+                  responsein = $.parseJSON(data);
+                  console.log(responsein);  
+                  ptocken = responsein.Purchase.attributes.purchaseToken;
+                  psui = responsein.Purchase.ServiceList.Service.attributes.SPUI;
 
-                    
-                }         
-                     
-              }); 
+                  //------------------------------------------Services Add OUt------------------------------
+      
+                 // console.log('Mayur -------------'+ptocken);
 
-        }         
-             
-      });
+                   $.ajax({
+                      type: 'GET',
+                      data:{contract:contract,contractcode:contractcode,availtotken:availtotken,tranCode:tranCode,tranType:tranType,tranVehicleType:tranVehicleType,child:child,adult:adult,pickup_date:pickup_date,pickup_time_hour:pickup_time_hour,pickup_time_min:pickup_time_min,pickup_terminal:pickup_terminal,dropoff_date:dropoff_date,drp_time_hour:drp_time_hour,drp_time_min:drp_time_min,location_latitude:location_latitude,location_longitude:location_longitude,BookType:BookType,hoteltitle:hoteltitle,hotellocaion:hotellocaion,drop_terminal:drop_terminal,address:address,fulladdress:fulladdress,ptocken:ptocken,psui:psui},
+                      url: '<?php echo base_url(); ?>'+'ean/ajax_call_car_services_out',
+                      cache: false,
+                      beforeSend:function(){
+                        // show image here
+                        // $(".divLoading").show();
+                         //$('#result_data').hide();
+                      },
+                      success: function(data)
+                      {
+                       
+                        // $(".divLoading").hide();
+                        console.log('Out-----------------');
+                        responseout = $.parseJSON(data);
+                        var purchasenewtoken = responseout.Purchase.attributes.purchaseToken;
+                        var supi1 = '';
+                        var supi2 = '';                            
+
+                      $.each(responseout.Purchase.ServiceList.Service, function(index, element9) {
+
+                          if ( element9.attributes.transferType == "IN"){
+                            supi1 = element9.attributes.SPUI;
+                          }
+                          
+                          if ( element9.attributes.transferType == "OUT"){
+                            supi2 = element9.attributes.SPUI;
+                          }
+                          
+
+                      });
+
+                        //console.log(responseout);
+                        
+
+                       // var ptocken = responsein.Purchase.attributes.purchaseToken;
+                        //var psui = responsein.Purchase.ServiceList.Service.attributes.SPUI;
+
+                          //------------------------------------------Purchase Confirm------------------------------
+
+                            $.ajax({
+                              type: 'GET',
+                              data:{contract:contract,contractcode:contractcode,availtotken:availtotken,tranCode:tranCode,tranType:tranType,tranVehicleType:tranVehicleType,child:child,adult:adult,pickup_date:pickup_date,pickup_time_hour:pickup_time_hour,pickup_time_min:pickup_time_min,pickup_terminal:pickup_terminal,dropoff_date:dropoff_date,drp_time_hour:drp_time_hour,drp_time_min:drp_time_min,location_latitude:location_latitude,location_longitude:location_longitude,BookType:BookType,purchasenewtoken:purchasenewtoken,supi1:supi1,supi2:supi2,pickup_flight_code:pickup_flight_code,drp_flight_code:drp_flight_code,hoteltitle:hoteltitle,drop_terminal:drop_terminal},
+                              url: '<?php echo base_url(); ?>'+'ean/ajax_call_car_save',
+                              cache: false,
+                              beforeSend:function(){
+                                // show image here
+                                // $(".divLoading").show();
+                                 //$('#result_data').hide();
+                              },
+                              success: function(data)
+                              {
+                               
+                                 $(".divLoading").hide();
+
+                                //console.log(data);
+                                $("#carbookingdetails").append("<input type='hidden' name='book_response' value='"+data+"'>");
+
+                                responsesave = $.parseJSON(data);
+                                console.log(responsesave);
+                                var refno1 = responsesave.Purchase.Reference.FileNumber;
+                                var refnocode1 = responsesave.Purchase.Reference.IncomingOffice.attributes.code;
+
+                                $("#carbookingdetails").append("<input type='hidden' name='booking_ref_no1' value='"+refno1+"'><input type='hidden' name='office_code_1' value='"+refnocode1+"'>");
+
+                                $("#carbookingdetails").append("<input type='hidden' name='booking_total' value='"+responseout.Purchase.TotalPrice+"'>");
+
+                                $.each(responsesave.Purchase.ServiceList.Service, function(index, element10) {
+
+                                    if ( element10.attributes.transferType == "IN"){
+                                       $("#carbookingdetails").append("<input type='hidden' name='booking_ref_no2' value='"+element10.Reference.FileNumber+"'><input type='hidden' name='office_code_2' value='"+element10.Reference.IncomingOffice.attributes.code+"'>");
+                                    }
+
+                                    if ( element10.attributes.transferType == "OUT"){
+                                        $("#carbookingdetails").append("<input type='hidden' name='booking_ref_no3' value='"+element10.Reference.FileNumber+"'><input type='hidden' name='office_code_3' value='"+element10.Reference.IncomingOffice.attributes.code+"'>");
+                                    } 
+
+
+                                });
+
+                                $('#confirmvip').html('');
+                                var murl = "<?php echo base_url();?>";
+                                $('#confirmvip').html('<input type="hidden" name="myurl" id="myurl" value="'+murl+'"><button type="submit"  class="btn btn-action btn-lg  completebook" name="<?php if(empty($usersession)){ echo "login";}else{ echo "logged"; } ?>"  onclick="return completebook_confirmvip()">CONFIRM THE BOOKING</button>');
+                                
+                                $('html, body').animate({
+                                scrollTop: $('#detail-slider').offset().top + 500
+                                }, 'slow');
+
+                                $('#vip_car_details').hide();
+                                $(".booksummary").show();
+
+                                  
+                              }         
+                                   
+                            }); 
+
+                      }         
+                           
+                    });
+            
+
+          }         
+               
+        });
   }
 
+
+function car_hotel_airport_in(id){
+ 
+       var pickup_date  = "<?php echo $checkin;?>";
+      var pickup_time_hour = $("#flight_pickup_time_hour").val();
+      var pickup_time_min = $("#flight_pickup_time_min").val();      
+      var pickup_terminal = $("#flight_pickup_terminal").val();
+      var drop_terminal = $("#flight_dep_terminal").val();
+      var dropoff_date = "<?php echo $checkOut;?>";
+      var drp_time_hour = $("#flight_drp_time_hour").val();
+      var drp_time_min = $("#flight_drp_time_min").val();
+
+      var pickup_flight_code = $("#pickup_flight_code").val()
+      var drp_flight_code = $("#drp_flight_code").val()
+
+      var child = <?php echo $child;?>;
+      var adult = <?php echo $adults;?>;
+      var location_latitude = '<?php echo $module->latitude;?>';
+      var location_longitude = '<?php echo $module->longitude;?>';
+      var address = '<?php echo $module->location;?>';
+      var hoteltitle = "<?php echo $module->title; ?>";
+      var hotellocaion = $("#cityname").val();
+      var fulladdress = '<?php echo $module->hotelAddress;?>';
+
+      var BookType = $("input[name='BookType']:checked").val();
+      
+      var contract = $("#contract"+id).val();
+      var contractcode = $("#contractcode"+id).val();
+      var availtotken = $("#availtotken"+id).val();
+
+      var tranCode = $("#tranCode"+id).val();
+      var tranType = $("#tranType"+id).val()
+      var tranVehicleType = $("#tranVehicleType"+id).val()
+
+      
+        //------------------------------------------Services Add IN------------------------------
+        
+        var ptocken = "";
+        var psui = "";
+
+        $.ajax({
+          type: 'GET',
+          data:{contract:contract,contractcode:contractcode,availtotken:availtotken,tranCode:tranCode,tranType:tranType,tranVehicleType:tranVehicleType,child:child,adult:adult,pickup_date:pickup_date,pickup_time_hour:pickup_time_hour,pickup_time_min:pickup_time_min,pickup_terminal:pickup_terminal,dropoff_date:dropoff_date,drp_time_hour:drp_time_hour,drp_time_min:drp_time_min,location_latitude:location_latitude,location_longitude:location_longitude,BookType:BookType,hoteltitle:hoteltitle,hotellocaion:hotellocaion,drop_terminal:drop_terminal,address:address,fulladdress:fulladdress},
+          url: '<?php echo base_url(); ?>'+'ean/ajax_call_car_services_in',
+          cache: false,
+          beforeSend:function(){
+             $(".divLoading").show();
+          },
+          success: function(data)
+          {
+                 
+                  // $(".divLoading").hide();
+                  console.log('In-----------------');
+                  responsein = $.parseJSON(data);
+                  console.log(responsein);  
+                  ptocken = responsein.Purchase.attributes.purchaseToken;
+                  psui = responsein.Purchase.ServiceList.Service.attributes.SPUI;
+
+                  //------------------------------------------Services Add OUt------------------------------
+      
+                 // console.log('Mayur -------------'+ptocken);
+
+                   $.ajax({
+                      type: 'GET',
+                      data:{contract:contract,contractcode:contractcode,availtotken:availtotken,tranCode:tranCode,tranType:tranType,tranVehicleType:tranVehicleType,child:child,adult:adult,pickup_date:pickup_date,pickup_time_hour:pickup_time_hour,pickup_time_min:pickup_time_min,pickup_terminal:pickup_terminal,dropoff_date:dropoff_date,drp_time_hour:drp_time_hour,drp_time_min:drp_time_min,location_latitude:location_latitude,location_longitude:location_longitude,BookType:BookType,hoteltitle:hoteltitle,hotellocaion:hotellocaion,drop_terminal:drop_terminal,address:address,fulladdress:fulladdress,ptocken:ptocken,psui:psui},
+                      url: '<?php echo base_url(); ?>'+'ean/ajax_call_car_services_out',
+                      cache: false,
+                      beforeSend:function(){
+                        // show image here
+                        // $(".divLoading").show();
+                         //$('#result_data').hide();
+                      },
+                      success: function(data)
+                      {
+                       
+                        // $(".divLoading").hide();
+                        console.log('Out-----------------');
+                        responseout = $.parseJSON(data);
+                        var purchasenewtoken = responseout.Purchase.attributes.purchaseToken;
+                        var supi1 = '';
+                        var supi2 = '';                            
+
+                      $.each(responseout.Purchase.ServiceList.Service, function(index, element9) {
+
+                          if ( element9.attributes.transferType == "IN"){
+                            supi1 = element9.attributes.SPUI;
+                          }
+                          
+                          if ( element9.attributes.transferType == "OUT"){
+                            supi2 = element9.attributes.SPUI;
+                          }
+                          
+
+                      });
+
+                        //console.log(responseout);
+                        
+
+                       // var ptocken = responsein.Purchase.attributes.purchaseToken;
+                        //var psui = responsein.Purchase.ServiceList.Service.attributes.SPUI;
+
+                          //------------------------------------------Purchase Confirm------------------------------
+
+                            $.ajax({
+                              type: 'GET',
+                              data:{contract:contract,contractcode:contractcode,availtotken:availtotken,tranCode:tranCode,tranType:tranType,tranVehicleType:tranVehicleType,child:child,adult:adult,pickup_date:pickup_date,pickup_time_hour:pickup_time_hour,pickup_time_min:pickup_time_min,pickup_terminal:pickup_terminal,dropoff_date:dropoff_date,drp_time_hour:drp_time_hour,drp_time_min:drp_time_min,location_latitude:location_latitude,location_longitude:location_longitude,BookType:BookType,purchasenewtoken:purchasenewtoken,supi1:supi1,supi2:supi2,pickup_flight_code:pickup_flight_code,drp_flight_code:drp_flight_code,hoteltitle:hoteltitle,drop_terminal:drop_terminal},
+                              url: '<?php echo base_url(); ?>'+'ean/ajax_call_car_save',
+                              cache: false,
+                              beforeSend:function(){
+                                // show image here
+                                // $(".divLoading").show();
+                                 //$('#result_data').hide();
+                              },
+                              success: function(data)
+                              {
+                               
+                                 $(".divLoading").hide();
+
+                                //console.log(data);
+                                $("#carbookingdetails").append("<input type='hidden' name='book_response' value='"+data+"'>");
+
+                                responsesave = $.parseJSON(data);
+                                console.log(responsesave);
+                                var refno1 = responsesave.Purchase.Reference.FileNumber;
+                                var refnocode1 = responsesave.Purchase.Reference.IncomingOffice.attributes.code;
+
+                                $("#carbookingdetails").append("<input type='hidden' name='booking_ref_no1' value='"+refno1+"'><input type='hidden' name='office_code_1' value='"+refnocode1+"'>");
+
+                                $("#carbookingdetails").append("<input type='hidden' name='booking_total' value='"+responseout.Purchase.TotalPrice+"'>");
+
+                                $.each(responsesave.Purchase.ServiceList.Service, function(index, element10) {
+
+                                    if ( element10.attributes.transferType == "IN"){
+                                       $("#carbookingdetails").append("<input type='hidden' name='booking_ref_no2' value='"+element10.Reference.FileNumber+"'><input type='hidden' name='office_code_2' value='"+element10.Reference.IncomingOffice.attributes.code+"'>");
+                                    }
+
+                                    if ( element10.attributes.transferType == "OUT"){
+                                        $("#carbookingdetails").append("<input type='hidden' name='booking_ref_no3' value='"+element10.Reference.FileNumber+"'><input type='hidden' name='office_code_3' value='"+element10.Reference.IncomingOffice.attributes.code+"'>");
+                                    } 
+
+
+                                });
+
+                                $('#confirmvip').html('');
+                                var murl = "<?php echo base_url();?>";
+                                $('#confirmvip').html('<input type="hidden" name="myurl" id="myurl" value="'+murl+'"><button type="submit"  class="btn btn-action btn-lg  completebook" name="<?php if(empty($usersession)){ echo "login";}else{ echo "logged"; } ?>"  onclick="return completebook_confirmvip()">CONFIRM THE BOOKING</button>');
+                                
+                                $('html, body').animate({
+                                scrollTop: $('#detail-slider').offset().top + 500
+                                }, 'slow');
+
+                                $('#vip_car_details').hide();
+                                $(".booksummary").show();
+
+                                  
+                              }         
+                                   
+                            }); 
+
+                      }         
+                           
+                    });
+            
+
+          }         
+               
+        });
+  }
 </script>
 
 <script type="text/javascript">
-  
+
+function completebook_confirmvip() {
+
+    var url = $("#myurl").val();
+
+    $(".divLoading").show();
+
+     $("#err_term").text("");
+
+     var policy = $("input[name='attantion']:checked").val();
+
+     if (typeof policy != "undefined") {
+
+        <?php if($appModule == "ean"){ ?>
+
+         $.post(url + "admin/carajaxcalls/hbprocessBooking", $("#bookingdetails,#guest_details").serialize(), function(response) {
+          <?php } else {?>
+
+
+         $.post(url + "admin/carajaxcalls/processBooking", $("#bookingdetails,#guest_details").serialize(), function(response) {
+          <?php } ?>
+
+             var resp = $.parseJSON(response);
+              console.log(resp);
+
+              
+              $("#carbookingdetails").append("<input type='hidden' name='booking_hotel_id' value='012' >");
+              
+    
+              $.post(url + "admin/carajaxcalls/carBooking", $("#bookingdetails,#guest_details,#carbookingdetails,#vip_details,#newcheckin").serialize(), function(response) {
+
+                /* var resp = $.parseJSON(response);
+                 console.log(resp);*/
+                 $(".divLoading").hide();
+                    setTimeout(function() {
+                    window.location.replace(resp.url);
+                    }, 2000);
+
+
+              });
+       });  
+
+    } else {
+          $("#err_term").text("Please select the checkbox for policy");
+    }
+
+ }
+
 </script>
 <!-- map -->
 <div class="collapse" id="collapseMap"> <br>
@@ -1249,48 +1693,51 @@ $(".guest_cont").click(function(){
 
     var formname = $("#mem_pay").data('name');
 
-    $('html, body').animate({
-        scrollTop: $('body').offset().top - 100
-        }, 'slow');
+    
      $("#mem_pay").fadeOut("fast");
      $("#waiting").html("Please Wait...");
-<?php if($appModule != "ean"){ ?>
-
-   $.post("<?php echo base_url(); ?>"+"admin/ajaxcalls/processBooking"+formname,$("#bookingdetails ,#guest_details , #"+formname+"form , #vip_details").serialize(), function(response){
-<?php }else{ ?>
-   $.post("<?php echo base_url(); ?>"+"admin/ajaxcalls/hbprocessBooking"+formname,$("#bookingdetails ,#guest_details , #"+formname+"form , #vip_details").serialize(), function(response){
-
-<?php } ?>
-
-    var resp = $.parseJSON(response);
-    console.log(resp);
-    if(resp.error == "yes"){
-        $(".result").html("<div class='alert alert-danger'>"+resp.msg+"</div>");
-        $("#mem_pay").fadeIn("fast");
-        $("#waiting").html("");
-        PayStand.closeFrame(checkout);
-    }else{
-        $(".bdetails").addClass("complete");
-        $(".bdetails").removeClass("active");
-        $(".bsuccess").removeClass("disabled");
-        $(".bsuccess").addClass("active");
-        $(".bsuccess").addClass("complete");  
-        $(".acc_section").hide();
-        $(".extrasection").hide();
-        $(".final_section").fadeIn("fast");
-        $(".result").html("");
 
 
-        setTimeout(function () {
-          window.location.replace(resp.url);
-        }, 2000);
-    
-      
-    }
-    });
-    
-    console.log('update123->'+JSON.stringify(data));
-  };
+    var user_id = $("#user_id").val();
+    console.log("my id = "+user_id);
+   
+   $.ajax({
+             type: 'POST',
+             data: {
+                 user_id: user_id
+             },
+             url: "<?php echo base_url();?>" + "admin/carajaxcalls/add_member",
+             cache: false,
+             beforeSend: function() {
+
+             },
+             success: function(response) {
+
+                PayStand.closeFrame(checkout);
+                
+                 var resp = $.parseJSON(response);
+                console.log(response);
+
+
+                 if (resp.error == "yes") {
+                     $(".result").html("<div class='alert alert-danger'>" + resp.msg + "</div>");
+                     $("#waiting").html("");
+
+                 } else {
+
+                    $('html, body').animate({
+                      scrollTop: $('#detail-slider').offset().top + 500
+                    }, 'slow');
+
+                    $('.book_extra_hide').hide();
+                    $(".result").html("");
+                    $('#vip_drop_select').show();  
+
+                 }
+             }
+         });
+ }
+
   PayStand.checkoutUpdated = function (data) {
     console.log('update->'+JSON.stringify(data));
 
@@ -1306,10 +1753,4 @@ $(".guest_cont").click(function(){
   var s = document.getElementsByTagName('script')[0];
   s.parentNode.insertBefore(PayStand.script, s);
 </script>
-
-<?php if($appModule != "ean"){ ?>
-<script src="<?php echo base_url(); ?>assets/js/booking.js"></script>
-<?php }else{ ?>
-<script src="<?php echo base_url(); ?>assets/js/hbbooking.js"></script>
-<?php } ?>
 

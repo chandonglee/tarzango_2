@@ -162,9 +162,14 @@ class Emails_model extends CI_Model {
 		function attraction_booking_paid_email($mydata,$att_data,$bookdata){
 
 				$booking_total = $att_data[0]->booking_total;
+				$booking_user = $att_data[0]->booking_user;
 				$booking_checkin = $att_data[0]->booking_checkin;
 				$booking_ref_no = $att_data[0]->booking_ref_no;
+				$accounts_email = $att_data[0]->accounts_email;
 
+				$address = $mydata->address;
+				$lat = $mydata->lat;
+				$long = $mydata->long;
 				$address = $mydata->address;
 				$thumbnail = $mydata->thumbnail;
 				$attraction_name = $mydata->attraction_name;
@@ -176,6 +181,12 @@ class Emails_model extends CI_Model {
 				$description = $bookdata->paymentData->description;
 				$code = $bookdata->agency->code;
 				$comments = $bookdata->activities[0]->bundles[0]->comments[0]->text;
+
+
+				$ptheme = pt_default_theme();
+				$this->_config = config_item('theme');
+				$uu = $this->_config['url'];
+				$email_temp_img =  $uu.$ptheme.'/email_temp_img/gb_email_temp_img/';
 				
 				 for ($r_i=0; $r_i < $adults ; $r_i++) {
                   	$bb = $r_i;
@@ -187,7 +198,8 @@ class Emails_model extends CI_Model {
                     <span style="font-family:Verdana, Geneva, sans-serif;font-size:14px;padding:5px 0px; display:block; margin-top:10px; letter-spacing:1px; font-weight:600;color:#0c134f">
                     	'.$guest_details[$bb].'
                     </span>
-                </p>';
+                </p>
+                 <hr />';
 				}				
                 if($child != ""){
                 	 for ($c_i=$cc; $c_i < $child ; $c_i++) {
@@ -202,41 +214,81 @@ class Emails_model extends CI_Model {
                     	'.$child_details[$bb].'
                         
                     </span>
-                </p>';
+                </p>
+                 <hr />';
                 	 }
                 }
-                for ($c_i=$cc; $c_i < $child ; $c_i++) {
-                	 	$bb = $c_i;
-                  		$cc = $c_i+1;
+               	$vouchers_total = $booking_total/$adults+$child;
 
-                	 	$vouchers .= '<span style="display:inline-block; float:left; height:180px; width:130px; position:relative; top:31px; border-right:2px dashed #ccc" class="zoo_aa">
-                    	<img src="http://www.atoatechnologies.com/client/images_tarzango/rotatelogo.png" style="position:relative;left:40px;top:65px" />
+                 for ($r_i=0; $r_i < $adults ; $r_i++) {
+                  	$bb = $r_i;
+                  	$cc = $r_i+1;
+                  	$vouchers .= '<div style="background:url('.$email_temp_img.'box.jpg) center center no-repeat; height:240px; padding:20px;margin-top:10px;" class="tic_ex">
+                  	<span style="margin-top: 30px;display:inline-block; float:left; height:180px; width:130px; position:relative; top:31px; border-right:2px dashed #ccc" class="zoo_aa">
+                    	<img style="margin-top: 60px;" src="'.$email_temp_img.'rotatelogo.png" style="position:relative;left:40px;top:65px" />
                     </span>
-                    <span style="display:inline-block; height:180px; width:346px; position:relative; top:31px; padding:0px 20px; padding-right:0" class="zoo_bb">
+                    <span style="display:inline-block; height:180px; width:346px; position:relative; top:31px; padding:20px 20px; padding-right:0" class="zoo_bb">
                     	<span style="font-family:Verdana, Geneva, sans-serif; display:block; text-transform:uppercase; font-size:12px;font-weight:600;color:#32c8fc">
                     		Tickets and excrusions 
                     	</span>
                         <h2 style="font-family:Verdana, Geneva, sans-serif;color:#0c134f; font-size:22px; margin-top:10px;">
-                    		San Diego Zoo
+                    		'.$attraction_name.'
                     	</h2>
                         <p style="margin:0 auto; padding:10px 0px;">
-                    	<img src="http://www.atoatechnologies.com/client/images_tarzango/map.png" />
-                        <span style="font-family:Verdana, Geneva, sans-serif; width:150px; display:inline-block; font-size:11px; color:#0c134f; vertical-align:top;">
-                         2920 Zoo Dr, San Diego, CA 92101
+                    	<img src="'.$email_temp_img.'map.png" />
+                        <span style="font-family:Verdana, Geneva, sans-serif; width:300px; display:inline-block; font-size:11px; color:#0c134f; vertical-align:top;">
+                         '.$address.'
                          </span>
-                        <img src="http://www.atoatechnologies.com/client/images_tarzango/phone.png" />
-                        <span style="vertical-align:top;font-family:Verdana, Geneva, sans-serif;font-size:11px; color:#0c134f; line-height:22px;">
-                        (619) 231-1515</span>
                         <span style="display:block; margin-top:10px">
-                        	<img src="http://www.atoatechnologies.com/client/images_tarzango/user.png" /> <strong style="font-family:Verdana, Geneva, sans-serif;font-size:11px; font-weight:normal; color:#0c134f;position:relative; top:-5px;">Vajon Krisztian</strong>
+                        	<img src="'.$email_temp_img.'user.png" /> <strong style="font-family:Verdana, Geneva, sans-serif;font-size:11px; font-weight:normal; color:#0c134f;position:relative; top:-5px;">'.$guest_details[$bb].'</strong>
                         </span>
                         <span style="font-family:Verdana, Geneva, sans-serif;display:inline-block;letter-spacing:1px; font-size:16px;padding:5px 0px; font-weight:500;color:#0c134f; margin-top:10px">
                     	1 adult (1 day pass)
                     </span>
-                    <span style="font-family:Verdana, Geneva, sans-serif; font-size:20px; margin:0;float:right; font-weight:600; color:#32c8fc; margin-top:13px">$ 88.56</span>
+                    <span style="font-family:Verdana, Geneva, sans-serif; font-size:20px; margin:0;float:right; font-weight:600; color:#32c8fc; margin-top:13px">$ '.$vouchers_total.'</span>
                     </p>
-                    </span>';
+                    </span>
+                    </div>';
                  }
+                  if($child != ""){
+                	 for ($c_i=$cc; $c_i < $child ; $c_i++) {
+                	 	$bb = $c_i;
+                  		$cc = $c_i+1;
+
+                	 	$vouchers .= ' <div style="background:url('.$email_temp_img.'box.jpg) center center no-repeat; height:240px; padding:20px;margin-top:10px;" class="tic_ex">
+                	 	<span style="margin-top: 30px;display:inline-block; float:left; height:180px; width:130px; position:relative; top:31px; border-right:2px dashed #ccc" class="zoo_aa">
+                    	<img style="margin-top: 60px;" src="'.$email_temp_img.'rotatelogo.png" style="position:relative;left:40px;top:65px" />
+                    </span>
+                    <span style="display:inline-block; height:180px; width:346px; position:relative; top:31px; padding:20px 20px; padding-right:0" class="zoo_bb">
+                    	<span style="font-family:Verdana, Geneva, sans-serif; display:block; text-transform:uppercase; font-size:12px;font-weight:600;color:#32c8fc">
+                    		Tickets and excrusions 
+                    	</span>
+                        <h2 style="font-family:Verdana, Geneva, sans-serif;color:#0c134f; font-size:22px; margin-top:10px;">
+                    		'.$attraction_name.'
+                    	</h2>
+                        <p style="margin:0 auto; padding:10px 0px;">
+                    	<img src="'.$email_temp_img.'map.png" />
+                        <span style="font-family:Verdana, Geneva, sans-serif; width:300px; display:inline-block; font-size:11px; color:#0c134f; vertical-align:top;">
+                         '.$address.'
+                         </span>
+                        <span style="display:block; margin-top:10px">
+                        	<img src="'.$email_temp_img.'user.png" /> <strong style="font-family:Verdana, Geneva, sans-serif;font-size:11px; font-weight:normal; color:#0c134f;position:relative; top:-5px;">'.$guest_details[$bb].'</strong>
+                        </span>
+                        <span style="font-family:Verdana, Geneva, sans-serif;display:inline-block;letter-spacing:1px; font-size:16px;padding:5px 0px; font-weight:500;color:#0c134f; margin-top:10px">
+                    	1 child (1 day pass)
+                    </span>
+                    <span style="font-family:Verdana, Geneva, sans-serif; font-size:20px; margin:0;float:right; font-weight:600; color:#32c8fc; margin-top:13px">$ '.$vouchers_total.'</span>
+                    </p>
+                    </span>
+                    </div>';
+                	 }
+                }
+              
+                 $map = '<div class="col-sm-12 map" style="width: 100%;padding-left: 0;float: left; box-sizing: border-box;min-height: 1px; padding-right:0px; position: relative;">
+								 <a href="http://maps.google.com/?daddr={hotel_name}" target="_blank"> 
+                                    <img style="width:100%;margin-bottom:30px" border="0" src="https://maps.googleapis.com/maps/api/staticmap?center='.$lat.','.$long.'&zoom=14&size=620x260&markers=size:mid%7Ccolor:red%7C'.$lat.','.$long.'&key=AIzaSyAH65sTGsDsP4mMpmbHC8zqRiM1Qh07iL8" alt="Google map"></a>
+							</div>';
+
 
 				$res = $this->settings_model->get_contact_page_details();
 				$contact_phone = $res[0]->contact_phone;
@@ -244,55 +296,144 @@ class Emails_model extends CI_Model {
 				$contact_address = $res[0]->contact_address;
 				$sento =  $details->contect_email;
 
-				$ptheme = pt_default_theme();
-				$this->_config = config_item('theme');
-				$uu = $this->_config['url'];
-				$email_temp_img =  $uu.$ptheme.'/email_temp_img/gb_email_temp_img/';
+				
 
-				$template = array('{contact_phone}','{contact_email}','{contact_address}','{email_temp_img}','{booking_total}','{booking_checkin}','{address}','{thumbnail}','{attraction_name}','{booking_ref_no}','{child}','{adults}','{description}','{code}','{comments}','{tickets}');
+				$template = array('{contact_phone}','{contact_email}','{contact_address}','{email_temp_img}','{booking_total}','{booking_checkin}','{address}','{thumbnail}','{attraction_name}','{booking_ref_no}','{child}','{adults}','{description}','{code}','{comments}','{tickets}','{vouchers}','{map}');
 
-				$values = array($contact_phone,$contact_email,$contact_address,$email_temp_img,$booking_total,$booking_checkin,$address,$thumbnail,$attraction_name,$booking_ref_no,$child,$adults,$description,$code,$comments,$tickets,$vouchers);
+				$values = array($contact_phone,$contact_email,$contact_address,$email_temp_img,$booking_total,$booking_checkin,$address,$thumbnail,$attraction_name,$booking_ref_no,$child,$adults,$description,$code,$comments,$tickets,$vouchers,$map);
 
 				$HTML_DATA = file_get_contents( $uu.$ptheme.'/Attraction_booking_email.html');
 				$message = str_replace($template, $values, $HTML_DATA);
 
-				print_r($message);
-				exit();	
 
+				
 				$this->email->set_newline("\r\n");
 				$this->email->from($this->sendfrom);
-				$this->email->to('ankitbapat1@gmail.com');
+				$this->email->to($accounts_email);
 				$this->email->subject('Your attraction is Confirmed!');
 				$this->email->message($message);
 				$this->email->send();
 		}
 	
 
+		function invoice_ticket_email($mydata,$att_data,$bookdata) {
+				
+				$booking_total = $att_data[0]->booking_total;
+				$booking_user = $att_data[0]->booking_user;
+				$booking_checkin = $att_data[0]->booking_checkin;
+				$booking_ref_no = $att_data[0]->booking_ref_no;
+				$accounts_email = $att_data[0]->accounts_email;
 
+				$address = $mydata->address;
+				$lat = $mydata->lat;
+				$long = $mydata->long;
+				$address = $mydata->address;
+				$thumbnail = $mydata->thumbnail;
+				$attraction_name = $mydata->attraction_name;
+				$adults = $mydata->adults;
+				$child = $mydata->child;
+				$guest_details = $mydata->guest_details;
+				$child_details = $mydata->child_details;
 
-		function invoice_ticket_email($to_email,$image) {
-			
-				$res = $this->settings_model->get_contact_page_details();
-				$contact_phone = $res[0]->contact_phone;
-				$contact_email = $res[0]->contact_email;
-				$contact_address = $res[0]->contact_address;
-				$sento =  $details->contect_email;
-				$image1 = str_replace('<wbr>','', $image);
+				$description = $bookdata->paymentData->description;
+				$code = $bookdata->agency->code;
+				$comments = $bookdata->activities[0]->bundles[0]->comments[0]->text;
+
 
 				$ptheme = pt_default_theme();
 				$this->_config = config_item('theme');
 				$uu = $this->_config['url'];
 				$email_temp_img =  $uu.$ptheme.'/email_temp_img/gb_email_temp_img/';
-				$template = array('{contact_phone}','{contact_email}','{contact_address}','{email_temp_img}','{image1}');
-				$values = array($contact_phone,$contact_email,$contact_address,$email_temp_img,$image1);
+				
+				
+               	$vouchers_total = $booking_total/$adults+$child;
+
+                 for ($r_i=0; $r_i < $adults ; $r_i++) {
+                  	$bb = $r_i;
+                  	$cc = $r_i+1;
+                  	$vouchers .= '<div style="background:url('.$email_temp_img.'box.jpg) center center no-repeat; height:240px; padding:20px;margin-top:10px;" class="tic_ex">
+                  	<span style="margin-top: 30px;display:inline-block; float:left; height:180px; width:130px; position:relative; top:31px; border-right:2px dashed #ccc" class="zoo_aa">
+                    	<img style="margin-top: 60px;" src="'.$email_temp_img.'rotatelogo.png" style="position:relative;left:40px;top:65px" />
+                    </span>
+                    <span style="display:inline-block; height:180px; width:346px; position:relative; top:31px; padding:20px 20px; padding-right:0" class="zoo_bb">
+                    	<span style="font-family:Verdana, Geneva, sans-serif; display:block; text-transform:uppercase; font-size:12px;font-weight:600;color:#32c8fc">
+                    		Tickets and excrusions 
+                    	</span>
+                        <h2 style="font-family:Verdana, Geneva, sans-serif;color:#0c134f; font-size:22px; margin-top:10px;">
+                    		'.$attraction_name.'
+                    	</h2>
+                        <p style="margin:0 auto; padding:10px 0px;">
+                    	<img src="'.$email_temp_img.'map.png" />
+                        <span style="font-family:Verdana, Geneva, sans-serif; width:300px; display:inline-block; font-size:11px; color:#0c134f; vertical-align:top;">
+                         '.$address.'
+                         </span>
+                        <span style="display:block; margin-top:10px">
+                        	<img src="'.$email_temp_img.'user.png" /> <strong style="font-family:Verdana, Geneva, sans-serif;font-size:11px; font-weight:normal; color:#0c134f;position:relative; top:-5px;">'.$guest_details[$bb].'</strong>
+                        </span>
+                        <span style="font-family:Verdana, Geneva, sans-serif;display:inline-block;letter-spacing:1px; font-size:16px;padding:5px 0px; font-weight:500;color:#0c134f; margin-top:10px">
+                    	1 adult (1 day pass)
+                    </span>
+                    <span style="font-family:Verdana, Geneva, sans-serif; font-size:20px; margin:0;float:right; font-weight:600; color:#32c8fc; margin-top:13px">$ '.$vouchers_total.'</span>
+                    </p>
+                    </span>
+                    </div>';
+                 }
+                  if($child != ""){
+                	 for ($c_i=$cc; $c_i < $child ; $c_i++) {
+                	 	$bb = $c_i;
+                  		$cc = $c_i+1;
+
+                	 	$vouchers .= ' <div style="background:url('.$email_temp_img.'box.jpg) center center no-repeat; height:240px; padding:20px;margin-top:10px;" class="tic_ex">
+                	 	<span style="margin-top: 30px;display:inline-block; float:left; height:180px; width:130px; position:relative; top:31px; border-right:2px dashed #ccc" class="zoo_aa">
+                    	<img style="margin-top: 60px;" src="'.$email_temp_img.'rotatelogo.png" style="position:relative;left:40px;top:65px" />
+                    </span>
+                    <span style="display:inline-block; height:180px; width:346px; position:relative; top:31px; padding:20px 20px; padding-right:0" class="zoo_bb">
+                    	<span style="font-family:Verdana, Geneva, sans-serif; display:block; text-transform:uppercase; font-size:12px;font-weight:600;color:#32c8fc">
+                    		Tickets and excrusions 
+                    	</span>
+                        <h2 style="font-family:Verdana, Geneva, sans-serif;color:#0c134f; font-size:22px; margin-top:10px;">
+                    		'.$attraction_name.'
+                    	</h2>
+                        <p style="margin:0 auto; padding:10px 0px;">
+                    	<img src="'.$email_temp_img.'map.png" />
+                        <span style="font-family:Verdana, Geneva, sans-serif; width:300px; display:inline-block; font-size:11px; color:#0c134f; vertical-align:top;">
+                         '.$address.'
+                         </span>
+                        <span style="display:block; margin-top:10px">
+                        	<img src="'.$email_temp_img.'user.png" /> <strong style="font-family:Verdana, Geneva, sans-serif;font-size:11px; font-weight:normal; color:#0c134f;position:relative; top:-5px;">'.$guest_details[$bb].'</strong>
+                        </span>
+                        <span style="font-family:Verdana, Geneva, sans-serif;display:inline-block;letter-spacing:1px; font-size:16px;padding:5px 0px; font-weight:500;color:#0c134f; margin-top:10px">
+                    	1 child (1 day pass)
+                    </span>
+                    <span style="font-family:Verdana, Geneva, sans-serif; font-size:20px; margin:0;float:right; font-weight:600; color:#32c8fc; margin-top:13px">$ '.$vouchers_total.'</span>
+                    </p>
+                    </span>
+                    </div>';
+                	 }
+                }
+              
+
+				$res = $this->settings_model->get_contact_page_details();
+				$contact_phone = $res[0]->contact_phone;
+				$contact_email = $res[0]->contact_email;
+				$contact_address = $res[0]->contact_address;
+				$sento =  $details->contect_email;
+
+				
+
+				$template = array('{contact_phone}','{contact_email}','{contact_address}','{email_temp_img}','{booking_total}','{booking_checkin}','{address}','{thumbnail}','{attraction_name}','{booking_ref_no}','{child}','{adults}','{description}','{code}','{comments}','{tickets}','{vouchers}','{map}');
+
+				$values = array($contact_phone,$contact_email,$contact_address,$email_temp_img,$booking_total,$booking_checkin,$address,$thumbnail,$attraction_name,$booking_ref_no,$child,$adults,$description,$code,$comments,$tickets,$vouchers,$map);
+
 				$HTML_DATA = file_get_contents( $uu.$ptheme.'/invoice_ticket.html');
 				$message = str_replace($template, $values, $HTML_DATA);
 
 
+
 				$this->email->set_newline("\r\n");
 				$this->email->from($this->sendfrom);
-				$this->email->to('ankitbapat1@gmail.com');
-				$this->email->subject('Tickets you have booked');
+				$this->email->to($accounts_email);
+				$this->email->subject('Attraction Vouchers');
 				$this->email->message($message);
 				$this->email->send();
 
@@ -376,6 +517,8 @@ class Emails_model extends CI_Model {
 				$message .= "Phone : " . $phone . "<br>";
 				$message .= "<br> To view Invoice visit at: <a href=" . base_url() . "invoice?id=" . $invoiceid . "&sessid=" . $refno . " >" . base_url() . "invoice?id=" . $invoiceid . "&sessid=" . $refno . "</a>";
 				$message .= $this->mailFooter;
+
+				
 
 				$this->email->set_newline("\r\n");
 				$this->email->from($this->sendfrom);

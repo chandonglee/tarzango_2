@@ -1,54 +1,48 @@
 <style type="text/css">
-    @media screen and (max-width: 768px){
+@media screen and (max-width: 768px) {
 .about_us_page .container {
-    margin-right: 10px !important;
-    margin-left: 10px !important;
+	margin-right: 10px !important;
+	margin-left: 10px !important;
 }
-.what_offer img{
-    width: 100%;
+.what_offer img {
+	width: 100%;
 }
-.vip_img img{
-  width: 100%; 
+.vip_img img {
+	width: 100%;
 }
-.vip-text{
-  width: 100% !important;
+.vip-text {
+	width: 100% !important;
 }
-.Negotiation img{
-  width: 150% ;
+.Negotiation img {
+	width: 150%;
 }
-.about_us_page .about_process .about_process_box > p{
-  font-size: 14px;
+.about_us_page .about_process .about_process_box > p {
+	font-size: 14px;
 }
-.our_team_cover .our_team_inner > p{
-  font-size: 12px;
+.our_team_cover .our_team_inner > p {
+	font-size: 12px;
 }
-.elephant-text{
-  margin-top: -17px !important;
+.elephant-text {
+	margin-top: -17px !important;
 }
 }
 </style>
 <div class="contact" style="background-image: none;">
-<?php include 'new_header.php';?>
+  <?php include 'new_header.php';?>
   <div class="container-main main_header" style="padding-top:110px">
-     <div class="container">
+    <div class="container">
       <div class="row">
-       
-      
-            <center class="center" style="margin-left: 88px; z-index: 999;
-    margin-top: 20px;"></center>
-          
-         
-     
+        <center class="center" style="margin-left: 88px; z-index: 999;
+    margin-top: 20px;">
+        </center>
         <div class="col-sm-12 page-title">
           <h2 class="">About Us</h2>
-          <a  href="<?php echo base_url(); ?>" ><img style="position:relative;z-index:999;" src="images/arrow-blue.png"></a>
-        </div>
+          <a  href="<?php echo base_url(); ?>" ><img style="position:relative;z-index:999;" src="images/arrow-blue.png"></a> </div>
       </div>
     </div>
-    </div>
   </div>
+</div>
 <div class="about_us_page">
-  
   <div class="container">
     <div class="about_tarzango">
       <h6>A little more about Tarzango</h6>
@@ -149,93 +143,93 @@
     </div>
   </div>
   <div class="our_team_cover">
-  	<div class="container">
-    	<h3>Our Team</h3>
-        <p>The tarzan’s of the travel industry. We’re motivated to making <br> a change, and here to help you with your next trip. </p>
-        <ul class="our_team_inner_ul">
-        	<li>
-            	<img src="images/our_team1.jpg">
-                <div class="our_team_inner">
-                	<h4>Nick</h4>
-                    <p>CTO and Co-Founder</p>
-                </div>
-            </li>
-            <li>
-            	<img src="images/our_team2.jpg">
-                <div class="our_team_inner">
-                	<h4>Michelle</h4>
-                    <p>Negotiator</p>
-                </div>
-            </li>
-            <li>
-            	<img src="images/our_team3.jpg">
-                <div class="our_team_inner">
-                	<h4>Krisztian</h4>
-                    <p>UI Senior Designer</p>
-                </div>
-            </li>
-            <li>
-            	<img src="images/our_team4.jpg">
-                <div class="our_team_inner">
-                	<h4>Anil</h4>
-                    <p>Senior Developer</p>
-                </div>
-            </li>
-            <li>
-            	<img class="elephant" src="images/our_team5.png">
-                <div class="our_team_inner elephant-text" style="margin-top:-42px;">
-                	<h4>Marlena</h4>
-                    <p>Director of Communications</p>
-                </div>
-            </li>
-            <li>
-            	<img src="images/our_team6.jpg">
-                <div class="our_team_inner">
-                	<h4>Gisella</h4>
-                    <p>Gisella HR & Client relations</p>
-                </div>
-            </li>
-            <li>
-            	<img class="parrot" src="images/our_team7.jpg">
-                <div class="our_team_inner">
-                	<h4>Summer</h4>
-                    <p>Reservationist</p>
-                </div>
-            </li>
-            <li>
-            	<img src="images/our_team5.jpg">
-                <div class="our_team_inner">
-                	<h4>Ciroc</h4>
-                    <p>Office guard dog</p>
-                </div>
-            </li>
-        </ul>
+    <div class="container">
+      <h3>Our Team</h3>
+      <p>The tarzan’s of the travel industry. We’re motivated to making <br>
+        a change, and here to help you with your next trip. </p>
+      <div class="row our_team_inner_ul">
+        <div class="col-md-3 col-xs-6">
+          <div class="team-img text-center"> <img src="images/our_team1.jpg"> </div>
+          <div class="our_team_inner">
+            <h4>Nick</h4>
+            <p>CTO and Co-Founder</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <div class="team-img text-center"> <img src="images/our_team2.jpg"> </div>
+          <div class="our_team_inner">
+            <h4>Michelle</h4>
+            <p>Negotiator</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <div class="team-img text-center"> <img src="images/our_team3.jpg"> </div>
+          <div class="our_team_inner">
+            <h4>Krisztian</h4>
+            <p>UI Senior Designer</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <div class="team-img text-center"> <img src="images/our_team4.jpg"> </div>
+          <div class="our_team_inner">
+            <h4>Anil</h4>
+            <p>Senior Developer</p>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-3 col-xs-6">
+          <div class="team-img text-center"> <img class="elephant" src="images/our_team5.png"> </div>
+          <div class="our_team_inner elephant-text">
+            <h4>Marlena</h4>
+            <p>Director of Communications</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <div class="team-img text-center"> <img src="images/our_team6.jpg"> </div>
+          <div class="our_team_inner">
+            <h4>Gisella</h4>
+            <p>Gisella HR & Client relations</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <div class="team-img text-center"> <img class="parrot" src="images/our_team7.jpg"> </div>
+          <div class="our_team_inner">
+            <h4>Summer</h4>
+            <p>Reservationist</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-xs-6">
+          <div class="team-img text-center"> <img src="images/our_team5.jpg"> </div>
+          <div class="our_team_inner">
+            <h4>Ciroc</h4>
+            <p>Office guard dog</p>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
     </div>
   </div>
-  
-  
-  
   <div class="careers">
     <div class="container">
       <div class="careers_title">
         <h3>Careers</h3>
         <p>To have a successful brand, it starts with a successful team that knows how to stick together to win! We're looking for<br>
           Energetic Remote Call Center Representatives. Come join the crew if you like to be on a disruptive winning team.</p>
-        <a href="<?php echo base_url().'we_are_hiring'; ?>"><input type="button" name="" value="See Openings &nbsp; &nbsp; &nbsp; &#8594;" class="career_btn"></a>
-      </div>
+        <a href="<?php echo base_url().'we_are_hiring'; ?>">
+        <input type="button" name="" value="See Openings &nbsp; &nbsp; &nbsp; &#8594;" class="career_btn">
+        </a> </div>
     </div>
   </div>
-  <div class="section7">
+  <div class="clearfix"></div>
+  <div class="container-fluid how-section vip-membership">
     <div class="container">
-      <div class="row">
-        <div class="col-md-7">
-          <h1 class="vip-text" style="width: 125%">Become a V.I.P member Now and receive additional</h1>
-          <h2>10% off plus some AWESOME Perks</h2>
-          <a href="<?php echo base_url().'membership'; ?>">MEMBERSHIP</a> </div>
-        <div class="col-md-5">
-          <div class="vip_img"> <img src="images/v.i.p-img.png"> </div>
-        </div>
-      </div>
+      <div class="col-md-7 ptop70">
+        <h4 class="description" style="text-align:left;font-size:30px;padding-bottom: 0px;">Become a V.I.P member Now and receive additional</h4>
+        </br>
+        <h4 style="text-align:left;font-size:30px;margin-top:-10px;font-family: 'Apercu-Bold';">10% off plus some AWESOME perks...</h4>
+        <a href="<?php echo base_url().'membership';?>" style="float:left" title="group booking" class="pink-btn">membership</a> </div>
+      <div class="col-sm-5"> <img style="margin-top: 0px" src="images/membership-door.png"> </div>
     </div>
   </div>
+  <div class="clearfix"></div>
 </div>

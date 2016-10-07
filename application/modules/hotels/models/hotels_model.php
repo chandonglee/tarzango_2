@@ -48,6 +48,15 @@ class Hotels_model extends CI_Model {
 				return $this->db->get('pt_hotels')->result();
 		}
 
+		function hotel_terminal($hotelid){
+
+		$cond = "name LIKE '%$hotelid%'";
+
+        $this->db->select('*');
+        $this->db->where($cond);
+        return $this->db->get('terminals')->result();
+      }
+
 // Get all hb hotels detail STP
 		function hb_hotel_detail($id = null) {
 				$this->db->select('iHotelID, sThumbnail');

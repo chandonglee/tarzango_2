@@ -12,12 +12,9 @@
   <div class="container-main main_header">
     <div class="container" style="margin-top: 100px;">
       <div class="row">
-        <div class="col-sm-12">
-        </div>
         <div class="col-sm-12 page-title">
           <h2 class="">City Information</h2>
-          <a  href="<?php echo base_url().'attraction'; ?>"><img src="images/arrow-blue.png"></a>
-        </div>
+          <a  href="<?php echo base_url().'attraction'; ?>"><img src="images/arrow-blue.png"></a> </div>
       </div>
     </div>
   </div>
@@ -28,26 +25,20 @@
           <div class="col-sm-4">
             <h1><?php echo $dest->name; ?></h1>
             <p><?php echo $dest->description; ?></p>
-            <a  href="<?php echo base_url().'attraction'; ?>">
-            <img src="images/rounded-arrow-left.png"></a>
-          </div>
+            <a  href="<?php echo base_url().'attraction'; ?>"> <img src="images/rounded-arrow-left.png"></a> </div>
         </div>
       </div>
     </div>
     <div class="section2">
       <ul class="nav nav-tabs">
-        <div class="col-sm-3">
-        </div>
+        <div class="col-sm-3 hidden-xs"></div>
         <?php //if(count($b_Data['all']) > 0 && $b_Data['all'] != ''){ ?>
         <li class="active col-sm-2"><a data-toggle="tab" class="scroll_down" href="#topthingstosee">Top Things to See</a></li>
         <?php //}else{ ?>
-        <!-- <li class=" col-sm-2"></li> -->
-        
         <?php// } ?>
         <li class="col-sm-2"><a data-toggle="tab" class="scroll_down" href="#topthingstodo">Top Things to Do</a></li>
         <li class="col-sm-2"><a data-toggle="tab" class="scroll_down" href="#placetostay">Place to Stay</a></li>
-        <div class="col-sm-3">
-        </div>
+        <div class="col-sm-3 hidden-xs"></div>
       </ul>
       <script type="text/javascript">
         $(".scroll_down").click(function(){
@@ -76,7 +67,6 @@
         <div class="row">
           <div class="col-sm-12">
             <div class="tab-content">
-             
               <div id="topthingstosee" class="tab-pane fade in active">
                 <p><?php echo $dest->to_see; ?></p>
               </div>
@@ -93,35 +83,23 @@
     </div>
     <?php if(count($dest_img) > 0){ ?>
     <div class="section3">
-      <div id="myCarousel" class="carousel slide" data-ride="carousel">
-        <!-- Indicators -->
-       
-
+      <div id="myCarousel" class="carousel slide" data-ride="carousel"> 
+        <!-- Indicators --> 
+        
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
           <?php
             for ($i_s=0; $i_s < count($dest_img) ; $i_s++) { ?>
-            <div class="item <?php if($i_s==0){ echo "active"; } ?>">
-            <img src="<?php echo PT_DEST_SLIDER.$dest_img[$i_s]->himg_image; ?>" alt="slide">
+          <div class="item <?php if($i_s==0){ echo "active"; } ?>"> <img src="<?php echo PT_DEST_SLIDER.$dest_img[$i_s]->himg_image; ?>" alt="slide">
             <p><?php echo $dest_img[$i_s]->image_title; ?></p>
-            </div>
-              
+          </div>
           <?php  }
 
           ?>
-          
         </div>
-
-        <!-- Left and right controls -->
-        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-          <span class="fa fa-arrow-left" aria-hidden="true"></span>
-          <span class="sr-only">Previous</span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-          <span class="fa fa-arrow-right" aria-hidden="true"></span>
-          <span class="sr-only">Next</span>
-        </a>
-      </div>
+        
+        <!-- Left and right controls --> 
+        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"> <span class="fa fa-arrow-left" aria-hidden="true"></span> <span class="sr-only">Previous</span> </a> <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next"> <span class="fa fa-arrow-right" aria-hidden="true"></span> <span class="sr-only">Next</span> </a> </div>
     </div>
     <?php } ?>
     <div class="section4">
@@ -130,32 +108,28 @@
           <div class="col-sm-12">
             <h1 class="title">Top Things to Do</h1>
           </div>
+                    <div class="clearfix"></div>
           <div class="col-sm-12 part">
-          <?php 
+            <?php 
           $datetime = new DateTime('tomorrow');
         $datetime->modify('+1 day');
         $checkIn =  $datetime->format('m/d/Y');
           for ($to_do_i=0; $to_do_i < count($to_do) ; $to_do_i++) { 
             
            ?>
-            <div class="col-sm-4" style="z-index: 1;">
-              <a href="<?php echo base_url().'attraction/details/'.$id.'/'.$to_do[$to_do_i]->code.'?adults=1&child=0&checkIn='.$checkIn.'&lat='.$lat.'&long='.$long; ?>">
-              <div class="gradeint">
-              <img class="img-responsive" style="width:100%;position: relative;z-index: -1; height: 273px;" src="<?php echo $to_do[$to_do_i]->content->media->images[0]->urls[0]->resource; ?>">
-              </div>
+            <div class="col-sm-4" style="z-index: 1;"> <a href="<?php echo base_url().'attraction/details/'.$id.'/'.$to_do[$to_do_i]->code.'?adults=1&child=0&checkIn='.$checkIn.'&lat='.$lat.'&long='.$long; ?>">
+              <div class="gradeint"> <img class="img-responsive" style="width:100%;position: relative;z-index: -1; height: 273px;" src="<?php echo $to_do[$to_do_i]->content->media->images[0]->urls[0]->resource; ?>"> </div>
               <h2><?php echo $to_do[$to_do_i]->name; ?></h2>
-              </a>
-            </div>
-
-             <?php
+              </a> </div>
+            <?php
               if(($to_do_i+1) %3 == 0){ ?>
-                   </div>
-                  <div class="col-sm-12 part">
-               <?php  }
-             } ?>
-            
           </div>
-          
+          <div class="clearfix"></div>
+          <div class="col-sm-12 part">
+            <?php  }
+             } ?>
+          </div>
+          <div class="clearfix"></div>
         </div>
       </div>
     </div>
@@ -165,6 +139,7 @@
           <div class="col-sm-12">
             <h1 class="title">Best Places to Stay</h1>
           </div>
+                    <div class="clearfix"></div>
           <div class="col-sm-12 part">
             <?php
             /*print_r($to_stay[0]);*/
@@ -189,30 +164,25 @@
                   $h_image_d = $theme_url.'images/hotel_default_image.jpg';
                 }
                 ?>
-                <div class="col-sm-4" style="z-index:1">
-                
-                
+            <div class="col-sm-4" style="z-index:1">
               <div class="box first" style="background-image:linear-gradient(to bottom, rgba(248,80,50,0) 0%, rgba(12,19,79,1) 100%),url('<?php echo  $h_image_d; ?>'); ">
-                
-                <div class="stars">
-                  <?php echo $to_stay[$h_i]->stars; ?>
-                </div>
+                <div class="stars"> <?php echo $to_stay[$h_i]->stars; ?> </div>
                 <div class="texts">
                   <h1><?php echo $to_stay[$h_i]->title; ?></h1>
                 </div>
                 <h3>$ <?php echo $to_stay[$h_i]->price; ?><span> /night</span></h3>
-                <a href="<?php echo $to_stay[$h_i]->slug; ?>"><img class="arrow" src="images/arrow_img.png"></a>
-              </div>
+                <a href="<?php echo $to_stay[$h_i]->slug; ?>"><img class="arrow" src="images/arrow_img.png"></a> </div>
             </div>
             <?php
               if(($h_i+1) %3 == 0){ ?>
-                   </div>
-                  <div class="col-sm-12 part">
-               <?php  }
-             } ?>
-
+              <div class="clearfix"></div>
           </div>
-          
+                    <div class="clearfix"></div>
+          <div class="col-sm-12 part">
+            <?php  }
+             } ?>
+          </div>
+          <div class="clearfix"></div>
         </div>
       </div>
     </div>
@@ -419,41 +389,37 @@ a {
   right: 10px;
 }
     </style>
-     <script type="text/javascript" src="js/javascript.js"></script>
-     <?php if(count($b_Data['all']) > 0 && $b_Data['all'] != ''){ ?>
+    <script type="text/javascript" src="js/javascript.js"></script>
+    <?php if(count($b_Data['all']) > 0 && $b_Data['all'] != ''){ ?>
     <div class="section6">
       <div class="container">
         <div class="row">
           <div class="col-sm-12">
             <h1 class="title">Top Things to See</h1>
           </div>
-         
-          <div id="holder">
+          <div id="holder"> 
             
             <!-- INITIAL BOXES, ALWAYS THE SAME -->
-           <?php foreach($b_Data['all'] as $post){ ?>
-            <div class="box box-1" style="background: url('<?php echo pt_post_thumbnail(str_replace("demo.","",$post->post_id)); ?>'); background-repeat: no-repeat; background-size: 100% 100%;">
-              <span>
-                <a href="<?php echo base_url().'blog/'.$post->post_slug;?>"><?php echo $post->post_title;?></a>
-              </span>
-            </div>
+            <?php foreach($b_Data['all'] as $post){ ?>
+            <div class="box box-1" style="background: url('<?php echo pt_post_thumbnail(str_replace("demo.","",$post->post_id)); ?>'); background-repeat: no-repeat; background-size: 100% 100%;"> <span> <a href="<?php echo base_url().'blog/'.$post->post_slug;?>"><?php echo $post->post_title;?></a> </span> </div>
             <?php } ?>
-         </div>
-        </div>
-      </div>
-    </div>
-    <?php } ?>
-    <div class="last-section-2">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <h1>Become a V.I.P member Now and receive additional</h1>
-            <h2>10% off plus some AWESOME Perks</h2>
-            <a href="">MEMBERSHIP</a>
           </div>
         </div>
       </div>
     </div>
+    <?php } ?>
+    <div class="clearfix"></div>
+    <div class="container-fluid how-section vip-membership">
+      <div class="container">
+        <div class="col-md-7 ptop70">
+          <h4 class="description" style="text-align:left;font-size:30px;padding-bottom: 0px;">Become a V.I.P member Now and receive additional</h4>
+          </br>
+          <h4 style="text-align:left;font-size:30px;margin-top:-10px;font-family: 'Apercu-Bold';">10% off plus some AWESOME perks...</h4>
+          <a href="<?php echo base_url().'membership';?>" style="float:left" title="group booking" class="pink-btn">membership</a> </div>
+        <div class="col-sm-5"> <img style="margin-top: 0px" src="images/membership-door.png"> </div>
+      </div>
+    </div>
+        <div class="clearfix"></div>
   </div>
 </div>
 </div>

@@ -72,7 +72,7 @@
   }
   .header-navigation-section .menu img {
     float: right;
-    margin-top: 25px;
+    margin-top: 0px;
     cursor: pointer;
 }
 .dropbtn {
@@ -298,8 +298,8 @@ background: url(<?php echo $theme_url;
             <div class="navbar-header"> <a class="navbar-brand non-sticky-logo" href="<?php echo base_url(); ?>"><img src="img/logo.png" class="img-responsive" alt="logo"></a> <a class="navbar-brand sticky-logo" href="<?php echo base_url(); ?>"><img src="img/sticky-logo.png" class="img-responsive" alt="logo"></a>
 
              <div class="col-sm-1 menu pull-right">
-           <!--  <img class="open menu" src="images/menu.png"> -->
-            <img src="images/acc_icon.png" class="close-button" style="display:block"></img>
+
+            <img src="images/acc_icon.png" class="close-button mtop25" style="display:block"></img>
             <!-- <p class="close-button" style="display:block">+</p> -->
           </div>
 

@@ -548,6 +548,9 @@ class Hb_lib {
               echo "\n";*/
               }
               /*exit();*/
+              /*error_reporting(-1);
+              echo json_encode($res_Data);
+              exit();*/
               return $res_Data;
               
           }

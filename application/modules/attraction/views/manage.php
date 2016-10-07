@@ -108,11 +108,12 @@ $att_data = json_encode($data);
 
     <div class="panel-footer">
       <input type="hidden" id="slug" value="<?php echo $data->pt_attr_booking_id;?>" />      
+      <input type="hidden" id="slug" value="<?php echo $data->pt_attr_booking_id;?>" />      
       <input type="hidden" id="att_id" value="<?php echo $data->pt_attr_booking_id;?>" />      
       <input type="hidden" name="submittype" value="<?php echo $submittype;?>" />
       <input type="hidden" name="pt_attr_booking_id" value="<?php echo $data->pt_attr_booking_id;?>" />
       <input type="hidden" name="booking_ref_no" value="<?php echo $data->booking_ref_no;?>" />
-      <button type="button" class="btn btn-primary submitfrm" id="<?php echo $submittype; ?>">Submit</button>
+      <button type="submit" class="btn btn-primary submitfrm" id="<?php echo $submittype; ?>">Submit</button>
     </div>
   </div>
 
@@ -123,7 +124,7 @@ $att_data = json_encode($data);
 </form>
   <script type="text/javascript">
 
-    $('.submitfrm').click(function(){
+    $('.submitfrm').click(function(){ 
     if( $('#status').val() == 'paid'){
        var att_id = $('#att_id').val();
        var url2 = '<?php echo base_url(); ?>';

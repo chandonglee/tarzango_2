@@ -1,0 +1,51 @@
+<TransferValuedAvailRQ xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages ../xsd/TransferValuedAvailRQ.xsd"
+                xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  sessionId="sldfghliadghla" echoToken="TransferValuedAvailRQ" version="2013/12" >
+                <Language>ENG</Language>
+                <Credentials>
+                    <User>TESTCHAINS</User>
+                    <Password>TESTCHAINS</Password>
+                </Credentials>
+                <ExtraParamList />
+                <AvailData type="IN">
+                    <ServiceDate date="20161007" time="0000"/>
+                    <Occupancy>
+                        <AdultCount>1</AdultCount>
+                        <ChildCount>0</ChildCount>            
+                        <GuestList><Customer type="AD"></Customer></GuestList>
+            </Occupancy>
+            <PickupLocation xsi:type="ProductTransferTerminal">
+                <Code>LAS</Code>
+                <DateTime date="20161007" time="0000"/>
+            </PickupLocation>
+            <DestinationLocation xsi:type="ProductTransferGPSPoint">
+                <Coordinates latitude="36.13526086290016" longitude="-115.15142416295168" />
+                <Description>Westgate Las Vegas Resort  Casino</Description>
+                <Address>3000 Paradise Rd, Las Vegas, NV 89109, United States</Address>
+                <City>Las Vegas</City>
+                <ZipCode>89109</ZipCode>
+                <Country>US</Country>
+            </DestinationLocation>
+        </AvailData>
+        <AvailData type="OUT">
+        <ServiceDate date="20161008" time="0000"/>
+        <Occupancy>
+            <AdultCount>1</AdultCount>
+            <ChildCount>0</ChildCount>
+            <GuestList><Customer type="AD"></Customer></GuestList>
+                </Occupancy>
+                <PickupLocation xsi:type="ProductTransferGPSPoint">
+                    <Coordinates latitude="36.13526086290016" longitude="-115.15142416295168" />
+                    <Description>Westgate Las Vegas Resort  Casino</Description>
+                    <Address>3000 Paradise Rd, Las Vegas, NV 89109, United States</Address>
+                    <City>Las Vegas</City>
+                    <ZipCode>89109</ZipCode>
+                    <Country>US</Country>
+                </PickupLocation>
+                <DestinationLocation xsi:type="ProductTransferTerminal">
+                    <Code>LAS</Code>
+                    <DateTime date="20161008" time="0000"/>
+                </DestinationLocation>
+            </AvailData>
+            <ReturnContents>Y</ReturnContents>
+        </TransferValuedAvailRQ>

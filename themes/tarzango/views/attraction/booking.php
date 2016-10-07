@@ -213,7 +213,7 @@
             </div>
           </div>
         </div>
-        <div class="vipmemberbox1" style="text-align:center;"> <img src="<?php echo $theme_url.'/images/vip_show.png'; ?>" style="margin-top:-10px;">
+        <div class="vipmemberbox1" style="text-align:center;"> <img class="hidden-xs" src="<?php echo $theme_url.'/images/vip_show.png'; ?>" style="margin-top:-10px;">
           <div class="vipmemberboxmain" style="margin-top:0px;">
             <div class="vipmemberboxhead">
               <h3 class="vipmembertxt">VIP Membership</h3>

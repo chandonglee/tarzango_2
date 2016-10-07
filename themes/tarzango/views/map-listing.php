@@ -260,6 +260,14 @@ header.header-section .menu img{
   .header-navigation-section{
     padding-right: 0px;
   }
+  .map_class{
+    width: 100%;
+    margin-left: 12px;
+    height: 1007px !important;
+    margin-top: -212px !important;
+    position: relative;
+    overflow: hidden;
+  }
 </style>
 <?php  
 
@@ -321,10 +329,13 @@ if($room <= 0){
 
 // Close the dropdown if the user clicks outside of it
 window.onclick = function(event) {
+        //document.getElementById("map_data").className += "map_class";
+       
   if (!event.target.matches('.dropbtn')) {
 
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
+        
     for (i = 0; i < dropdowns.length; i++) {
       var openDropdown = dropdowns[i];
       if (openDropdown.classList.contains('show')) {
@@ -377,6 +388,7 @@ window.onclick = function(event) {
                   <option value="9" <?php if($room == 9){ echo "selected"; } ?> >9</option>
                   <option value="10" <?php if($room == 10){ echo "selected"; } ?> >10</option>
                 </select>
+                <span class="rm_sel">Room</span>
               </div>
             </div>
             <div class="col-sm-3">
@@ -539,13 +551,18 @@ window.onclick = function(event) {
                  
                ?>
                 <div class="col-sm-6 sorting">
-                  <label class="title">Recommended <img src="images/arrow-down.png"><img src="images/arrow-up.png"></label>
-                  <div class="dropdown" style="z-index:999999999">
+                  <label class="title map_views">Recommended <img src="images/arrow-down.png"><img src="images/arrow-up.png"></label>
+                  <div class="dropdown " style="z-index:999999999">
                     <button class="sort" data-sort="stars" style="">Popularity</button>
                     <a id="map-listing" href="<?php echo $complete_url3; ?>">Recommended</a>
                     <button class="sort" data-sort="distance">Distance</button>
                   </div>
                 </div>
+                <script type="text/javascript">
+                  $(".map_views").click(function(){
+                    $("#map_data").toggleClass("map_class");
+                });
+                </script>
                 <div class="col-sm-6 view-options">
                   
                   <a class="" id="box-listing" href="<?php echo $complete_url1; ?>">

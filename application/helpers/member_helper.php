@@ -10,7 +10,7 @@ if (!function_exists('check_is_member')) {
         $CI->db->select('*');
         $CI->db->where("accounts_id ", $user_id);
         $member = $CI->db->get('pt_member')->result();
-
+        
         return $member;
     }
 

@@ -198,7 +198,28 @@
 
   /* Expedia datepicker */
   <?php  if(pt_main_module_available('ean')){ ?>
-  var nowTemp2=new Date,now2=new Date(nowTemp2.getFullYear(),nowTemp2.getMonth(),nowTemp2.getDate(),0,0,0,0),checkin2=$(".dpean1").datepicker({format:"mm/dd/yyyy",onRender:function(e){return e.valueOf()<now2.valueOf()?"disabled":""}}).on("changeDate",function(e){if(e.date.valueOf()>checkout2.date.valueOf()){var a=new Date(e.date);a.setDate(a.getDate()+1),checkout2.setValue(a)}checkin2.hide(),$(".dpean2")[0].focus()}).data("datepicker"),checkout2=$(".dpean2").datepicker({format:"mm/dd/yyyy",onRender:function(e){return e.valueOf()<=checkin2.date.valueOf()?"disabled":""}}).on("changeDate",function(){checkout2.hide()}).data("datepicker");
+  var nowTemp2 = new Date,
+      now2 = new Date(nowTemp2.getFullYear(), nowTemp2.getMonth(), nowTemp2.getDate(), 0, 0, 0, 0),
+      checkin2 = $(".dpean1").datepicker({
+          format: "mm/dd/yyyy",
+          onRender: function(e) {
+              return e.valueOf() < now2.valueOf() ? "disabled" : ""
+          }
+      }).on("changeDate", function(e) {
+          /*if (e.date.valueOf() > checkout2.date.valueOf()) {
+          }*/
+              var a = new Date(e.date);
+              a.setDate(a.getDate() + 1), checkout2.setValue(a)
+          checkin2.hide(), $(".dpean2")[0].focus()
+      }).data("datepicker"),
+      checkout2 = $(".dpean2").datepicker({
+          format: "mm/dd/yyyy",
+          onRender: function(e) {
+              return e.valueOf() <= checkin2.date.valueOf() ? "disabled" : ""
+          }
+      }).on("changeDate", function() {
+          checkout2.hide()
+      }).data("datepicker");
   <?php } ?>
   /* End Expedia Datepicker*/
 

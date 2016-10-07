@@ -3,8 +3,8 @@
 
   @media screen and (max-width: 650px) {
   header.header-section .menu img{
-    margin-top:-90px !important;
-    margin-right: -28px !important;
+  /*  margin-top:-90px !important;
+    margin-right: -28px !important;*/
   }
   header.header-section .logo img {
     float: none;
@@ -45,7 +45,7 @@ header.header-navigation-section .logo img {
 }
 header.header-navigation-section .menu img {
   float: right;
-  
+
   cursor: pointer;
 }
 header.header-navigation-section .menu p.close-button {
@@ -71,6 +71,8 @@ header.header-navigation-section .menu p.close-button {
     padding: 60px;
     width: 400px;
     height: 690px !important;
+	right:-25px !important;
+	top:25px !important;
     
   z-index: 1111;
 }
@@ -184,16 +186,17 @@ header.header-navigation-section .fields .submit-button input {
 
     </style>
 
-<div class="header-navigation-section container-fluid <?php echo $cls_name; ?>">
+<div class="header-navigation-section container-fluid col-sm-1 <?php echo $cls_name; ?>">
   <div class="<?php echo $cls_name_1; ?> ">
-    <div class="">
-          <div> 
-            <div class="col-sm-1 menu pull-right">
-            <img class="open menu" style="display:none" src="images/menu.png">
+
+
+            <div class="menu pull-right">
+
             <?php  if(!empty($customerloggedin)){ ?>
-            <img style="margin-top: -48px;" src="images/acc_icon.png" class="close-button" style="display:block"></img>
-            <?php }else{?>
-            <img style="margin-top: -18px;" src="images/acc_icon.png" class="close-button" style="display:block"></img>
+            <img src="images/acc_icon.png" class="close-button mb-70" style="display:block"></img>
+            <?php }
+			else{?>
+            <img src="images/acc_icon.png" class="close-button mb-70" style="display:block"></img>
             <?php }?>
           </div>
    
@@ -246,7 +249,7 @@ $(".close-button").click(function(){
               </div> -->
 
 
-            </div>
+
           <!--    <?php  if(!empty($customerloggedin)){ ?>
       <div class=" menu pull-right">
       <div class="menu-header" style=" position: absolute; margin-left: -35px; margin-top: -1px;"> 
@@ -261,6 +264,7 @@ $(".close-button").click(function(){
     
           <!-- /.container-fluid --> 
       
-      </div>
+
     </div>
 	 <?php echo  $cls_div; ?>
+	 </div>

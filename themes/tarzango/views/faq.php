@@ -1,3 +1,5 @@
+  
+
 <style type="text/css">
   .member_ship .membership_perks .accordion .Acc_head:after{
     top: 27% !important;
@@ -24,7 +26,7 @@
   </script>
 </head>
 
-<div class="contact">
+<div class="">
 <?php include 'new_header.php';?>
   <div class="container-main main_header" style="padding-top:110px">
      <div class="container">
@@ -48,7 +50,8 @@
   
   <div class="col-sm-12 text-center">
     <div class="container">
-              <div class="col-sm-10" style=" margin-left: 90px;   margin-bottom: 150px;">
+    <div class="col-sm-1"></div>
+              <div class="col-sm-10" style="margin-bottom: 150px;">
       <div class="membership_signin_page">
                 <div class="membership_perks">
                   <div class="col-md-1"></div>
@@ -100,6 +103,8 @@
                 </div>    
                 </div>
             </div>
+                <div class="col-sm-1"></div>
+                <div class="clearfix">></div>
     </div>
   </div>
   <div class="last-section">

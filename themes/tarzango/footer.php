@@ -84,6 +84,7 @@
         </ul>
       </div>
     </div>
+    <div class="clearfix"></div>
     </div>
   </div>
   <div class="footer-bottom">
@@ -98,6 +99,7 @@
     <div class="col-sm-3">
       <p>MADE WITH <img src="images/heart.png"> IN SAN FRANCISCO</p>
     </div>
+    <div class="clearfix"></div>
     </div>
   </div>
 </footer>

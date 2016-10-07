@@ -72,12 +72,12 @@ header.header-section .menu img{
   }
   .form-group button[type="submit"] {
     width: 60%;
-   color: #000;
+   color: #FFF;
     font-size: 17px;
     text-transform: capitalize;
     padding: 18px;
     display: inline-block;
-    background: #ffc100;
+    /*background: #ffc100;*/
     font-weight: 500;
     border-radius: 5px;
     /*
@@ -369,18 +369,19 @@ window.onclick = function(event) {
             <div class="col-sm-2">
               <div class="form-group">
                <select class="form-control inner-dd" name="room" id="room" style="padding:10px 5px;border-radius: 3px; border: 0px;padding-right: 85px !important;">
-            <option value="">Room</option>
-            <option value="1" <?php if($room == 1){ echo "selected"; } ?> >1</option>
-            <option value="2" <?php if($room == 2){ echo "selected"; } ?> >2</option>
-            <option value="3" <?php if($room == 3){ echo "selected"; } ?> >3</option>
-            <option value="4" <?php if($room == 4){ echo "selected"; } ?> >4</option>
-            <option value="5" <?php if($room == 5){ echo "selected"; } ?> >5</option>
-            <option value="6" <?php if($room == 6){ echo "selected"; } ?> >6</option>
-            <option value="7" <?php if($room == 7){ echo "selected"; } ?> >7</option>
-            <option value="8" <?php if($room == 8){ echo "selected"; } ?> >8</option>
-            <option value="9" <?php if($room == 9){ echo "selected"; } ?> >9</option>
-            <option value="10" <?php if($room == 10){ echo "selected"; } ?> >10</option>
-          </select>
+                <option value="">Room</option>
+                <option value="1" <?php if($room == 1){ echo "selected"; } ?> >1</option>
+                <option value="2" <?php if($room == 2){ echo "selected"; } ?> >2</option>
+                <option value="3" <?php if($room == 3){ echo "selected"; } ?> >3</option>
+                <option value="4" <?php if($room == 4){ echo "selected"; } ?> >4</option>
+                <option value="5" <?php if($room == 5){ echo "selected"; } ?> >5</option>
+                <option value="6" <?php if($room == 6){ echo "selected"; } ?> >6</option>
+                <option value="7" <?php if($room == 7){ echo "selected"; } ?> >7</option>
+                <option value="8" <?php if($room == 8){ echo "selected"; } ?> >8</option>
+                <option value="9" <?php if($room == 9){ echo "selected"; } ?> >9</option>
+                <option value="10" <?php if($room == 10){ echo "selected"; } ?> >10</option>
+              </select>
+              <span class="rm_sel">Room</span>
               </div>
             </div>
             <div class="col-sm-3">

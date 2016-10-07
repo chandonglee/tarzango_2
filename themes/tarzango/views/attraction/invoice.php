@@ -366,68 +366,34 @@ $repl_arry = array(".",",");
    $(function() { 
      
       $("#send_by_email").click(function() { 
-
-          html2canvas($("#printcontent_1"), {
-              "proxy":"../html2canvasproxy",
-              onrendered: function(canvas) {
-                  var img = new Image();
-                        img.onload = function() {
-                            img.onload = null;
-                            //document.body.appendChild(img);
-                        };
-                        img.onerror = function() {
-                            img.onerror = null;
-                            if(window.console.log) {
-                                window.console.log("Not loaded image from canvas.toDataURL");
-                            } else {
-                                //alert("Not loaded image from canvas.toDataURL");
-                            }
-                        };
+    
+          
+           var to_email = $('#invoiceemail').val();
+           var url = '<?php echo base_url(); ?>';
             
-                        var img = canvas.toDataURL("image/png");
-                        var DocumentContainer = document.getElementById('imgs');
+        
+              $.ajax({
+                     type: 'GET',
+                     data: {
+                         att_id:'<?php echo $id; ?> '  
+                     },
+                    
+                     url: url + "admin/attractionajaxcalls/invoice_ticket_email",
+                     cache: false,
+                     beforeSend: function() {
 
-
-                       /* img_data_p = Canvas2Image.convertToImage(canvas, w, h, type);
-                        console.log(img_data_p);*/
-                        
-                       // var WindowObject = window.open('', 'PrintWindow', 'toolbars=no,scrollbars=yes,status=no,resizable=yes');
-                     /* 
-                        WindowObject.document.close();*/
-                        
-                       /* WindowObject.focus();
-                        WindowObject.print();
-                        WindowObject.close();*/
-                  
-                         var image = '<img src="'+img+'">';
-                         var to_email = $('#invoiceemail').val();
-                         var url = '<?php echo base_url(); ?>';
-                          
-                      
-                            $.ajax({
-                                   type: 'POST',
-                                   data: {
-                                       to_email: to_email,
-                                       image: image
-                                   },
-                                  
-                                   url: url + "admin/ajaxcalls/invoice_ticket_email",
-                                   cache: false,
-                                   beforeSend: function() {
-
-                                   },
-                                   success: function(response) {
-                                       console.log(response);
-                                       $('#invoiceemail').val('');
-                                       $('.disp_message').html("<div class='alert alert-success'>Your booking email has been sent.</div>");
-                                   }
-                               });
-              }
+                     },
+                     success: function(response) {
+                         console.log(response);
+                         $('#invoiceemail').val('');
+                         $('.disp_message').html("<div class='alert alert-success'>Email Sent.</div>");
+                     }
+                 });
+              
           });
 
 
-                         
-      });
+        
       $("#savepdf").click(function() { 
 
           html2canvas($("#printcontent"), {

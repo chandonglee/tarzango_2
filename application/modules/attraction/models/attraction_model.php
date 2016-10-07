@@ -35,9 +35,29 @@ class Attraction_model extends CI_Model {
 				$book_response_final = array('error' => 'yes' , 'msg' => $save_data->errors[0]->text);
 			}
 			/*echo "\n";*/
-			echo json_encode($book_response_final);
 			/*echo json_encode($profile);*/
+			echo json_encode($book_response_final);
 			exit();
+		}
+
+		 public function attraction_paid_email($att_id = null){
+			/*error_reporting(-1);*/
+			/*$att_id = $this->input->get('att_id');*/
+			$this->load->model('admin/emails_model');
+			$this->db->select('pt_attr_booking.*,pt_accounts.accounts_email');
+			$this->db->where('pt_attr_booking_id', $att_id);
+			$this->db->join('pt_accounts','pt_attr_booking.booking_user = pt_accounts.accounts_id','left');
+			$att_data = $this->db->get('pt_attr_booking')->result();
+			$mydata = json_decode($att_data[0]->booking_extra_data);
+			$bookdata = json_decode($att_data[0]->book_response);
+			/*print_r($bookdata->activities[0]->bundles[0]->comments[0]->text);
+			exit();*/
+			/*print_r($att_data[0]->accounts_email);
+			exit;*/
+			/*echo json_encode($att_data);
+			exit();*/
+
+        	$this->emails_model->attraction_booking_paid_email($mydata,$att_data,$bookdata);
 		}
 
 		function save_booking($save_data,$profile,$input_data){
@@ -76,11 +96,13 @@ class Attraction_model extends CI_Model {
 			$bookingdata = array(
 							'booking_status' => 'paid',
 							'booking_payment_type' => 'paystand',
-							'payment_data' => $pay_data,
+							'payment_data' => json_encode($pay_data),
 							'booking_remaining' => 0
 							);
 			$this->db->where('pt_attr_booking_id',$pt_attr_booking_id);
     		$this->db->update('pt_attr_booking',$bookingdata);
+
+    		//echo $this->db->last_query();
 		}
 
 		function cancel_booking($booking_ref_no,$pt_attr_booking_id){

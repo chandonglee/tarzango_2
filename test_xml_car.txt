@@ -1,0 +1,33 @@
+<TransferValuedAvailRQ echoToken="DummyEchoToken"
+                      sessionId="134132121"
+                      xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages TransferValuedAvailRQ.xsd"
+                      version="2013/12">
+                      <Language>ENG</Language>
+                      <Credentials>
+                          <User>TESTCHAINS</User>
+                          <Password>TESTCHAINS</Password>
+                      </Credentials>
+                      <AvailData type="IN">
+                          <ServiceDate date="20161007" time="0000" />
+                          <Occupancy>
+                              <AdultCount>1</AdultCount>
+                              <ChildCount>0</ChildCount>
+                              <GuestList><Customer type="AD">30</Customer></GuestList>
+                        </Occupancy>
+                        <PickupLocation xsi:type="ProductTransferTerminal">
+                            <Code>LAS</Code>
+                            <DateTime date="20161007" time="0000" />
+                        </PickupLocation>
+                        <DestinationLocation xsi:type="ProductTransferGPSPoint">
+                            <Coordinates latitude="36.13526086290016" longitude="-115.15142416295168" />
+                            <Description>Westgate Las Vegas Resort  Casino</Description>
+                            <Address>Las Vegas, NV, United States</Address>
+                            <City> NV</City>
+                            <ZipCode>89109</ZipCode>
+                            <Country></Country>
+                        </DestinationLocation>
+                    </AvailData>
+                    <ReturnContents>Y</ReturnContents>
+                </TransferValuedAvailRQ>

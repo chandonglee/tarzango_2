@@ -13,7 +13,7 @@
   </script>
 </head>
 
-<div class="contact">
+<div class="contact bg-none">
 <?php include 'new_header.php';?>
   <div class="container-main main_header" style="padding-top:110px">
      <div class="container">

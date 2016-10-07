@@ -77,12 +77,12 @@
         <?php  if($r->price > 100){ ?>
         <?php } ?>
         <?php if($R_user_type == '_f_no_login'){ ?>
-        <button type="button" data-target="#M_f_no_login" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
+        <button type="button" data-target="#M_f_no_login" data-room_type="<?php echo $r->title; ?>" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
         <?php }elseif($R_user_type == '_f_free_login'){ ?>
-        <button type="button" data-target="#M_f_free_login" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
+        <button type="button" data-target="#M_f_free_login" data-room_type="<?php echo $r->title; ?>" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
         <?php }else{ ?>
         <input type="hidden" name="mem_type" value="M_vip_login" />
-        <button type="button" class="btn btn-action btn-block chk reserve-btn already_member" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" >Reserve</button>
+        <button type="button" class="btn btn-action btn-block chk reserve-btn already_member" data-room_type="<?php echo $r->title; ?>" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" >Reserve</button>
         <?php } ?>
         <a style="display:none;" href="<?php echo trans('0142');?>" class="reserve-btn"> Reserve </a>
         </div>
@@ -134,6 +134,19 @@
     $(".op_modal").click(function(){
         var price_vip = $(this).data('price_vip');
         var price_total = $(this).data('price_total');
+        var roomType = $(this).data('room_type');
+        
+         if ( "<?php echo $R_user_type;?>" == '_f_vip_member' ) {
+            var nightrate = price_vip / <?php echo $diff;?>;
+         } else {
+            var nightrate = price_total / <?php echo $diff;?>; 
+         }
+         
+         $("#nightsrate").text("$ " + nightrate + " / night");
+         $("#roomType").text(roomType);
+         var savePrice = price_total - price_vip;
+         $("#savePrice").text("$ " + savePrice);
+
         /*console.log(price_vip);
         console.log(price_total);*/
         $(".hide_pp").remove();

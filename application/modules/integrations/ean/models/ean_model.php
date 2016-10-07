@@ -216,6 +216,7 @@ class Ean_model extends CI_Model{
    function get_last_bookings_hb(){
 
     $this->db->order_by('book_id','desc');
+    $this->db->group_by('book_hotelid'); 
     $this->db->limit(3, 0);
 
     $results = $this->db->get('pt_ean_booking')->result();

@@ -547,10 +547,10 @@ $repl_arry = array(".",",");
   PayStand.checkouts = PayStand.checkouts || [];
   PayStand.load = PayStand.load || function(){};
   var checkout = {
-  api_key: "aiPjqMbXh79vnMDqBVeq1xtM6VIx0LGVfu4ifqQONbm8PrS2GRinF/TDsoMeqeHUJfJ6Xrp9FSGrn2ehugEX8/w",
-  //api_key: "aUGXTVXIQWzpuRpHZiBjJIs01C5HWowACqx5aOLFQ49xh2JnbGbkKwol1jR5MwY3kIkjHogLXwEpno1kkrQEM3w",
-  org_id: "15191",
-  //org_id: "760",
+  //api_key: "aiPjqMbXh79vnMDqBVeq1xtM6VIx0LGVfu4ifqQONbm8PrS2GRinF/TDsoMeqeHUJfJ6Xrp9FSGrn2ehugEX8/w",
+  api_key: "aUGXTVXIQWzpuRpHZiBjJIs01C5HWowACqx5aOLFQ49xh2JnbGbkKwol1jR5MwY3kIkjHogLXwEpno1kkrQEM3w",
+  //org_id: "15191",
+  org_id: "760",
   element_ids: ["element_id_1470283648"],
   data_source: "org_defined",
   checkout_type: "button",
@@ -600,8 +600,8 @@ $repl_arry = array(".",",");
   PayStand.script = document.createElement('script');
   PayStand.script.type = 'text/javascript';
   PayStand.script.async = true;
-  PayStand.script.src = 'https://app.paystand.com/js/gen/checkout.min.js';
-  //PayStand.script.src = 'https://sandbox.paystand.com/js/gen/checkout.min.js';
+  //PayStand.script.src = 'https://app.paystand.com/js/gen/checkout.min.js';
+  PayStand.script.src = 'https://sandbox.paystand.com/js/gen/checkout.min.js';
   var s = document.getElementsByTagName('script')[0];
   s.parentNode.insertBefore(PayStand.script, s);
 
@@ -610,10 +610,10 @@ $repl_arry = array(".",",");
   PayStand.checkouts = PayStand.checkouts || [];
   PayStand.load = PayStand.load || function(){};
   var checkout = {
-  api_key: "aiPjqMbXh79vnMDqBVeq1xtM6VIx0LGVfu4ifqQONbm8PrS2GRinF/TDsoMeqeHUJfJ6Xrp9FSGrn2ehugEX8/w",
-  //api_key: "aUGXTVXIQWzpuRpHZiBjJIs01C5HWowACqx5aOLFQ49xh2JnbGbkKwol1jR5MwY3kIkjHogLXwEpno1kkrQEM3w",
-  org_id: "15191",
-  //org_id: "760",
+  //api_key: "aiPjqMbXh79vnMDqBVeq1xtM6VIx0LGVfu4ifqQONbm8PrS2GRinF/TDsoMeqeHUJfJ6Xrp9FSGrn2ehugEX8/w",
+  api_key: "aUGXTVXIQWzpuRpHZiBjJIs01C5HWowACqx5aOLFQ49xh2JnbGbkKwol1jR5MwY3kIkjHogLXwEpno1kkrQEM3w",
+  //org_id: "15191",
+  org_id: "760",
   element_ids: ["element_id_1470283647"],
   data_source: "org_defined",
   checkout_type: "button",
@@ -663,8 +663,8 @@ $repl_arry = array(".",",");
   PayStand.script = document.createElement('script');
   PayStand.script.type = 'text/javascript';
   PayStand.script.async = true;
-  PayStand.script.src = 'https://app.paystand.com/js/gen/checkout.min.js';
-  //PayStand.script.src = 'https://sandbox.paystand.com/js/gen/checkout.min.js';
+  //PayStand.script.src = 'https://app.paystand.com/js/gen/checkout.min.js';
+  PayStand.script.src = 'https://sandbox.paystand.com/js/gen/checkout.min.js';
   var s = document.getElementsByTagName('script')[0];
   s.parentNode.insertBefore(PayStand.script, s);
 </script> 
