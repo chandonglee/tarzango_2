@@ -256,7 +256,179 @@ label.agreement input {
 	width: 100%;
 	margin: auto;
 }
+.booksummary{color:#373b71;}
+.booksummary h3{
+font-size: 16px;
+margin-bottom: 15px;
+margin-top: 10px;
+color:#373b71;
+	}
+	.booktotal {
+		border-bottom: 1px solid #c7cadb;
+border-top: 1px solid #c7cadb;
+color: #373b71;
+font-size: 20px;
+margin-bottom: 25px;
+margin-top: 30px;
+padding-bottom: 15px;
+padding-top: 18px;
+		}
+		.booksummary .box{
+background-color: #fff;
+margin-bottom: 20px;
+min-height: 120px;
+padding: 10px;			}
+#add_note{
+	margin-bottom:15px;
+	}
+	.remark{ border-bottom: 1px solid #c7cadb;
+	margin-bottom:15px;
+	padding-bottom:15px;
+	}
+	.attansion-bg-y{
+		background:#fffca6;
+		padding:10px;
+		text-align:center;
+		margin-bottom:15px;	
+		}
+		.attansion-bg-y > p {
+  font-size: 11px;
+  font-weight: bold;
+  color:#2c3748;
+}
+.attansion-bg-y input[type="checkbox"]{
+height: auto !important;
+margin-right: 8px;
+	}
+	.attansion label{
+		float: right;
+font-size: 16px !important;
+margin-bottom: 15px;
+		}
+		.red{
+			color:red;
+			font-weight:bold;
+			font-size:11px;
+			}
+			
+			#vip_car_details{
+				padding-top:0px;
+				}
+				.bg-w{
+					background:#FFF;
+					margin-bottom:15px;
+					border:1px solid #c9c7dc;
+					padding:15px;
+					}
+					
+					.bg-w .col-sm-8 h3{
+font-size: 15px;
+font-weight: bold;
+margin-bottom: 16px;
+margin-top: 0;						}
+
+.bg-w ul{
+	margin: 15px 0;
+padding: 0 0 0 15px;
+	}
+	.bg-w ul li{
+		margin-bottom:10px;
+		}
+		.link-button{
+background: transparent none repeat scroll 0 0;
+border: medium none;
+color: #3ecdff;
+font-weight: bold;
+margin-bottom: 15px;
+padding-left: 0;
+			
+			}
+			.b-text-l .nextcarlist.detail-btn {
+  margin: 0;
+}
+			.b-text-l p{
+				width:48%;
+				float:left;
+				margin-top:15px;
+				}
+				.b-text-l p span{
+					font-weight:bold;
+					}
+				.b-text-l .nextcarlist{
+					float:right;
+					width:48%;
+					}
+					.b-text-l .nextcarlist .detail-btn{
+						margin:0px ;
+						}
+	.remark p.f{
+		font-size:11pxp;
+		}
+		
+		.remark label{
+			color:#7e82a3 !important;
+			}
+			.booksummary .box h6{color: #24c4fc;
+
+    font-size: 12px;
+    text-transform: uppercase;}
+	.booksummary .box h5{
+		color: #0c134f;
+font-family: "Apercu-Regular";
+font-size: 16px;
+		}
 /* CSS used here will be applied after bootstrap.css */
+
+#selectDropOff {
+	font-size: 13px;
+	padding: 18px 7px;
+	margin: 0px;
+}
+.green-bg {
+	background-color: #42e880 !important;
+}
+.prsndetail {
+	font-size: 12px;
+}
+.booktype input[type="radio"] {
+	height: auto !important;
+}
+.booktype {
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+.airport-new label {
+	font-family: 'Apercu-Light' !important;
+	font-size: 11px !important;
+	letter-spacing: 0px !important;
+}
+.airport-new select {
+	padding: 8px !important;
+}
+#flight_pickup_terminal {
+	width: 100%;
+}
+.airport-new .form-control.selectx {
+	width: 100%;
+}
+.error {
+	color: red;
+	margin: 10px 0;
+	display: inline-block;
+}
+.pl-pr0 {
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+.name-t {
+	color: #3ecdff;
+}
+.signupperkrow01 {
+	background: #FFF;
+	border: 1px solid #ccc;
+	padding: 15px;
+	margin-bottom: 15px;
+}
 .slider-default .carousel {
 	margin-top: 0px;
 }
@@ -6063,24 +6235,26 @@ textarea {
 }
 .check-out-form {
 	background: #f1f1f8;
-	padding: 60px 10px;
-	padding-bottom: 0px !important;
+	padding-top: 60px;
+}
+.owl-wrapper .item {
+	text-align: center;
 }
 
 @media(min-width: 1440px) {
-.side-popups {
+/*.side-popups {
 	width: 44%;
 	margin-right: -35px;
 	height: 105.8% !important;
-}
+}*/
 }
 
 @media(min-width: 1500px) {
-.side-popups {
+/*.side-popups {
 	width: 37% !important;
 	right: 6% !important;
 	height: 105.8% !important;
-}
+}*/
 .mainleft-content {
 	width: 60% !important;
 }
@@ -7145,7 +7319,7 @@ header .form-control {
 input {
 	height: 60px !important;
 	border: 1px solid #d3d4e0 !important;
-	padding: 15px 25px !important;
+	padding: 15px 15px !important;
 	font-size: 16px !important;
 	color: #373b71 !important;
 	font-family: 'Apercu-Regular';
@@ -8661,10 +8835,15 @@ header.header-section .logo p {
 	font-family: 'Apercu-Bold';
 }
 /* sign up 2 */
-
+#Sign-In .form-control, #sign_up .form-control {
+	margin-bottom: 15px;
+}
+#Sign-In .form-control label, #sign_up .form-control label {
+	margin-bottom: 3px !important;
+}
 .signup_body .left-section .nav-tabs {
 	border: 0px;
-	margin-bottom: 50px;
+	margin-bottom: 30px;
 }
 .signup_body .left-section .nav-tabs li {
 	padding: 0px;
@@ -9020,11 +9199,11 @@ header.header-section .logo p {
 .group_booking_body .section6 {
 	float: left;
 	width: 100%;
-	background-image: url(../images/group_booking_bg5.png);
-	background-repeat: no-repeat;
-	background-size: 100%;
-	background-position: 100% 50%;
+	background: #edf0f7 url(../images/box-img.png) repeat-x center center;
 	padding: 25px 0px;
+}
+.gr-bg .form-control {
+	background: #FFF !important;
 }
 .group_booking_body .section6 h1 {
 	font-family: 'Apercu-Light';
@@ -9904,6 +10083,9 @@ header.header-navigation-section .fields .submit-button input {
 	padding: 40px 30px;
 	text-align: left;/*  margin-bottom: 25px;*/
 }
+.details01 {
+	padding: 40px;
+}
 .cancellation p {
 	font-size: 14px;
 	font-family: 'Apercu-Light';
@@ -9921,17 +10103,20 @@ header.header-navigation-section .fields .submit-button input {
 .cancellation p span {
 	color: #24c4fc;
 }
-.paynow_body .col-sm-10 .section3 .details .col-sm-4 h6 {
+.paynow_body .col-sm-10 .section3 .details .col-sm-4 h6, .paynow_body .col-sm-10 .section3 .details h6 {
 	text-align: center;
 	font-family: 'Gotham-Bold';
 	font-size: 11px;
 	color: #24c4fc;
 }
-.paynow_body .col-sm-10 .section3 .details .col-sm-4 h5 {
+.paynow_body .col-sm-10 .section3 .details .col-sm-4 h5, .paynow_body .col-sm-10 .section3 .details h5 {
 	text-align: center;
 	font-family: 'Apercu-Regular';
 	font-size: 20px;
 	color: #fff;
+}
+.paynow_body .col-sm-10 .section3 .details h6, .paynow_body .col-sm-10 .section3 .details h5 {
+	text-align: left;
 }
 .paynow_body .col-sm-10 .section3 .boxes {
 	float: left;
@@ -9947,14 +10132,22 @@ header.header-navigation-section .fields .submit-button input {
 	text-align: left;
 	background-color: #fff;
 	padding: 20px;*/
-	margin-bottom: 10px;
-	margin-top: 10px;
-	float: left;
-	width: 30%;
-	margin-right: 4%;
-	text-align: left;
 	background-color: #fff;
+	float: left;
+	margin-bottom: 10px;
+	margin-right: 3%;
+	margin-top: 10px;
 	padding: 20px;
+	text-align: left;
+	width: 31.1%;
+	min-height: 145px;
+}
+.hr-color {
+	border-bottom: 1px solid #b3b2c2;
+	margin: 30px 0px;
+}
+.m-bottom0 {
+	margin-bottom: 0px !important;
 }
 .paynow_body .col-sm-10 .section3 .boxes .box.last {
 	margin-right: 0px;
@@ -9963,9 +10156,43 @@ header.header-navigation-section .fields .submit-button input {
 	margin-bottom: 10px;
 }
 .paynow_body .col-sm-10 .section3 .boxes .box h6 {
-	font-size: 11px;
-	font-family: 'Gotham-Bold';
 	color: #24c4fc;
+	font-family: "Gotham-Bold";
+	font-size: 12px;
+	text-transform: uppercase;
+}
+.new-tital-i {
+	color: #383779;
+	margin-bottom: 26px;
+}
+.freecancellation {
+	background: #FFF;
+	padding: 15px;
+	margin: 20px 0 10px 0;
+}
+.jcarousel-wrapper h2 {
+	color: #2c3748;
+	font-family: "Apercu-Light";
+	font-size: 34px;
+	margin: 50px 0;
+	text-align: center;
+}
+.freecancellation h3 {
+	margin-top: 0px;
+	margin-bottom: 10px;
+	color: #373b71;
+	text-transform: uppercase;
+	font-size: 14px;
+	font-weight: bold;
+}
+.freecancellation .red-ti {
+	color: #ff0000;
+	font-size: 12px;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+.freecancellation p {
+	color: #3f3b78;
 }
 .paynow_body .col-sm-10 .section3 .boxes .box h5 {
 	font-size: 16px;
@@ -11531,6 +11758,48 @@ header.header-navigation-section .links a.col-sm-2 {
 }
  @media screen and (max-width: 767px) {
 /*********jmk*******/
+.vipmemberbox1 {
+	float: none;
+	margin-bottom: 20px;
+	margin-left: 0;
+	width: 100%;
+}
+.savebox {
+	line-height: 20px;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	margin-top: 15px !important;
+	padding: 10px;
+	text-align: center;
+	width: 100%;
+}
+.ingo-btn .reserve-btn {
+	width: 118px !important;
+	margin-top: 10px;
+}
+.vipmemberboxhead {
+	padding: 20px;
+}
+.VIPBTNbox {
+	padding: 30px 15px;
+}
+.VIPBTNbox .vipmemberbtn {
+	letter-spacing: 0.5px;
+}
+.hotel-detail-header-info .hd-info h2 {
+	font-size: 34px;
+}
+#list-view-first .hotel-detail .hotel-name-address-block h1 {
+	width: 99%;
+}
+#list-view-first .hotel-name-address-block {
+	float: none;
+}
+.paynow_body .col-sm-10 .section3 .user_details .col-sm-12 div.button {
+	margin-top: 30px;
+	text-align: center;
+	width: 100%;
+}
 .member_ship {
 	margin-left: 0px !important;
 }
@@ -11901,7 +12170,19 @@ background-size:90px auto;
 }
 }
 /* H O T E L - D E T A I L - P A G E */
-
+#detail-block #detail-slider {
+	background-color: #f1f1f8;
+	padding: 20px 0;
+}
+.login.book_extra_hide {
+	margin-right: 0 !important;
+}
+.col-md-12.go-right {
+	margin-top: 15px !important;
+}
+#loggedform .col-md-12 {
+	margin-top: 15px;
+}
 .search-section.inner-search {
 	padding-bottom: 20px;
 }

@@ -30,7 +30,7 @@
     </div>
   <?php } ?>
   <?php if(!empty($rooms)){ 
-     /*echo json_encode($rooms);
+    /* echo json_encode($rooms);
       exit();*/
       ?>
   <h2 class="room-title"> Room Types </h2>
@@ -66,28 +66,28 @@
         <?php } ?>
       </div>
       <div class="room-btn">
-      <form action="<?php echo base_url().$appModule;?>/book/<?php echo $module->slug;?>" method="GET">
-        <div data-click="#collapse<?php echo $r->id; ?>"  class="ingo-btn info-toggle"> Info </div>
-        <input type="hidden" name="adults" value="<?php  echo $modulelib->adults; ?>" />
-        <input type="hidden" name="child" value="<?php  echo $modulelib->children; ?>" />
-        <input type="hidden" name="checkin" value="<?php  echo $checkin; ?>" />
-        <input type="hidden" name="checkout" value="<?php  echo $checkOut; ?>" />
-        <input type="hidden" name="roomid" value="<?php echo $r->id; ?>" />
-        <input type="hidden" name="room" value="<?php echo $_GET['room']; ?>" />
-        <?php  if($r->price > 100){ ?>
-        <?php } ?>
-        <?php if($R_user_type == '_f_no_login'){ ?>
-        <button type="button" data-target="#M_f_no_login" data-room_type="<?php echo $r->title; ?>" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
-        <?php }elseif($R_user_type == '_f_free_login'){ ?>
-        <button type="button" data-target="#M_f_free_login" data-room_type="<?php echo $r->title; ?>" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
-        <?php }else{ ?>
-        <input type="hidden" name="mem_type" value="M_vip_login" />
-        <button type="button" class="btn btn-action btn-block chk reserve-btn already_member" data-room_type="<?php echo $r->title; ?>" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" >Reserve</button>
-        <?php } ?>
-        <a style="display:none;" href="<?php echo trans('0142');?>" class="reserve-btn"> Reserve </a>
-        </div>
-      </form>
-    </div>
+        <form action="<?php echo base_url().$appModule;?>/book/<?php echo $module->slug;?>" method="GET">
+          <div data-click="#collapse<?php echo $r->id; ?>"  class="ingo-btn info-toggle"> Info </div>
+          <input type="hidden" name="adults" value="<?php  echo $modulelib->adults; ?>" />
+          <input type="hidden" name="child" value="<?php  echo $modulelib->children; ?>" />
+          <input type="hidden" name="checkin" value="<?php  echo $checkin; ?>" />
+          <input type="hidden" name="checkout" value="<?php  echo $checkOut; ?>" />
+          <input type="hidden" name="roomid" value="<?php echo $r->id; ?>" />
+          <input type="hidden" name="room" value="<?php echo $_GET['room']; ?>" />
+          <?php  if($r->price > 100){ ?>
+          <?php } ?>
+          <?php if($R_user_type == '_f_no_login'){ ?>
+          <button type="button" data-target="#M_f_no_login" data-room_type="<?php echo $r->title; ?>" data-remark="" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
+          <?php }elseif($R_user_type == '_f_free_login'){ ?>
+          <button type="button" data-target="#M_f_free_login" data-remark="" data-room_type="<?php echo $r->title; ?>" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
+          <?php }else{ ?>
+          <input type="hidden" name="mem_type" value="M_vip_login" />
+          <button type="button" class="btn btn-action btn-block chk reserve-btn already_member" data-remark="" data-room_type="<?php echo $r->title; ?>" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $set_avg_rate; ?>" data-room_id="<?php echo $r->id; ?>" >Reserve</button>
+          <?php } ?>
+          <a style="display:none;" href="<?php echo trans('0142');?>" class="reserve-btn"> Reserve </a>
+          </div>
+        </form>
+      </div>
     <div class="room-detail" id="collapse<?php echo $r->id; ?>" style="display:none">
       <div class="row">
         <div class="col-lg-12 col-sm-12 col-md-12">
@@ -135,7 +135,7 @@
         var price_vip = $(this).data('price_vip');
         var price_total = $(this).data('price_total');
         var roomType = $(this).data('room_type');
-        
+        $("#roomType").text(roomType);
          if ( "<?php echo $R_user_type;?>" == '_f_vip_member' ) {
             var nightrate = price_vip / <?php echo $diff;?>;
          } else {
@@ -143,10 +143,13 @@
          }
          
          $("#nightsrate").text("$ " + nightrate + " / night");
-         $("#roomType").text(roomType);
+         
          var savePrice = price_total - price_vip;
+         savePrice = Math.floor(savePrice);
          $("#savePrice").text("$ " + savePrice);
 
+          var remark = $(this).data('remark');
+        $(".remark").remove(remark);
         /*console.log(price_vip);
         console.log(price_total);*/
         $(".hide_pp").remove();
@@ -164,15 +167,15 @@
         $(op_modal).addClass('in');
         $(op_modal).show();
     });
-    $(document).ready(function() {
+    // $(document).ready(function() {
       $('.info-toggle').click(function(){
-      var collapse_content_selector = $(this).attr('data-click');         
-      var toggle_switch = $(this);
-      $('.room-detail').hide();
-      $(collapse_content_selector).toggle(function(){
-       
-      });
-      });
+        var collapse_content_selector = $(this).attr('data-click');         
+        //var toggle_switch = $(this);
+        /*$('.room-detail').hide();*/
+        $(collapse_content_selector).toggle(function(){});
+       /* console.log(collapse_content_selector);*/
+     /* }); */
+      
         
         var discount_price = '$<?php echo $discount_price; ?>';
         $('.discount_price').html(discount_price);
@@ -279,7 +282,7 @@
             </div>
           </div>
         </div>
-        <div class="vipmemberbox1" style="text-align:center;"> <img src="<?php echo $theme_url.'/images/vip_show.png'; ?>" style="margin-top:-10px;">
+        <div class="vipmemberbox1" style="text-align:center;"> <img class="hidden-xs" src="<?php echo $theme_url.'/images/vip_show.png'; ?>" style="margin-top:-10px;">
           <div class="vipmemberboxmain" style="margin-top:0px;">
             <div class="vipmemberboxhead">
               <h3 class="vipmembertxt">VIP Membership</h3>
@@ -334,6 +337,12 @@ $("#vip_details").append('<input type="hidden" name="member_add" value="1">');
  $('#total').val(price);
  
   $('.set_avg_rate').html('$'+price);
+
+
+  var savePrice = normal_price - price;
+         savePrice = Math.round(savePrice);
+         $("#savePrice").text("$ " + savePrice);
+
   var op_modal = $(this).data('modalname');
       //if(mem_type == 'M_c_free'){
         $(op_modal).modal('hide');
@@ -361,6 +370,17 @@ $(".already_member").click(function(){
         $('#click_type').remove();
         $('#total').val(price);
         //var normal_price = $("#price_total_1").val();
+
+        var roomType = $(this).data('room_type');
+        $("#roomType").text(roomType);
+
+        var remark = $(this).data('remark');
+        $(".remark").remove(remark);
+
+        var savePrice = normal_price - price;
+         savePrice = Math.round(savePrice);
+         $("#savePrice").text("$ " + savePrice);
+
         $("#vip_details").append('<input type="hidden" name="normal_price" value="'+normal_price+'">');
         $('#ROOMS').append('<input type="hidden" value="already_member" id="click_type">');
         //$('.signup_upgrade_to_vip').show();

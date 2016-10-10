@@ -287,6 +287,14 @@ background: url(<?php echo $theme_url;
   <img src="<?php echo $theme_url.'images/loader.gif'; ?>">
 </p>
 </div>
+
+
+<!-- <div class="divLoading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0, 0, 0); z-index: 30001; opacity: 0.8;overflow-x:hidden;">
+  <div class="loader__figure"></div>
+  <p class="loader__label">Hang on, we're booking your tickets</p>
+</div> -->
+
+
 <!-- Top wrapper -->
 <div class="header-navigation-section container-fluid <?php echo $cls_name; ?>">
   <div class="<?php echo $cls_name_1; ?> row">

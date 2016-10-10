@@ -755,6 +755,232 @@ class Emails_model extends CI_Model {
 				$HTML_DATA = file_get_contents( $uu.$ptheme.'/invoice.html');
 				$message = str_replace($template, $values, $HTML_DATA);
 
+				
+				/*$message = $this->mailHeader;*/
+				/*echo '<pre>'.json_encode($message).'</pre>';
+				exit();*/
+				/*$details = $this->html_template_booking($hotel_id,$invoiceid);
+				$message .= str_replace($template, $values, $details);*/
+				//$message .= $this->mailFooter;
+				/*echo $message;
+				exit;*/
+				//$smsmessage = str_replace($template, $values, $smsdetails[0]->temp_body);
+				//sendsms($smsmessage, $phone, "bookingpaidcustomer");
+				$this->email->set_newline("\r\n");
+				$this->email->from($this->sendfrom);
+				$this->email->to($sendto);
+				$this->email->subject('Thanks for Booking at the '.$HOTEL_NAME);
+				$this->email->message($message);
+				$this->email->send();
+				
+		}
+
+		function paid_sendEmail_customer_hb($details) {
+			
+
+			/*print_r($Extra_data->guest_name[0]);
+			exit();*/
+
+			$Extra_data = json_decode($details->extra_data);
+			$book_response = json_decode($details->book_response);
+
+
+				/*echo json_encode($book_response);
+				exit();*/
+		/*	print_r($book_response->hotel->longitude);
+			exit();*/
+			
+
+			$currencycode = 'USD';
+			$currencysign = '$';
+
+			
+				$total_amount = $details->book_total;
+
+				 $abc = $book_response->hotel->rooms[0]->rates[0]->net - $total_amount;
+                  if($abc < 0){
+                    $save = '0';
+
+                  }else{
+                    $save = number_format($book_response->hotel->rooms[0]->rates[0]->net - $total_amount,0);
+					}
+
+				$id = $details->book_hotelid;
+				$itemid = $details->book_confirmation;
+				$custid = $details->book_user;
+				$country = $details->ai_country;
+				$name = $details->ai_first_name . ' ' .$details->ai_last_name;
+				$stars = $details->book_stars;
+				$code = $details->book_confirmation;
+				$booking_adults = $Extra_data->adults;
+				$child = $Extra_data->child;
+				
+				$phone = $details->ai_mobile;
+				$paymethod = 'Paysand';
+				$invoiceid = $details->book_id;
+				$refno = $details->book_itineraryid;
+				$deposit = $book_response->hotel->rooms[0]->rates[0]->net;
+				$quantity = $Extra_data->room;
+				$hotel_title = $book_response->hotel->rooms[0]->name;
+				$duedate = $details->expiry;
+				$date = $details->date;
+				$sendto = $details->accountEmail;
+
+				$additionaNotes = $details->additionaNotes;
+
+				$remaining = $details->remainingAmount;
+				$board_type = $book_response->hotel->rooms[0]->rates[0]->boardName;
+				
+				$HOTEL_NAME = $book_response->hotel->name;
+				$location = $details->book_location;
+				$room_name = $Extra_data->hotelname;
+				$booking_adults = $Extra_data->adults;
+				$room_price = $book_response->hotel->rooms[0]->rates[0]->net;
+				
+				$checkin = $details->book_checkin;
+				
+				$checkout = $details->book_checkout;
+				$couponRate = $details->couponRate;
+				
+				$date = date ( "m/d/Y" , strtotime ( "-1 day" , strtotime ( $details->checkin ) ) );
+				$no_of_room  = $Extra_data->room;
+				$thumbnail = str_replace("demo.tarzango.com/","tarzango.com/",$details->book_thumbnail);
+				$hotel_id = $details->itemid;
+
+				$guest_name = $Extra_data->guest_name;
+				$guest_age = $Extra_data->guest_age;
+				$child = $Extra_data->child;
+				$child_name = isset($details->Extra_data->child_name) ? $details->Extra_data->child_name : 0;
+				$child_age = isset($details->Extra_data->child_age) ? $details->Extra_data->child_age : 0;
+				$sitetitle = "";
+
+				$invoicelink = "";
+				
+				$sendto =  $details->accounts_email;
+				
+				 $ptheme = pt_default_theme();
+					$this->_config = config_item('theme');
+					$uu = $this->_config['url'];
+				$email_temp_img =  $uu.$ptheme.'/email_temp_img/gb_email_temp_img/';
+				/*$template = $this->shortcode_variables("bookingpaidcustomer");
+				$details = email_template_detail("bookingpaidcustomer");*/
+
+					if($child >= 1 ){
+						$guest_canditates .= '<span style="float: right; color: #0c134f;">'.$booking_adults.' ADULTS '.$child.' CHILD </span>';
+					}else{
+						$guest_canditates .= '<span style="float: right; color: #0c134f;">'.$booking_adults.' ADULTS </span>';
+					}
+				  $book_room = $no_of_room;
+                  
+                  $room_per_guest = $booking_adults / $book_room;
+                  
+                  for ($r_i=0; $r_i < $book_room ; $r_i++) {
+                  	$cc = $r_i+1;
+                  	$no_top_hotel .= '<li class="title" style="float: left; width: 100%; list-style-type: none; margin-left:0px;">
+                    <p style="font-size: 11px;color: #a5a6b4;padding-top: 15px;margin-left: -30px;">ROOM '.$cc.'</p>
+                  </li>';
+	             for($g_d_a=0; $g_d_a < $room_per_guest; $g_d_a++){
+
+	               $jj = $g_d_a + $r_i;
+	               $dd = $guest_name[$jj];
+	               $age = $guest_age[$jj];
+	         
+
+	              	$no_top_hotel .= '<li class="username" style="list-style-type: none;width: 100%;float:left;border-bottom: 1px solid #e6e7ed; margin-left:0px; ">
+		                    <h5 class="left" style="font-size: 16px;color: #0c134f;float: left;    margin-left: -30px;">'.$dd.'</h5>
+                     		<h5 class="right" style="float:right;font-size: 16px;color: #0c134f;margin-right: 5px;">'.$age.' Years</h5>
+		                  </li>';
+	                  }
+                  }
+
+                  if($chil > 0){
+	              $no_top_hotel .= ' <li class="title" style="float: left; width: 100%; list-style-type: none; margin-left:0px; ">
+                   				 <p style="font-size: 11px;color: #a5a6b4;padding-top: 15px;">CHILD DETAILS</p>
+                 				 </li>';
+                 	 for($c_i=0;$c_i<$chil;$c_i++){
+                 	 	 $ii = $c_i;
+	             		 $child_name1 = $child_name[$ii];
+	              		 $child_age1= $child_age[$ii];
+                 	 	
+                 	 	 $no_top_hotel .= '<li class="username" style="list-style-type: none;width: 96%;float:left;border-bottom: 1px solid #e6e7ed; margin-left:0px;">
+                   			<h5 class="left" style="font-size: 16px;color: #0c134f;float: left;    margin-left: -30px;">'.$child_name1.'</h5>
+                    		<h5 class="right" style="font-size: 16px;color: #0c134f;float: right;margin-right: 5px;"><img src="'.$email_temp_img.'paynow_icon8.png"> '.$child_age1.' Years</h5>
+                  			</li>';
+                 	}
+                 }
+
+                 	$this->db->select('hotel_latitude,hotel_longitude,hotel_desc,hotel_map_city,hotel_stars');
+		        	$this->db->where('hotel_id', $itemid);
+		        	$query = $this->db->get('pt_hotels');	
+		        	$hotel_data = $query->result();
+
+		        	$star_temp_img =  $uu.$ptheme.'/images/';
+
+					/*echo $hotel_data[0]->hotel_stars;*/
+
+					$aaa = '';
+					for ($st_i=0; $st_i < 5 ; $st_i++) { 
+                              	if($st_i < $details->book_stars){
+                              		$aaa .= '<img src="'.$star_temp_img.'/star-on.png">';
+                              	}else{
+                              		$aaa .= '<img src="'.$star_temp_img.'/star-off.png">';
+                              	}
+                              }
+
+		        	$arrayInfo['checkIn'] = date("m/d/Y", strtotime("+1 days"));
+		        	$arrayInfo['checkOut'] = date("m/d/Y", strtotime("+2 days"));
+		        	$arrayInfo['adults'] = '1';
+		        	$arrayInfo['child'] = '';
+		        	$arrayInfo['room'] = '1';
+		        	/*error_reporting(E_ALL);*/
+		    		//$this->ci = & get_instance();
+						// $this->db = $this->ci->db;
+					$this->load->model('hotels/hotels_model');
+		        	
+		        	$local_hotels = $this->hotels_model->search_hotels_by_lat_lang($book_response->hotel->latitude, $book_response->hotel->longitude,$arrayInfo);
+
+		        	$top_hotel = '<div class="col-sm-12 hotels">';
+
+		        	for ($i=0; $i < count($local_hotels['hotels']) ; $i++) { 
+		        		if($i < 3){
+		        		 $image = str_replace("demo.tarzango.com/","tarzango.com/",$bb[$i]->thumbnail);
+		        		$bb = $local_hotels['hotels'];
+		        		 $bb[$i]->title;
+		        		$top_hotel .= '<a class="col-sm-4" href="'.$bb[$i]->slug.'" style="margin-left: 2%;padding:10px;text-decoration: none; width:27.3333%;float: left; box-sizing: border-box;position: relative;">';
+		        						if($image == ""){
+
+											$top_hotel .= '<img height=185px class="img-responsive"  src="'.$uu.$ptheme.'/email_temp_img/gb_email_temp_img/email-d-lasvegas.png" style="width: 100%; min-height: 185px;   height: 185px; max-height: 185px;">';
+										}else{
+
+											$top_hotel .= '<img height=185px class="img-responsive" src="'.$image.'" style="width: 100%; min-height: 185px;   height: 185px; max-height: 185px;">';
+										}
+
+											$top_hotel .= '<p style="text-align:center;margin:0px;color: rgb(12, 19, 79);font-size: 14px;margin: 20px 0 10px;font-family: \'Roboto\',sans-serif;">'.$this->custom_echo($bb[$i]->title, 25).'</p>
+											<h4 style=" text-align:center;margin:0px; color: rgb(28, 192, 251);font-size: 20px;font-weight: 600;font-family: \'Roboto\',sans-serif;">'.$bb[$i]->currCode.$bb[$i]->price.'</h4>
+										</a>';
+		        	} 
+		        }
+		       
+		        $map = '<div class="col-sm-12 map" style="width: 100%;padding-left: 0;float: left; box-sizing: border-box;min-height: 1px; padding-right:0px; position: relative;">
+								 <a href="http://maps.google.com/?daddr={hotel_name}" target="_blank"> 
+                                    <img style="width:100%" border="0" src="https://maps.googleapis.com/maps/api/staticmap?center='.$book_response->hotel->latitude.','.$book_response->hotel->longitude.'&zoom=14&size=620x260&markers=size:mid%7Ccolor:red%7C'.$book_response->hotel->latitude.','.$book_response->hotel->longitude.'&key=AIzaSyAH65sTGsDsP4mMpmbHC8zqRiM1Qh07iL8" alt="Google map"></a>
+							</div>';
+
+					
+				$res = $this->settings_model->get_contact_page_details();
+				$contact_phone = $res[0]->contact_phone;
+				$contact_email = $res[0]->contact_email;
+				$contact_address = $res[0]->contact_address;
+
+				
+
+				$template = array("{invoice_id}", "{hotel_name}", "{stars}", "{location}", "{code}","{invoice_code}", "{deposit_amount}", "{total_amount}", "{customer_email}", "{customer_id}", "{country}", "{phone}", "{currency_code}", "{currency_sign}", "{invoice_link}", "{site_title}", "{remaining_amount}", "{fullname}","{room_name}","{date}","{checkin}","{checkout}","{no_of_room}","{thumbnail}","{booking_adults}","{room_price}","{couponRate}","{additionaNotes}","{email_temp_img}","{quantity}","{hotel_title}","{booking_adults}","{child}","{no_top_hotel}","{top_hotel}","{map}","{aaa}","{save}","{board_type}","{guest_canditates}");
+				//$smsdetails = sms_template_detail("bookingpaidcustomer");
+				$values = array($invoiceid, $HOTEL_NAME, $stars, $location, $code, $refno, $deposit, $total_amount, $sendto, $custid, $country, $phone, $currencycode, $currencysign, $invoicelink, $sitetitle, $remaining , $name, $room_name, $date, $checkin, $checkout, $no_of_room, $thumbnail,$booking_adults,$room_price,$couponRate,$additionaNotes,$email_temp_img, $quantity,$hotel_title,$booking_adults,$child,$no_top_hotel,$top_hotel,$map,$aaa,$save,$board_type, $guest_canditates);
+
+				$HTML_DATA = file_get_contents( $uu.$ptheme.'/invoice.html');
+				$message = str_replace($template, $values, $HTML_DATA);
+
 				/*print_r($message);
 				exit();*/
 				/*$message = $this->mailHeader;*/

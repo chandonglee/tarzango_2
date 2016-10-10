@@ -460,7 +460,7 @@
 
 
                   $url = base_url() . 'invoice?id=' . $bookid . '&sessid=' . $refno;
-                  $bookingResult = array("error" => "no", 'msg' => '', 'url' => $url);
+                  $bookingResult = array("error" => "no", 'msg' => '', 'url' => $url , 'book_id'=> $bookid);
                   $invoicedetails = invoiceDetails($bookid,$refno);
 
                   /*$this->emails_model->sendEmail_customer($invoicedetails,$this->data['app_settings'][0]->site_title);

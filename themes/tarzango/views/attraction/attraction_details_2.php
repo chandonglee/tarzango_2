@@ -50,7 +50,7 @@ if($user_id != ''){
       <div class="container">
         <div class="row">
           <div class="col-sm-12">
-            <div class="col-sm-7 left-section">
+            <div class="col-sm-8 left-section">
               <div id="myCarousel" class="carousel slide" data-ride="carousel">
                 <!-- Indicators -->
                
@@ -146,7 +146,7 @@ if($user_id != ''){
                   </div>
               <?php } ?>
             </div>
-            <div class="col-sm-5 right-section" id="detail-slider">
+            <div class="col-sm-4 right-section" id="detail-slider">
               <form class="sidebar result" method="get">
                 <input type="hidden" name="code" value="<?php echo $code; ?>">
                 <div class="col-sm-12">
@@ -425,22 +425,18 @@ if($user_id != ''){
         </div>
       </div>
     </div>
-    <div class="last-section-2">
+    <div class="clearfix"></div>
+    <div class="container-fluid how-section vip-membership">
       <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="col-sm-7">
-            <h1 style="    width: 125%;">Become a V.I.P member Now and receive additional</h1>
-            <h2>10% off plus some AWESOME Perks</h2>
-            <a href="<?php echo base_url().'membership'; ?>">MEMBERSHIP</a>
-          </div>
-          <div class="col-sm-5">
-            <img style="margin-top: -80px" src="images/membership-door.png">
-          </div>
-          </div>
-        </div>
+        <div class="col-md-7 ptop70">
+          <h4 class="description" style="text-align:left;font-size:30px;padding-bottom: 0px;">Become a V.I.P member Now and receive additional</h4>
+          </br>
+          <h4 style="text-align:left;font-size:30px;margin-top:-10px;font-family: 'Apercu-Bold';">10% off plus some AWESOME perks...</h4>
+          <a href="<?php echo base_url().'membership';?>" style="float:left" title="group booking" class="pink-btn">membership</a> </div>
+        <div class="col-sm-5"> <img style="margin-top: 0px" src="images/membership-door.png"> </div>
       </div>
     </div>
+        <div class="clearfix"></div>
   </div>
 </div>
 </div>

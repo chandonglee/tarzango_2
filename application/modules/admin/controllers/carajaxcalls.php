@@ -175,9 +175,11 @@ class Carajaxcalls extends MX_Controller {
 
 
 		function processBooking() {
+			//error_reporting(-1);
 			$this->load->model('admin/bookings_model');
 			
 			$user_id = $this->input->post('user_id');
+			
 			echo json_encode($this->bookings_model->do_booking($user_id));
 		}
 
@@ -196,7 +198,7 @@ class Carajaxcalls extends MX_Controller {
 		}
 
 		function carBooking(){
-			error_reporting(-1);
+			/*error_reporting(-1);*/
 			$this->load->model('ean/car_hb_model');
 
 			$in_data = $this->input->post();
@@ -228,9 +230,10 @@ class Carajaxcalls extends MX_Controller {
 			$insert_data['booking_expiry'] = date('Y-m-d H:i:s');
 			$insert_data['booking_payment_date'] = '';
 			$insert_data['booking_extra_data'] = '';
-			$insert_data['book_response'] = $in_data['book_response'];
+			$insert_data['book_response'] = str_replace("'", '', $in_data['book_response']);
 			$insert_data['payment_data'] = '';
 			$insert_data['book_cancel_data'] = '';
+			$insert_data['book_type'] = $in_data['BookType'];
 
 			$this->car_hb_model->insert_booking($insert_data);
 

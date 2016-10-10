@@ -22,7 +22,10 @@ class Invoice extends MX_Controller {
 //$this->data['geo'] = $this->load->get_var('geolib');
 		}
 
-
+		function html2canvasproxy(){
+	        $this->load->helper('html2canvas_helper');
+	        html2canvasproxy_h();
+	    }
 
 		public function index() {
 				/*echo $this->session->userdata('pt_logged_customer');
@@ -231,15 +234,16 @@ class Invoice extends MX_Controller {
 			//error_reporting(E_ALL);
 			$this->load->helper('invoice');
 			updateInvoiceStatus_hb($invoice_id,$booking_total,$order_id,"paystand","paid","hotels",$booking_total);
-			$invoicedetails = pt_get_einvoice_details($invoice_id,$invoice_code);
+			$invoicedetails = pt_get_einvoice_details_hb($invoice_id);
+			$invoicedetails = $invoicedetails[0];
+			/*echo json_encode($invoicedetails);
+			exit();*/
+			/*$this->load->model('admin/emails_model');*/
 
-			$this->load->model('admin/emails_model');
-
-			$this->emails_model->paid_sendEmail_customer($invoicedetails);
+			$this->emails_model->paid_sendEmail_customer_hb($invoicedetails);
 			$this->emails_model->paid_sendEmail_admin($invoicedetails);
-			$this->emails_model->paid_sendEmail_supplier($invoicedetails);
 			$this->emails_model->paid_sendEmail_owner($invoicedetails);
-			redirect(base_url().'invoice?eid='.$bookingid.'&sessid='.$bookingref,'refresh');
+			redirect(base_url().'invoice?eid='.$invoice_id.'&sessid='.$invoice_code,'refresh');
 		}
 
 		function add_member(){

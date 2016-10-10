@@ -9,79 +9,134 @@ exit();*/
 
 ?>
 <style>
-  header {
-    background: linear-gradient(to left, #321d61, #1d2c68);
-    padding: 20px 0;
-  }
-  .fa {
-    padding-left: 7px;
-    font-size: 16px;
-  }
-  .main-pay {
-    -webkit-box-shadow: -1px 2px 7px 0px rgba(217,217,227,1);
-    -moz-box-shadow: -1px 2px 7px 0px rgba(217,217,227,1);
-    box-shadow: -1px 2px 7px 0px rgba(217,217,227,1);
-  }
-  .row {
-    margin-right: -15px;
-    margin-left: -15px;
-  }
-  .pay-block {
-    text-align: center;
-    margin-top: 60px;
-  }
-  .pay-block h1 {
-    font-family: gotham_light;
-    color: #fff;
-    font-size: 21px;
-    font-weight: normal;
-    margin: 0;
-    padding-bottom: 5px;
-  }
-  .pay-block p {
-    font-family: gotham_light;
-    color: #fff;
-    font-size: 18px;
-    font-weight: normal;
-    margin-bottom: 50px;
-  }
-  .btn-primary {
-    text-align: center;
-    font-family: gotham_bold;
-    font-size: 15px;
-    color: #fff;
-    padding: 20px 12%;
-    background: #2cc6fd;
-    border-radius: 2px;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: none;
-    letter-spacing: 1px;
-    display: inline-block;
-    margin: 0 10px 40px;
-  }
-  .menu {
-    width: 52px;
-  }
-  .menu-header {
-    position: absolute;
-    margin-left: -105px !important;
-    margin-top: -48px !important;
-  }
-  .inner-page-nav {
-    display: none;
-  }
-  .pay-header {
-    padding-bottom: 120px;
-  }
-  .menu-header {
-    margin-left: -100px !important;
-  }
-  .menu-header a {
-    margin-left: 110% !important;
-  }
+header {
+	background: linear-gradient(to left, #321d61, #1d2c68);
+	padding: 20px 0;
+}
+.fa {
+	padding-left: 7px;
+	font-size: 16px;
+}
+.main-pay {
+	-webkit-box-shadow: -1px 2px 7px 0px rgba(217,217,227,1);
+	-moz-box-shadow: -1px 2px 7px 0px rgba(217,217,227,1);
+	box-shadow: -1px 2px 7px 0px rgba(217,217,227,1);
+}
+.row {
+	margin-right: -15px;
+	margin-left: -15px;
+}
+.pay-block {
+	text-align: center;
+	margin-top: 60px;
+}
+.pay-block h1 {
+	font-family: 'Conv_GothamNarrow-Book_0';
+	color: #fff;
+	font-size: 21px;
+	font-weight: normal;
+	margin: 0;
+	padding-bottom: 5px;
+}
+.pay-block p {
+	font-family: 'Conv_GothamNarrow-Book_0';
+	color: #fff;
+	font-size: 18px;
+	font-weight: normal;
+	margin-bottom: 50px;
+}
+.btn-primary {
+	text-align: center;
+	font-family: 'Gotham-Bold';
+	font-size: 15px;
+	color: #fff;
+	padding: 20px 12%;
+	background: #2cc6fd;
+	border-radius: 2px;
+	text-transform: uppercase;
+	text-decoration: none;
+	border: none;
+	letter-spacing: 1px;
+	display: inline-block;
+	margin: 0 10px 40px;
+}
+.menu {
+	width: 52px;
+}
+.menu-header {
+	position: absolute;
+	margin-left: -105px !important;
+	margin-top: -48px !important;
+}
+.inner-page-nav {
+	display: none;
+}
+.pay-header {
+	padding-bottom: 120px;
+}
+.menu-header {
+	margin-left: -100px !important;
+}
+.menu-header a {
+	margin-left: 110% !important;
+}
+.clearfix {
+	border: medium none;
+	clear: both;
+	float: none;
+	font-size: 0;
+	height: 0;
+	line-height: 0;
+}
+.left-in {
+	display: inline-block;
+	margin: 15px 2% 30px;
+	float: none !important;
+}
+.hotel-icon {
+	margin-top: 15px 0px;
+	color: #373b71;
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: bold;
+}
+.p-bottom0 {
+	padding-bottom: 0px !important;
+}
+.w70 {
+	width: 42% !important;
+}
+.w30 {
+	width: 20% !important;
+}
 
-  
+@media (max-width: 767px) {
+.section3 {
+	padding: 20px !important;
+}
+.w70 {
+	width: 100% !important;
+}
+.w30 {
+	width: 100% !important;
+}
+}
+
+@media(min-width: 1000px) {
+.img-responsive, .thumbnail > img, .thumbnail a > img, .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+	display: block;
+	height: 400px !important;
+	width: 100% !important;
+}
+}
+
+@media(min-width: 1600px) {
+.img-responsive, .thumbnail > img, .thumbnail a > img, .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+	display: block;
+	height: 450px !important;
+	width: 100% !important;
+}
+}
 </style>
 <!-- list View block   -->
 <header class="pay-header">
@@ -147,10 +202,8 @@ exit();*/
   </div>
 </div>
 </header>
-
-    <?php if($booking_status != "paid"){  ?>
+<?php if($booking_status != "paid"){  ?>
 <div class="paynow">
- 
   <div class="paynow_body"> <img class="top-bg" src="images/paynow_top.png"> <img class="left-bg" src="images/membership-left-bg.png"> <img class="right-bg" src="images/membership-right-bg.png">
     <div class="container">
       <div class="row">
@@ -159,21 +212,25 @@ exit();*/
           <div class="col-sm-10" id="printcontent">
             <div class="section1">
               <div class="col-sm-12"> <img src="images/email-page-logo.png"> </div>
+              <div class="clearfix"></div>
               <div class="col-sm-6 left">
-                <h5>Tarzango</h5>
+                <h5><strong>Tarzango</strong></h5>
                 <h6>415-680-3008</h6>
               </div>
               <div class="col-sm-6 right">
-                <h5><?php echo $invoice->ai_first_name.' '.$invoice->ai_last_name; ?></h5>
+                <h5><strong><?php echo $invoice->ai_first_name.' '.$invoice->ai_last_name; ?></strong></h5>
                 <h6><?php echo $invoice->ai_mobile; ?></h6>
               </div>
+              <div class="clearfix"></div>
               <div class="col-sm-6 left">
                 <p>Invoice Date:<span> <?php echo date("m/d/Y", strtotime($invoice->booking_date)); ?></span></p>
               </div>
               <div class="col-sm-6 right">
                 <p>Invoice Number:<span> <?php echo $invoice->booking_ref_no; ?></span></p>
               </div>
+              <div class="clearfix"></div>
             </div>
+            <div class="clearfix"></div>
             <div class="section2">
               <h1><?php echo $book_response->activities[0]->content->name; ?></h1>
               <p class="left"><img src="images/checkin.png"> <?php echo $booking_extra_data->address; ?></p>
@@ -185,14 +242,13 @@ exit();*/
                 }
               }
               ?>
-              <span></span> 
-              <img class="img-responsive" src="<?php echo $img_disp; ?>" style="height: 400px !important;
-    width: 100% !important;"> </div>
+              <img class="img-responsive" src="<?php echo $img_disp; ?>" /> </div>
+            <div class="clearfix"></div>
             <?php
             $child_count = count($booking_extra_data->kids_details);
             ?>
             <div class="section3">
-              <div class="details">
+              <div class="details details01">
                 <div class="col-sm-9">
                   <h6>Tickets and Exucrsions</h6>
                   <!-- <h5><?php echo $booking_extra_data->adults; ?> adults </h5> -->
@@ -242,31 +298,27 @@ exit();*/
                     <h5 class="right"><img src="images/paynow_icon6.png"> 2 Years</h5>
                   </li> -->
                 </ul>
-                <div class="col-sm-12"> 
-                  <a class="button" id="pintbtn" style="cursor: pointer;">
-                    <img src="images/paynow_icon7.png">PRINT INVOICE
-                  </a> 
-                  <a class="button" id="savepdf" style="cursor: pointer;">
-                    <img src="images/paynow_icon8.png">DOWNLOAD INVOICE
-                  </a> 
-
+                <div class="col-sm-12"> <a class="button" id="pintbtn" style="cursor: pointer;"> <img src="images/paynow_icon7.png">PRINT INVOICE </a> <a class="button" id="savepdf" style="cursor: pointer;"> <img src="images/paynow_icon8.png">DOWNLOAD INVOICE </a>
                   <?php if($booking_status == "unpaid" && time() < $expiryUnixtime){
                    ?>
-                    <div class="button" style="width: 200px; float: right; margin-top: 30px;">
-                      <button id="element_id_1470283647"></button>
-                    </div>
-                    <?php } ?></div>
+                  <div class="button" style="width: 200px; float: right; margin-top: 30px;">
+                    <button id="element_id_1470283647"></button>
+                  </div>
+                  <?php } ?>
+                </div>
               </div>
             </div>
+            <div class="clearfix"></div>
           </div>
+          <div class="clearfix"></div>
           <div class="col-sm-1"> </div>
+          <div class="clearfix"></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 <?php }else{ ?>
-
 <?php 
   for ($k=0; $k < count($book_response->activities[0]->content->media->images[0]->urls) ; $k++) { 
     if($book_response->activities[0]->content->media->images[0]->urls[$k]->sizeType == 'XLARGE'){
@@ -275,17 +327,11 @@ exit();*/
   }
 ?>
 <div class="paynow-voucher" >
-  
-  <div class="paynow-voucher-body">
-  <img class="top-bg" src="images/paynow_top.png">
-  <img class="left-bg" src="images/details_update_sidegraphic1.png">
-  <img class="right-bg" src="images/sidegraphics3.png">
+  <div class="paynow-voucher-body"> <img class="top-bg" src="images/paynow_top.png"> <img class="left-bg" src="images/details_update_sidegraphic1.png"> <img class="right-bg" src="images/sidegraphics3.png">
     <div class="container" >
       <div class="row">
         <div class="col-sm-12">
-          <div class="col-sm-1">
-          
-          </div>
+          <div class="col-sm-1"> </div>
           <div class="col-sm-10 content-box">
             <div class="list" id="printcontent_1">
               <h1>Vouchers</h1>
@@ -293,24 +339,22 @@ exit();*/
               $main_p =  number_format($invoice->booking_total,2);
               $per_p = $main_p / (count($booking_extra_data->guest_details) + count($booking_extra_data->kids_details));
               for ($i_i=0; $i_i < count($booking_extra_data->guest_details) ; $i_i++) { ?>
-               <div class="box">
+              <div class="box">
                 <div class="col-sm-9">
                   <h6>tickets and exucrions</h6>
                   <h3><?php echo $book_response->activities[0]->content->name; ?></h3>
                   <div class="address">
                     <h5><img src="images/checkin.png"> <?php echo $booking_extra_data->address; ?></h5>
-                    <!-- <h5><img src="images/email-call.png"> (619) 231-1515</h5> -->
+                    <!-- <h5><img src="images/email-call.png"> (619) 231-1515</h5> --> 
                   </div>
                   <h5><img src="images/vouchar_icon1.png"> <?php echo $booking_extra_data->guest_details[$i_i]; ?></h5>
                   <h4>1 Adult (1 Day Pass)<span>$ <?php echo number_format($per_p,2); ?></span></h4>
                 </div>
-                <div class="col-sm-3">
-                  <img class="img-responsive" src="<?php echo $img_disp; ?>" style="height: 250px;">
-                </div>
+                <div class="col-sm-3"> <img class="img-responsive" src="<?php echo $img_disp; ?>" style="height: 250px;"> </div>
               </div>
-             <?php   } 
+              <?php   } 
               for ($i_i=0; $i_i < count($booking_extra_data->kids_details) ; $i_i++) { ?>
-               <div class="box">
+              <div class="box">
                 <div class="col-sm-9">
                   <h6>tickets and exucrions</h6>
                   <h3><?php echo $book_response->activities[0]->content->name; ?></h3>
@@ -321,33 +365,21 @@ exit();*/
                   <h5><img src="images/vouchar_icon1.png"> <?php echo $booking_extra_data->kids_details[$i_i]; ?></h5>
                   <h4>1 Kid (1 Day Pass)<span>$ <?php echo number_format($per_p,2); ?></span></h4>
                 </div>
-                <div class="col-sm-3">
-                  <img class="img-responsive" src="<?php echo $img_disp; ?>" style="height: 250px;">
-                </div>
+                <div class="col-sm-3"> <img class="img-responsive" src="<?php echo $img_disp; ?>" style="height: 250px;"> </div>
               </div>
-             <?php   } ?>
-              
-
+              <?php   } ?>
             </div>
-         
             <div class="buttons">
               <div class="disp_message" style=" margin-left: 15px;margin-right: 15px;"></div>
-              <div class="col-sm-2">
-              </div>
+              <div class="col-sm-2"> </div>
               <div class="col-sm-4">
-              <input type="hidden" value="<?php echo ($profile[0]->accounts_email);?>" class="form-control form" id="invoiceemail" name="email" required="">
-                <a style="cursor: pointer;" id="send_by_email" ><img src="images/vouchar_icon2.png"> send by email</a>
-              </div>
-              <div class="col-sm-4">
-                <a id="savepdf_1" style="cursor: pointer;"><img src="images/vouchar_icon3.png"> download pdf</a>
-              </div>
-              <div class="col-sm-2">
-              </div>
+                <input type="hidden" value="<?php echo ($profile[0]->accounts_email);?>" class="form-control form" id="invoiceemail" name="email" required>
+                <a style="cursor: pointer;" id="send_by_email" ><img src="images/vouchar_icon2.png"> send by email</a> </div>
+              <div class="col-sm-4"> <a id="savepdf_1" style="cursor: pointer;"><img src="images/vouchar_icon3.png"> download pdf</a> </div>
+              <div class="col-sm-2"> </div>
             </div>
           </div>
-          <div class="col-sm-1">
-          
-          </div>
+          <div class="col-sm-1"> </div>
         </div>
       </div>
     </div>
@@ -361,7 +393,7 @@ $repl_arry = array(".",",");
 ?>
 <script src="<?php echo $theme_url; ?>js/jspdf.min.js"></script> 
 <script src='<?php echo $theme_url; ?>js/html2canvas.js'></script> 
-<script src='<?php echo $theme_url; ?>js/canvas2image.js'></script>  
+<script src='<?php echo $theme_url; ?>js/canvas2image.js'></script> 
 <script type="text/javascript">
    $(function() { 
      

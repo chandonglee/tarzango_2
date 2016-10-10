@@ -71,6 +71,47 @@
     margin-left: 110% !important;
   }
 
+.clearfix {
+	border: medium none;
+	clear: both;
+	float: none;
+	font-size: 0;
+	height: 0;
+	line-height: 0;
+}
+.left-in {
+	display: inline-block;
+	margin: 15px 2% 30px;
+	float: none !important;
+}
+.hotel-icon {
+	margin-top: 15px 0px;
+	color: #373b71;
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: bold;
+}
+.p-bottom0 {
+	padding-bottom: 0px !important;
+}
+.w70 {
+	width: 42% !important;
+}
+.w30 {
+	width: 20% !important;
+}
+
+@media (max-width: 767px) {
+.section3 {
+	padding: 20px !important;
+}
+.w70 {
+	width: 100% !important;
+}
+.w30 {
+	width: 100% !important;
+}
+}
   @media(min-width: 1000px) {
   .img-responsive, .thumbnail > img, .thumbnail a > img, .carousel-inner > .item > img, .carousel-inner > .item > a > img {
     display: block;
@@ -90,8 +131,9 @@
 <script src='<?php echo $theme_url; ?>js/custom.js'></script>
 <?php 
 
-/*echo json_encode($invoice);
-exit();*/
+/*echo json_encode($invoice);*/
+
+//exit();
 if(isset($page_title_1)) {
   /*$invoice = $invoice[0];*/
   if($invoice->book_cancelnumber == null){
@@ -101,8 +143,21 @@ if(isset($page_title_1)) {
   }
 
   $book_response = json_decode($invoice->book_response);
+  $car_response = $invoice->car_booking;
+  /*echo json_encode($car_response);
+
+  echo "<br>";
+  echo "<br>";
+  echo "<br>";
+  echo "<br>";
+  echo $car_response->book_response;
+  exit();*/
+  $car_data = $invoice->car_booking;
+  $car_book_response = json_decode($car_data->book_response);
+
   $Extra_data = $invoice->Extra_data;
   $invoice->expiryUnixtime = strtotime(date('Y-m-d H:i:s', strtotime('+24 hours', strtotime($invoice->created_date))));
+  
   
   //$invoice->expiryUnixtime = strtotime();
  ?>
@@ -134,8 +189,7 @@ if(isset($page_title_1)) {
         <?php if($payOnArrival){ ?>
         <button class="btn-arrival arrivalpay" data-module="<?php echo $invoice->module; ?>" id="<?php echo $invoice->id;?>"><?php echo trans('0345');?></button>
         <?php } if($singleGateway != "payonarrival"){ ?>
-        <button data-toggle="modal" style="display:none;"  data-target="#paynow" type="submit" class="btn btn-primary"><?php echo trans('0117');?></button>
-        <button data-toggle="modal" style="display:none;"  data-target="#paynow" type="button" id="gateway_pro" class="btn btn-primary"><?php echo trans('0117');?></button>
+        
         <div style="text-align:center;">
           <div class="col-sm-5" style="color:transparent"> aasdsada </div>
           <div class="col-sm-2">
@@ -207,26 +261,38 @@ if(isset($page_title_1)) {
 
                </div>
               <h1><?php echo $invoice->book_hotel;?></h1>
-              <p class="left"><img src="images/checkin.png"> <?php echo $invoice->book_location;?> </p>
-             
-              <img class="img-responsive" src="<?php echo $invoice->book_thumbnail;?>"> </div>
+                            <div class="text-center">
+              <p class="left-in"><img src="images/checkin.png"> <?php echo $invoice->book_location;?> </p>
+             </div>
+              <img class="img-responsive" src="<?php echo str_replace("bigger/", '', $invoice->book_thumbnail);?>"> </div>
             <div class="section3">
-              <div class="details">
-                <div class="col-sm-4">
+              <div class="details details01">
+                <div class="col-sm-3">
                   <h6>CONFIRMATION #</h6>
                   <h5><?php echo $invoice->book_itineraryid; ?></h5>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                   <h6>ROOM RATE</h6>
                   <h5>$ <?php echo number_format($invoice->book_roomtotal / $invoice->Extra_data->room); ?></h5>
                 </div>
-                <div class="col-sm-4">
+                <?php if ( !empty($car_data) ){?>
+                <div class="col-sm-3">
+                  <h6>Transfer Rate</h6>
+                  <h5>$ <?php echo $car_data->booking_total; ?></h5>
+                </div>
+                <?php } ?>
+                <div class="col-sm-3">
                   <h6>TOTAL AMOUNT</h6>
-                  <h5>$ <?php echo str_replace(".00",'',number_format($invoice->book_total,2));?></h5>
+                  <h5>$ <?php 
+                  
+                  $totalRate = $invoice->book_total + $car_data->booking_total;
+
+                  echo str_replace(".00",'',number_format($totalRate,2));?></h5>
                 </div>
               </div>
               <div class="boxes">
-                <div class="box" style="margin-left:10px !important"> <img src="images/paynow_icon2.png">
+              <h3 class="hotel-icon"><img src="images/h-icon.png"> Hotel</h3>
+                <div class="box"> <img src="images/paynow_icon2.png">
                   <h6>BOARD TYPE</h6>
                   <h5><?php echo $book_response->hotel->rooms[0]->rates[0]->boardName; ?></h5>
                 </div>
@@ -234,17 +300,16 @@ if(isset($page_title_1)) {
                   <h6>ROOMS</h6>
                   <h5><?php echo $invoice->Extra_data->room; ?></h5>
                 </div>
-                <div class="box" style="margin-right:0% !important"> <img src="images/paynow_icon4.png">
+                <div class="box last"> <img src="images/paynow_icon4.png">
                   <h6>TYPE</h6>
                   <h5><?php echo  character_limiter($invoice->book_roomname,5); ?></h5>
                 </div>
-              </div>
-              <div class="boxes">
-                <div class="box" style="margin-left:10px !important"> <img src="images/paynow_icon5.png">
+                <div class="clearfix"></div>
+                 <div class="box"> <img src="images/paynow_icon5.png">
                   <h6>CHECK IN</h6>
                   <h5><?php echo $invoice->book_checkin; ?></h5>
                 </div>
-                <div class="box "> <img src="images/paynow_icon5.png">
+                <div class="box"> <img src="images/paynow_icon5.png">
                   <h6>CHECK OUT</h6>
                   <h5><?php echo $invoice->book_checkout; ?></h5>
                 </div>
@@ -252,6 +317,194 @@ if(isset($page_title_1)) {
                   <h6>YOU SAVED</h6>
                   <h5><?php  if($Extra_data->normal_price){ echo "$ ".number_format($Extra_data->normal_price - $invoice->book_total,2); }else{ echo "$ 0"; } ?></h5>
                 </div>
+                <div class="clearfix"></div>
+
+                <?php if ( !empty($car_data )) { ?>
+
+                <div class="hr-color"></div>
+                <h3 class="hotel-icon"><img src="images/car-icon.png"> Arrival Transfer</h3>
+                <div class="box">
+                  <h4 class="new-tital-i">Private Luxury (Sedan)</h4>
+                  <h6> Pick Up Date</h6>
+                  <h5><?php echo $invoice->book_checkin; ?></h5>
+                </div>
+                <div class="box"> <img src="images/DepartureTime.png">
+                  <h6>Arrival Time</h6>
+                  <h5><?php echo $car_data->pickup_time; ?></h5>
+                </div>
+                <div class="box last"> <img src="images/flightCode.png">
+                  <h6>flight Code</h6>
+                  <h5><?php echo $car_data->dep_flight_code; ?></h5>
+                </div>
+                <div class="clearfix"></div>
+                <div class="box"> <img src="images/Travellers.png">
+                  <h6>Travellers</h6>
+                  <h5><?php echo $invoice->Extra_data->adults; ?> ADULTS
+                  <?php $chil = $Extra_data->child; if($chil){ echo $chil; ?>
+                  CHILDREN
+                  <?php } ?></h5>
+                </div>
+                <div class="box w70">
+                  <h6>From</h6>
+                    <h5><?php 
+                        if (  $car_data->book_type == "round"){
+                            
+                            foreach ($car_book_response->Purchase->ServiceList->Service as $value) {
+                                if ($value->attributes->transferType == "IN"){
+                                  echo $value->PickupLocation->Name;  
+                                }                              
+                             }
+                         } else {
+                          
+                           echo  $car_book_response->Purchase->ServiceList->Service->PickupLocation->Name; 
+                         }  
+                  ?></h5>
+                  <h6>To</h6>
+                  <h5><?php 
+
+                      if (  $car_data->book_type == "round"){
+                    foreach ($car_book_response->Purchase->ServiceList->Service as $value) {
+                              if ($value->attributes->transferType == "IN"){
+                                echo $value->DestinationLocation->LocationDescription;  
+                              }                              
+
+                           } 
+                         }else {
+                          echo  $car_book_response->Purchase->ServiceList->Service->DestinationLocation->LocationDescription; 
+                         }
+
+                    ?></h5>
+                </div>
+                <div class="box w30 last"> <img src="images/Price.png">
+                  <h6>Price</h6>
+                  <h5><?php 
+                    if (  $car_data->book_type == "round"){
+                      echo $car_data->booking_total / 2; 
+                    } else {
+                      echo $car_data->booking_total;
+                    }
+                  
+
+                  ?></h5>
+                </div>
+                <div class="clearfix"></div>
+
+                <?php 
+
+                  if (  $car_data->book_type == "round"){
+                    foreach ($car_book_response->Purchase->ServiceList->Service as $value) {
+                          /*echo json_encode($value);
+                          echo "<br>";
+                          echo "<br>";
+                          echo "<br>";
+                          echo "<br>";*/
+                        if ($value->attributes->transferType == "IN"){
+
+                            $in_time = $value->CancellationPolicies->CancellationPolicy->attributes->time;
+                            $in_date = $value->CancellationPolicies->CancellationPolicy->attributes->dateFrom;
+                            $in_amount = $value->CancellationPolicies->CancellationPolicy->attributes->amount;
+                        } 
+
+                        if ($value->attributes->transferType == "OUT"){
+                            $out_time = $value->CancellationPolicies->CancellationPolicy->attributes->time;
+                            $out_date = $value->CancellationPolicies->CancellationPolicy->attributes->dateFrom;
+                            $out_amount = $value->CancellationPolicies->CancellationPolicy->attributes->amount;
+                        }                              
+                    } 
+                  } else {
+                    
+                          $in_time = $car_book_response->Purchase->ServiceList->Service->CancellationPolicies->CancellationPolicy->attributes->time;
+                            $in_date = $car_book_response->Purchase->ServiceList->Service->CancellationPolicies->CancellationPolicy->attributes->dateFrom;
+                            $in_amount = $car_book_response->Purchase->ServiceList->Service->CancellationPolicies->CancellationPolicy->attributes->amount;
+                        
+                  }
+                    
+                ?>
+
+                <div class="freecancellation">
+                  <h3>Free cancellation until <?php echo date('m/d/Y',strtotime($in_date));?></h3>
+                  <p class="red-ti">In the event of cancellation after <?php echo $in_time;?> on <?php echo date('m/d/Y',strtotime($in_date));?> &nbsp; &nbsp;
+                    the following charges will be applied: $ <?php echo $in_amount;?></p>
+                  <p>Date and time is calculated based on local time of destination.</p>
+                </div>
+                <div class="clearfix"></div>
+                <?php 
+                      if ($car_data->book_type == "round"){
+
+                 ?>
+                <div class="oneway-book-invoice">
+                
+                <div class="hr-color"></div>                
+                <h3 class="hotel-icon"><img src="images/car-icon.png"> Departure Transfer</h3>
+                <div class="box">
+                  <h4 class="new-tital-i">Private Luxury (Sedan)</h4>
+                  <h6> Pick Up Date</h6>
+                  <h5><?php echo $invoice->book_checkout; ?></h5>
+                </div>
+                <div class="box"> <img src="images/DepartureTime.png">
+                  <h6>Departure Time</h6>
+                  <h5><?php echo $car_data->drop_time; ?></h5>
+                </div>
+                <div class="box last"> <img src="images/flightCode.png">
+                  <h6>flight Code</h6>
+                  <h5><?php echo $car_data->arv_flight_code; ?></h5>
+                  
+                </div>
+                <div class="clearfix"></div>
+                <div class="box"> <img src="images/Travellers.png">
+                  <h6>Travellers</h6>
+                  <h5><?php echo $invoice->Extra_data->adults; ?> ADULTS
+                  <?php $chil = $Extra_data->child; if($chil){ echo $chil; ?>
+                  CHILDREN
+                  <?php } ?></h5>
+                </div>
+                <div class="box w70">
+                  <h6>From</h6>
+
+                  <h5><?php 
+                      
+
+                    foreach ($car_book_response->Purchase->ServiceList->Service as $value) {
+                              if ($value->attributes->transferType == "IN"){
+                                echo $value->DestinationLocation->LocationDescription;  
+                              }                              
+                           } 
+
+                    ?></h5>
+
+                  
+                  <h6>To</h6>
+                  <h5><?php 
+                          foreach ($car_book_response->Purchase->ServiceList->Service as $value) {
+                              if ($value->attributes->transferType == "IN"){
+                                echo $value->PickupLocation->Name;  
+                              }                              
+                           }
+                  ?></h5>
+                  
+                </div>
+                <div class="box w30 last"> <img src="images/Price.png">
+                  <h6>Price</h6>
+                  <h5><?php 
+                  if (  $car_data->book_type == "round"){
+                      echo $car_data->booking_total / 2; 
+                    } else {
+                      echo $car_data->booking_total;
+                    }
+                  ?></h5>
+                </div>
+                <div class="clearfix"></div>
+                <div class="freecancellation">
+                
+                  <h3>Free cancellation until <?php echo date('m/d/Y',strtotime($out_date));?></h3>
+                  <p class="red-ti">In the event of cancellation after <?php echo $out_time;?> on <?php echo date('m/d/Y',strtotime($out_date));?> &nbsp; &nbsp;
+                    the following charges will be applied: $ <?php echo $out_amount;?></p>
+                  <p>Date and time is calculated based on local time of destination.</p>
+                </div>
+                <div class="clearfix"></div>
+                </div>
+                <?php } ?>
+              <?php } ?>
               </div>
               <div class="user_details">
                 <h6>GUEST NAMES<span><?php echo $invoice->Extra_data->adults; ?> ADULTS
@@ -292,7 +545,7 @@ if(isset($page_title_1)) {
                   <?php }  ?>
                 </ul>
                 <?php } ?>
-                <div class="col-sm-12 cancellation"  style="border-bottom: 1px solid #e6e7ed; padding:20px">
+                <div class="col-sm-12 cancellation"  style="padding:20px">
                   <h6>The cancellation policy</h6>
                   </br>
                   <p>Here at Tarzango, we offer a hassle free Cancellation Option. Last Minute change of plans? No problem mate! We allow 7 days prior to you arrival for cancellations, without any fees or penalties.*</p>
@@ -305,15 +558,7 @@ if(isset($page_title_1)) {
                   </br>
                   <p>To cancel your entire reservation, please email cancel@tarzango.com. Please note: We can only accept cancellation via writing to: <span>cancel@tarzango.com</span>. Cancelations will not be submitted via phone or chat, only through written email to <span>cancel@tarzango.com</span>.</p>
                 </div>
-                <div>
-                  <div class="col-sm-12"> <a class="button" id="pintbtn"><img src="images/paynow_icon8.png"> PRINT INVOICE</a> <a class="button" id="savepdf"><img src="images/paynow_icon8.png"> DOWNLOAD INVOICE</a>
-                    <?php if($invoice->status == "unpaid"){ ?>
-                    <div style="" class="button">
-                      <button id="element_id_1470283647"></button>
-                    </div>
-                    <?php } ?>
-                  </div>
-                </div>
+               
               </div>
             </div>
             <div class="col-sm-1">
@@ -328,130 +573,46 @@ if(isset($page_title_1)) {
               <?php } ?>
             </div>
           </div>
+          <div class="paynow_body">
+            <div class="col-sm-1">&nbsp;</div>
+
+                  <div class="col-sm-10" style="margin-bottom: 30px; border: none;"> 
+                   <a class="button btn_ps" id="pintbtn"><img src="images/paynow_icon7.png"> PRINT INVOICE</a> <a class="button btn_ps" id="savepdf"><img src="images/paynow_icon8.png"> DOWNLOAD INVOICE</a>
+                    <?php if($invoice->status == "unpaid"){ ?>
+                    <div style="" class="button">
+                      <button id="element_id_1470283647"></button>
+                    </div>
+                    <?php } ?>
+                  </div>
+                   <div class="col-sm-1">&nbsp;</div>
+                </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="paynow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header" style="margin-bottom: 0px;">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <img src="<?php echo $theme_url; ?>img/logo.png" class="img-responsive" alt="Home Logo"> </div>
-      <div class="modal-body">
-        <div role="form">
-          <div class="form-group" style="display:none;">
-            <label for="form-input" class="hidden-xs col-sm-2 control-label text-left" style="padding: 10px;font-size: 18px;"><?php echo trans('0154');?></label>
-            <div class="col-sm-10 col-md-10 col-xs-12">
-              <select class="form-control form selectx" name="gateway" id="gateway">
-                <option value=""><?php echo trans('0159');?></option>
-                <?php foreach ($paymentGateways as $pay) { if($pay['name'] != "payonarrival" && $pay['name'] != 'moneybookers'){ ?>
-                <option value="<?php echo $pay['name']; ?>" <?php makeSelected($invoice->paymethod, $pay['name']); ?> ><?php echo $pay['gatewayValues'][$pay['name']]['name']; ?></option>
-                <?php } } ?>
-              </select>
-              <div class="clearfix"></div>
-            </div>
-            <div class="clearfix"></div>
-          </div>
-          <div class="col-sm-12" > <b>Amount : </b> $<?php echo number_format($invoice->checkoutTotal,2);?>
-            <hr>
-            <center>
-              <div  id="response"></div>
-              <div  id="response1" style="display:none;">
-                <button id="element_id_1470283648"></button>
-              </div>
-            </center>
-          </div>
-          <div class="clearfix"></div>
-          <div class="col-sm-12 creditcardform" style="display:none;">
-            <form  role="form" action="<?php echo base_url();?>creditcard" method="POST">
-              <fieldset>
-                <div class="row">
-                  <div class="col-md-6  go-right">
-                    <div class="form-group ">
-                      <label class="required go-right"><?php echo trans('0171');?></label>
-                      <input type="text" class="form-control" name="firstname" id="card-holder-firstname" placeholder="<?php echo trans('0171');?>">
-                    </div>
-                  </div>
-                  <div class="col-md-6  go-left">
-                    <div class="form-group ">
-                      <label class="required go-right"><?php echo trans('0172');?></label>
-                      <input type="text" class="form-control" name="lastname" id="card-holder-lastname" placeholder="<?php echo trans('0172');?>">
-                    </div>
-                  </div>
-                  <div class="clearfix"></div>
-                  <div class="col-md-12  go-right">
-                    <div class="form-group ">
-                      <label class="required go-right"><?php echo trans('0316');?></label>
-                      <input type="text" class="form-control" name="cardnum" id="card-number" placeholder="<?php echo trans('0316');?>" onkeypress="return isNumeric(event)" >
-                    </div>
-                  </div>
-                  <div class="clearfix"></div>
-                  <div class="col-md-3 go-right">
-                    <div class="form-group ">
-                      <label style="font-size:13px"class="required  go-right"><?php echo trans('0329');?></label>
-                      <select class="form-control col-sm-2" name="expMonth" id="expiry-month">
-                        <option value="01"><?php echo trans('0317');?> (01)</option>
-                        <option value="02"><?php echo trans('0318');?> (02)</option>
-                        <option value="03"><?php echo trans('0319');?> (03)</option>
-                        <option value="04"><?php echo trans('0320');?> (04)</option>
-                        <option value="05"><?php echo trans('0321');?> (05)</option>
-                        <option value="06"><?php echo trans('0322');?> (06)</option>
-                        <option value="07"><?php echo trans('0323');?> (07)</option>
-                        <option value="08"><?php echo trans('0324');?> (08)</option>
-                        <option value="09"><?php echo trans('0325');?> (09)</option>
-                        <option value="10"><?php echo trans('0326');?> (10)</option>
-                        <option value="11"><?php echo trans('0327');?> (11)</option>
-                        <option value="12"><?php echo trans('0328');?> (12)</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-3 go-left">
-                    <div class="form-group">
-                      <label class="required go-right">&nbsp;</label>
-                      <select class="form-control" name="expYear" id="expiry-year">
-                        <?php for($y = date("Y");$y <= date("Y") + 10;$y++){?>
-                        <option value="<?php echo $y?>"><?php echo $y; ?></option>
-                        <?php } ?>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-3 go-left">
-                    <div class="form-group">
-                      <label class="required go-right">&nbsp;</label>
-                      <input type="text" class="form-control" name="cvv" id="cvv" placeholder="<?php echo trans('0331');?>">
-                    </div>
-                  </div>
-                  <div class="col-md-3 go-left">
-                    <label class="required go-right">&nbsp;</label>
-                    <img src="<?php echo base_url(); ?>assets/img/cc.png" class="img-responsive"> </div>
-                </div>
-                <div class="clearfix"></div>
-                <br>
-                <div class="form-group">
-                  <div class="alert alert-danger submitresult"></div>
-                  <input type="hidden" name="paymethod" id="creditcardgateway" value="" />
-                  <input type="hidden" name="bookingid" id="bookingid" value="<?php echo $invoice->bookingID;?>" />
-                  <input type="hidden" name="refno" id="bookingid" value="<?php echo $invoice->code;?>" />
-                  <button type="submit" class="btn btn-success btn-lg paynowbtn pull-left" onclick="return expcheck();"><?php echo trans('0117');?></button>
-                </div>
-              </fieldset>
-            </form>
-          </div>
-          <div class="clearfix"></div>
-        </div>
-        <div class="clearfix"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo trans('0234');?></button>
-      </div>
-    </div>
-  </div>
-</div>
 <div id="imgs"> </div>
+
+<style type="text/css">
+.btn_ps{
+  float: left;
+    width: 30%;
+    margin-right: 20px;
+    background-color: #fff;
+    border: 1px solid #edeaf2;
+    border-radius: 4px;
+    color: #0c134f;
+    font-size: 11px;
+    font-family: 'Gotham-Bold';
+    text-align: center;
+    padding: 15px 0px;
+   /* margin-top: 30px;*/
+    line-height: 25px;
+    cursor: pointer;
+}
+
+</style>
 <!-- 
 
  <script async defer
@@ -470,17 +631,23 @@ $repl_arry = array(".",",");
   $(function() { 
       $("#pintbtn").click(function() { 
 
-          html2canvas($("#printcontent"), {
+           html2canvas($("#printcontent"), {
+              "proxy":"html2canvasproxy",
               onrendered: function(canvas) {
-                  theCanvas = canvas;
-                  
-                  var type = 'png',
-                  w = 800,
-                  h = 1550;
-                  $imgs = document.getElementById('imgs');
-                  //$imgs.append(Canvas2Image.convertToImage(canvas, w, h, type));
-                  img_data_p = Canvas2Image.convertToImage(canvas, w, h, type);
-                  
+                  var img = new Image();
+                        img.onload = function() {
+                            img.onload = null;
+                            //document.body.appendChild(img);
+                        };
+                        img.onerror = function() {
+                            img.onerror = null;
+                            if(window.console.log) {
+                                window.console.log("Not loaded image from canvas.toDataURL");
+                            } else {
+                                //alert("Not loaded image from canvas.toDataURL");
+                            }
+                        };
+                        var img_data_p = canvas.toDataURL("image/png");
                   
                   var DocumentContainer = document.getElementById('imgs');
                   var WindowObject = window.open('', 'PrintWindow', 'toolbars=no,scrollbars=yes,status=no,resizable=yes');
@@ -490,54 +657,64 @@ $repl_arry = array(".",",");
                   WindowObject.focus();
                   WindowObject.print();
                   WindowObject.close();
+
                   
               }
           });
+
+          
       });
        $("#savepdf").click(function() { 
 
           html2canvas($("#printcontent"), {
+              "proxy":"html2canvasproxy",
               onrendered: function(canvas) {
-                  theCanvas = canvas;
-                  //document.body.appendChild(canvas);
-                  //$('#img_val').val(canvas.toDataURL("image/png"));
-                  // Convert and download as image 
-                  //alert();
-                  //Canvas2Image.saveAsPNG(canvas); 
-                  //window.print(canvas);
-                  //Canvas2Image.convertToImage(canvas, 500, 500, type)
-                  var type = 'png',
-                  w = 800,
-                  h = 1550;
-                  $imgs = document.getElementById('imgs');
-                  //$imgs.append(Canvas2Image.convertToImage(canvas, w, h, type));
-                  img_data_p = Canvas2Image.convertToImage(canvas, w, h, type);
-                  //console.log(img_data_p);
-                  //var ffff = img_data_p.replace('<img src=​"','');
-                  //var ffff = ffff.replace('">​','');
-                  // window.print(img_data_p);
-                  // You'll need to make your image into a Data URL
-                  // Use http://dataurl.net/#dataurlmaker
-                  var imgData = img_data_p;
-                  var doc = new jsPDF();
+                  var img = new Image();
+                        img.onload = function() {
+                            img.onload = null;
+                            //document.body.appendChild(img);
+                        };
+                        img.onerror = function() {
+                            img.onerror = null;
+                            if(window.console.log) {
+                                window.console.log("Not loaded image from canvas.toDataURL");
+                            } else {
+                                //alert("Not loaded image from canvas.toDataURL");
+                            }
+                        };
+                        var img = canvas.toDataURL("image/png");
+                  
+                        var img1 = new Image();
+                        img1.src = img;
 
-                  doc.addImage(imgData, 'png', 15, 15, 180, 275);
+                          var imgSize = {
+                             w: img1.width,
+                             h: img1.height
+                          };
+                          console.log(img1.width +' *-* '+ img1.height);
+                          var imgWidth = 180; 
+                          var pageHeight = 290;
+                          var imgHeight = imgSize.h * imgWidth / imgSize.w;
+                          var heightLeft = imgHeight;
+
+                          var imgData = img;
+                          var doc = new jsPDF('p', 'mm' );
+
+                          //doc.addImage(imgData, 'png', 15, 15, 180, 297);
+                          var position = 15;
+                          //console.log(imgWidth+'--0++'+imgHeight);
+                          doc.addImage(imgData, 'png', 15, position, imgWidth , imgHeight);
+                          heightLeft -= pageHeight;
+
+                          while (heightLeft >= 0) {
+                            position = heightLeft - imgHeight;
+                            doc.addPage();
+                            
+                            doc.addImage(imgData, 'png', 15, position, imgWidth, imgHeight);
+                            heightLeft -= pageHeight;
+                          }
+
                   doc.save('invoice.pdf');
-                  /*var DocumentContainer = document.getElementById('imgs');
-                  var WindowObject = window.open('', 'PrintWindow', 'toolbars=no,scrollbars=yes,status=no,resizable=yes');
-
-                  WindowObject.document.writeln('<img src="'+img_data_p+'">');
-                        
-
-                  WindowObject.document.close();
-                  WindowObject.focus();
-                  WindowObject.print();
-                  WindowObject.close();*/
-                  //pwin = window.open(img_data_p);
-                  //pwin.onload = function () {}
-                  //$("#paynow_body").append('<img id="my_img" src="'+Canvas2Image.convertToImage(canvas, 1366, 768, 'jpeg')+'">');
-                  // Clean up 
-                  //document.body.removeChild(canvas);
               }
           });
       });
@@ -560,12 +737,12 @@ $repl_arry = array(".",",");
   input: false,
   variants: false
   },
-  amount: "<?php echo str_replace($repl_arry,'',number_format($invoice->book_total,2));?>",
+  amount: "<?php echo str_replace($repl_arry,'',number_format($totalRate,2));?>",
   //amount: "100",
   items: [{
   title: "Reservation Payment",
   subtitle: "Payment to lock reservation in TarzanGo",
-  item_price: "<?php echo str_replace($repl_arry,'',number_format($invoice->book_total,2));?>",
+  item_price: "<?php echo str_replace($repl_arry,'',number_format($totalRate,2));?>",
   //item_price: "100",
   quantity: 1
   }],
@@ -623,12 +800,12 @@ $repl_arry = array(".",",");
   input: false,
   variants: false
   },
-  amount: "<?php echo str_replace($repl_arry,'',number_format($invoice->book_total,2));?>",
+  amount: "<?php echo str_replace($repl_arry,'',number_format($totalRate,2));?>",
   //amount: "100",
   items: [{
   title: "Reservation Payment",
   subtitle: "Payment to lock reservation in TarzanGo",
-  item_price: "<?php echo str_replace($repl_arry,'',number_format($invoice->book_total,2));?>",
+  item_price: "<?php echo str_replace($repl_arry,'',number_format($totalRate,2));?>",
   //item_price: "100",
   quantity: 1
   }],

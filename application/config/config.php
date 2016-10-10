@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /*error_reporting(E_ALL);*/
-if($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '192.168.0.2' ){
+if($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '192.168.0.6' ){
 	$config['base_url']	= 'http://'.$_SERVER['HTTP_HOST'].'/tarzango_2/';
 	
 }else{

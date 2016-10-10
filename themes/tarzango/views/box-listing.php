@@ -523,15 +523,58 @@ window.onclick = function(event) {
                   }
                  
                ?>
-                <div class="col-sm-3 sorting">
-                  <label class="title">Recommended <img src="images/arrow-down.png"><img src="images/arrow-up.png"></label>
-                  <div class="dropdown" style="z-index:999999999">
-                    <button class="sort" data-sort="stars" style="">Popularity</button>
-                    
-                    <a id="box-listing" href="<?php echo $complete_url1; ?>">Recommended</a>
-                    <button class="sort" data-sort="distance">Distance</button>
-                  </div>
+                <div class="col-sm-3 sorting recommended">
+                <label class="title">Recommended <img src="images/arrow-down.png"><img src="images/arrow-up.png"></label>
+                <div class="dropdown" style="z-index:999999999">
+                  <button class="sort stars_p" data-sort="stars" style="">Popularity</button>
+                  <a id="grid-listing" href="<?php echo $complete_url2; ?>">Recommended</a>
+                  <button class="sort distance-d" data-sort="distance">Distance</button>
                 </div>
+              </div>
+              <div class="col-sm-3 sorting popularity" style="display: none">
+                <label class="title">Popularity <img src="images/arrow-down.png"><img src="images/arrow-up.png"></label>
+                <div class="dropdown" style="z-index:999999999">
+                  <button class="sort stars_p" data-sort="stars" style="">Popularity</button>
+                  <a id="grid-listing" href="<?php echo $complete_url2; ?>">Recommended</a>
+                  <button class="sort distance-d" data-sort="distance">Distance</button>
+                </div>
+              </div>
+               <div class="col-sm-3 sorting distance_div" style="display: none">
+                <label class="title">Distance<img src="images/arrow-down.png"><img src="images/arrow-up.png"></label>
+                <div class="dropdown" style="z-index:999999999">
+                  <button class="sort stars_p" data-sort="stars" style="">Popularity</button>
+                  <a id="grid-listing" href="<?php echo $complete_url2; ?>">Recommended</a>
+                  <button class="sort distance-d" data-sort="distance">Distance</button>
+                </div>
+              </div>
+
+              <script type="text/javascript">
+                $(document).ready(function(){
+            $(".stars_p").click(function(){
+                $(".recommended").hide();
+            });
+            $(".stars_p").click(function(){
+                $(".distance_div").hide();
+            });
+            $(".stars_p").click(function(){
+                $(".popularity").show();
+                $(".dropdown ").hide();
+
+            });
+
+            $(".distance-d").click(function(){
+                $(".recommended").hide();
+            });
+            $(".distance-d").click(function(){
+                $(".distance_div").show();
+                $(".dropdown ").hide();
+
+            });
+            $(".distance-d").click(function(){
+                $(".popularity").hide();
+            });
+        });
+              </script>
                 <div class="col-sm-9 view-options" style="width: 73.8%">
                   
                   <a class="" id="box-listing" href="<?php echo $complete_url1; ?>">

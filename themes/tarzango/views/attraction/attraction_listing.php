@@ -117,17 +117,18 @@
         </div>
       </div>
     </div>
-    <div class="last-section-2">
+    <div class="clearfix"></div>
+    <div class="container-fluid how-section vip-membership">
       <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <h1>Become a V.I.P member Now and receive additional</h1>
-            <h2>10% off plus some AWESOME Perks</h2>
-            <a href="">MEMBERSHIP</a>
-          </div>
-        </div>
+        <div class="col-md-7 ptop70">
+          <h4 class="description" style="text-align:left;font-size:30px;padding-bottom: 0px;">Become a V.I.P member Now and receive additional</h4>
+          </br>
+          <h4 style="text-align:left;font-size:30px;margin-top:-10px;font-family: 'Apercu-Bold';">10% off plus some AWESOME perks...</h4>
+          <a href="<?php echo base_url().'membership';?>" style="float:left" title="group booking" class="pink-btn">membership</a> </div>
+        <div class="col-sm-5"> <img style="margin-top: 0px" src="images/membership-door.png"> </div>
       </div>
     </div>
+        <div class="clearfix"></div>
   </div>
 </div>
 </div>

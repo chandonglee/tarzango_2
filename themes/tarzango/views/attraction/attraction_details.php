@@ -52,7 +52,7 @@ if($user_id != ''){
       <div class="container">
         <div class="row">
           <div class="col-sm-12">
-            <div class="col-sm-7 left-section">
+            <div class="col-sm-8 left-section">
               <div id="myCarousel" class="carousel slide" data-ride="carousel"> 
                 <!-- Indicators --> 
                 
@@ -139,7 +139,7 @@ if($user_id != ''){
               <div class="ratings"> </div>
               <?php } ?>
             </div>
-            <div class="col-sm-5 right-section" id="detail-slider">
+            <div class="col-sm-4 right-section" id="detail-slider">
               <form class="sidebar result" method="get">
                 <input type="hidden" name="code" value="<?php echo $code; ?>">
                 <div class="col-sm-12">

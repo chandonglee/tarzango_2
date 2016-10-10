@@ -154,7 +154,7 @@ class Hb_model extends CI_Model{
                 $H_data['TaxAndServiceFee'] = '10';
                 /*$H_data['extra_data'] = $extra_data;*/
 
-                $bookingResult = array("error" => "no", 'url' => base_url().'invoice?eid='.$inv_id.'&sessid='.$itid);
+                $bookingResult = array("error" => "no", 'url' => base_url().'invoice/?eid='.$inv_id.'&sessid='.$itid , 'book_id'=> $inv_id);
                 //redirect(base_url().'invoice?eid='.$inv_id.'&sessid='.$itid);
                
             }else{
@@ -306,7 +306,7 @@ class Hb_model extends CI_Model{
         return json_encode($bookingResult);
     }
 
-function insert_booking_final($insertdata){
+    function insert_booking_final($insertdata){
 
         $data = array(
           'book_user' => $insertdata['user'],
@@ -332,6 +332,16 @@ function insert_booking_final($insertdata){
 
         $this->db->insert('pt_ean_booking',$data);
         return $this->db->insert_id();
+    }
+
+    function get_booking_data($book_id){
+        $this->db->join('pt_accounts','pt_ean_booking.book_user = pt_accounts.accounts_id','left');
+        $this->db->where('book_id',$book_id);
+
+        //$this->db->order_by('book_id','desc');
+
+        $results = $this->db->get('pt_ean_booking')->result();
+        return $results;
     }
   
 

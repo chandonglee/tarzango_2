@@ -152,9 +152,9 @@ if($room <= 0){
       <div class="col-sm-12">
         <h1>Search the Best Hotel options for your Event</h1>
         <form class="container form_header_one" action="" method="GET" role="search">
-          <div class="col-sm-5">
+          <div class="col-sm-7">
             <div class="form-group">
-              <input id="HotelsPlacesEan1" name="city"  type="text" class="form-control RTL " placeholder="<?php echo trans('026');?>" value="Las Vegas, NV, United States" required >
+              <input id="HotelsPlacesEan1" name="city"  type="text" class="form-control RTL " placeholder="<?php echo trans('026');?>" value="" required >
             </div>
           </div>
           <div class="col-sm-2">
@@ -192,8 +192,8 @@ if($room <= 0){
           <input type="hidden" name="childages" id="childages" value="">
           <input type="hidden" name="room" id="room" value="1">
           <input type="hidden" name="search" value="search" >
-          <input type="hidden" id="lat1" name="lat" value="36.1699412">
-          <input type="hidden" id="long1" name="long" value="-115.13982959999998">
+          <input type="hidden" id="lat1" name="lat" value="">
+          <input type="hidden" id="long1" name="long" value="">
           <input type="hidden" id="url" name="url" value="<?php echo base_url(); ?>">
         </form>
       </div>
@@ -498,7 +498,7 @@ if($room <= 0){
 .jcarousel img {
     display: block;
     max-width: 100%;
-    height: auto !important;
+    height: 250px;
 }
 
 /** Carousel Controls **/
@@ -526,7 +526,7 @@ if($room <= 0){
 }
 
 .jcarousel-control-prev {
-    left: -55px;
+    left: -32px;
 }
 
 .jcarousel-control-next {
@@ -576,12 +576,16 @@ if($room <= 0){
     -moz-box-shadow: 0 0 2px #F0EFE7;
     box-shadow: 0 0 2px #F0EFE7;
 }
-
+.rmv_index{
+      color: #23527c;
+      font-size: 28px;
+      display: block;
+      margin-top: 10px;
+}
 
 </style>
 
-
-<div class="container">
+<div class="container" style="position: inherit;">
 
 <div class="jcarousel-wrapper">
 <h2 class="text-center">Your Selected Hotels</h2>
@@ -590,13 +594,26 @@ if($room <= 0){
         
       </ul>
     </div>
-
+    <div class="text-index"></div>
 
     <a href="#" class="jcarousel-control-next"><img src="images/group_booking_icon5.png"></a>
     <a href="#" class="jcarousel-control-prev"><img src="images/group_booking_icon4.png"></a> 
     <p class="jcarousel-pagination"></p>
   </div>
 </div>
+<script type="text/javascript">
+/*$(".jcarousel ul li").each(function() {
+    var $this = $(this);
+    $this.children('a').prepend("<span>" + ($this.index()+1) + "</span>");
+});*/
+
+
+/*$(".jcarousel ul li").each(function() {
+    var $this = $(this);
+    $this.('.text-index').prepend("<span>" + ($this.index()+1) + "</span>");
+});
+ */
+</script>
 
   <div class="section6 gr-bg">
     <div class="container">
@@ -782,7 +799,11 @@ $('.jcarousel-wrapper').hide();
             
 
             $(".jcarousel").children('ul').html(final_sli);
-            
+            $('.rmv_index').remove();
+            $(".jcarousel ul li").each(function() {
+                var $this = $(this);
+                $this.append("<span class='rmv_index'> #" + ($this.index()+1) + "</span>");
+            });
             
 
             console.log(new_cnt+'---plss');
@@ -798,11 +819,17 @@ $('.jcarousel-wrapper').hide();
           $("#sel_hotel_name").val(new_val_name);*/
           $(".sel_"+hotel_id).remove();
           $(".remove_sli_"+hotel_id).remove();
+          $('.rmv_index').remove();
+          $(".jcarousel ul li").each(function() {
+                var $this = $(this);
+                console.log($this.index()+'--nnn');
+                $this.append("<span class='rmv_index'> #" + ($this.index()+1) + "</span>");
+            });
         }
         var count_sel = $('#sel_slider_count').val();
 
         count_sel = parseInt(count_sel,10);
-        if(count_sel <= 0){
+          if(count_sel <= 0){
               $('.jcarousel-wrapper').hide();
             }else{
               $('.jcarousel-wrapper').show();
@@ -875,8 +902,8 @@ $('.jcarousel-wrapper').hide();
       });
 });
               
-  //$(".update_btn").click(function(){
-  $(document).ready(function(){
+  $(".update_btn").click(function(){
+  //$(document).ready(function(){
       //$(".form_header_one")
 
       var lat = $("#lat1").val();
@@ -954,6 +981,9 @@ $('.jcarousel-wrapper').hide();
           }
            HTML_DATA += '  </div>          <div class="navigation">             <a href="#" class="btn prev">Previous</a>             <a href="#" class="btn next">Next</a>          </div>        </div>      </div>    </div> </div>';
            HTML_DATA += '<div class="buttons navigation"><p><img  type="button" onClick="onClick1()" id="prev" class="pre btn prev" src="images/group_booking_icon4.png">#<a id="clicks">1</a><img  type="button" onClick="onClick()" id="next" class="next btn next" src="images/group_booking_icon5.png"></p></div></div><div class="clearfix"></div></div><div class="clearfix"></div></div></div> </div><div class="clearfix"></div>';
+
+
+          
 
           $("#hotel_deta").html(HTML_DATA);
           //$("#n_data").html(N_HTML_DATA);

@@ -58,8 +58,13 @@ $set_avg_rate = 0;
 exit;*/
 if(empty($hb_room)){ echo 'No rooms available'; }else{ ?>
 <?php 
-
+  
   foreach($hb_room as $room){ 
+      $date=date_create($room->rates[0]->cancellationPolicies[0]->from);
+      $cancel_date = date_format($date,"H:i m/d/Y");
+  /* echo $room->rates[0]->cancellationPolicies[0]->from;*/
+  
+
    /* echo json_encode($room);
     exit();*/
 	$nightlyRate = $room->rates[0]->net / $diff;
@@ -113,12 +118,12 @@ if(empty($hb_room)){ echo 'No rooms available'; }else{ ?>
 			  <input type="hidden" name="sessionid" value="hotelbed" />
 			 
 			  <?php if($R_user_type == '_f_no_login'){ ?>
-			  <button type="button" data-target="#M_f_no_login" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $total_price; ?>" data-room_id="<?php echo $room->rates[0]->rateKey; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
+			  <button type="button" data-target="#M_f_no_login" data-cancellation_policies="<?php echo $room->rates[0]->cancellationPolicies[0]->amount; ?>" data-cancellation_policies_from="<?php echo $cancel_date; ?>" data-room_type="<?php  echo $room->name; ?>" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $total_price; ?>" data-room_id="<?php echo $room->rates[0]->rateKey; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
 			  <?php }elseif($R_user_type == '_f_free_login'){ ?>
-			  <button type="button" data-target="#M_f_free_login" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $total_price; ?>" data-room_id="<?php echo $room->rates[0]->rateKey; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
+			  <button type="button" data-target="#M_f_free_login" data-cancellation_policies_from="<?php echo $cancel_date; ?>" data-cancellation_policies="<?php echo $room->rates[0]->cancellationPolicies[0]->amount; ?>" data-room_type="<?php  echo $room->name; ?>" data-price_vip="<?php echo $discount_price_vip; ?>" data-price_total="<?php echo $total_price; ?>" data-room_id="<?php echo $room->rates[0]->rateKey; ?>" class="btn btn-action btn-block chk reserve-btn op_modal">Reserve</button>
 			  <?php }else{ ?>
 			  <input type="hidden" name="mem_type" value="M_vip_login" />
-			  <button type="button" class="btn btn-action btn-block chk reserve-btn already_member" data-price_vip="<?php echo $discount_price_vip; ?>" data-room_id="<?php echo $room->rates[0]->rateKey; ?>" data-price_total="<?php echo $total_price; ?>" >Reserve</button>
+			  <button type="button" class="btn btn-action btn-block chk reserve-btn already_member" data-cancellation_policies_from="<?php echo $cancel_date; ?>" data-cancellation_policies="<?php echo $room->rates[0]->cancellationPolicies[0]->amount; ?>" data-room_type="<?php  echo $room->name; ?>" data-price_vip="<?php echo $discount_price_vip; ?>" data-room_id="<?php echo $room->rates[0]->rateKey; ?>" data-price_total="<?php echo $total_price; ?>" >Reserve</button>
 			  <?php } ?>
 			  <a style="display:none;" href="<?php echo trans('0142');?>" class="reserve-btn"> Reserve </a>
 			 
@@ -240,12 +245,12 @@ if(empty($hb_room)){ echo 'No rooms available'; }else{ ?>
     });
     $(document).ready(function() {
       $('.info-toggle').click(function(){
-      var collapse_content_selector = $(this).attr('data-click');         
-      var toggle_switch = $(this);
-      $('.room-detail').hide();
-      $(collapse_content_selector).toggle(function(){
-       
-      });
+        var collapse_content_selector = $(this).attr('data-click');         
+        var toggle_switch = $(this);
+        /*$('.room-detail').hide();*/
+          $(collapse_content_selector).toggle(function(){
+           
+          });
       });
         
         var discount_price = '$<?php echo $discount_price; ?>';
@@ -353,7 +358,7 @@ if(empty($hb_room)){ echo 'No rooms available'; }else{ ?>
             </div>
           </div>
         </div>
-        <div class="vipmemberbox1" style="text-align:center;"> <img src="<?php echo $theme_url.'/images/vip_show.png'; ?>" style="margin-top:-10px;">
+        <div class="vipmemberbox1" style="text-align:center;"> <img class="hidden-xs" src="<?php echo $theme_url.'/images/vip_show.png'; ?>" style="margin-top:-10px;">
           <div class="vipmemberboxmain" style="margin-top:0px;">
             <div class="vipmemberboxhead">
               <h3 class="vipmembertxt">VIP Membership</h3>
@@ -415,6 +420,19 @@ $(".vipmemberbtn").click(function(){
         $('#guest_details').show();
         $('#click_type').remove();
        
+       var roomType = $(this).data('room_type');
+        $("#roomType").text(roomType);
+
+        var cancellationPolicies = $(this).data('cancellation_policies');
+        $("#cancellationPolicies").text(cancellationPolicies);
+
+        var cancellationPolicies1 = $(this).data('cancellation_policies_from');
+        $("#cancellationPolicies_from").text(cancellationPolicies1);
+
+        var savePrice = normal_price - price;
+         savePrice = Math.round(savePrice);
+         $("#savePrice").text("$ " + savePrice);
+
         $('#ROOMS').append('<input type="hidden" value="'+mem_type+'" id="click_type">');
         //$('.signup_upgrade_to_vip').show();
         
@@ -432,6 +450,21 @@ $(".already_member").click(function(){
         $('.set_avg_rate').html('$'+price);
         $('#guest_details').show();
         $('#click_type').remove();
+
+
+        var roomType = $(this).data('room_type');
+        $("#roomType").text(roomType);
+ 
+       var cancellationPolicies = $(this).data('cancellation_policies');
+        $("#cancellationPolicies").text(cancellationPolicies);
+
+        var cancellationPolicies1 = $(this).data('cancellation_policies_from');
+        $("#cancellationPolicies_from").text(cancellationPolicies1);
+
+        var savePrice = normal_price - price;
+         savePrice = Math.round(savePrice);
+         $("#savePrice").text("$ " + savePrice);
+
         $("#vip_details").append('<input type="hidden" name="normal_price" value="'+normal_price+'">');
         $('#ROOMS').append('<input type="hidden" value="already_member" id="click_type">');
         //$('.signup_upgrade_to_vip').show();
@@ -464,6 +497,17 @@ $(".cont_free").click(function(){
         //$('.signup_body').show();
         $('#guest_details').show();
         $('#click_type').remove();
+        var roomType = $(this).data('room_type');
+        $("#roomType").text(roomType);
+
+         var cancellationPolicies = $(this).data('cancellation_policies');
+        $("#cancellationPolicies").text(cancellationPolicies);
+
+        var cancellationPolicies1 = $(this).data('cancellation_policies_from');
+        $("#cancellationPolicies_from").text(cancellationPolicies1);
+
+         $("#savePrice").text("$ " + price);
+
         $("#vip_details").append('<input type="hidden" name="normal_price" value="'+price+'">');
         $('#ROOMS').append('<input type="hidden" value="'+mem_type+'" id="click_type">');
         //$('.signup_upgrade_to_vip').show();

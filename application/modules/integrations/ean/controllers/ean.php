@@ -749,6 +749,11 @@ class Ean extends MX_Controller {
       $address = $this->input->get("fulladdress");
       $hotellocaion = $this->input->get("hotellocaion");
 
+      $guest_name = $this->input->get("guest_name");
+      $guest_age = $this->input->get("guest_age");
+
+      $child_name = $this->input->get("child_name");
+      $child_age = $this->input->get("child_age");    
 
       $hoteltitle = $this->input->get("hoteltitle");
       $hoteltitle = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%-]/s', '', $hoteltitle);
@@ -759,6 +764,20 @@ class Ean extends MX_Controller {
         //print_r($allcountries);
         $countrycode = $fulladdress[3];
         $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
+
+        for($i = 0; $i<count($allcountries);$i++) {
+            //echo $allcountries[$i]->short_name.'<br>';
+                if ($allcountries[$i]->short_name == trim($countrycode)) {
+                    
+                    $ccode = $allcountries[$i]->iso2;
+                    break;
+                }
+          }
+
+      } else if ( count($fulladdress) == 5 ){
+        //print_r($allcountries);
+        $countrycode = $fulladdress[4];
+        $zipcode = filter_var($fulladdress[3], FILTER_SANITIZE_NUMBER_INT);
 
         for($i = 0; $i<count($allcountries);$i++) {
             //echo $allcountries[$i]->short_name.'<br>';
@@ -826,13 +845,13 @@ class Ean extends MX_Controller {
             if ( $adult > 0){
 
                 for($ad=0; $ad < $adult; $ad++){
-                    $request .= '<Customer type="AD">30</Customer>';
+                    $request .= '<Customer type="AD"><Age>'.$guest_age[$ad].'</Age></Customer>';
                 }
             }
 
             if ( $child > 0){
                 for($ch = 0; $ch < $child; $ch ++){
-                    $request .= '<Customer type="CH"></Customer>';
+                    $request .= '<Customer type="CH"><Age>'.$child_age[$ch].'</Age></Customer>';
                 }
             }
 
@@ -912,18 +931,19 @@ class Ean extends MX_Controller {
                         <GuestList>';
 
         
-                        if ( $adult > 0){
+                            
+                if ( $adult > 0){
 
-                            for($ad=0; $ad<$adult;$ad++){
-                                $request .= '<Customer type="AD"></Customer>';
-                            }
-                        }
+                for($ad=0; $ad < $adult; $ad++){
+                    $request .= '<Customer type="AD"><Age>'.$guest_age[$ad].'</Age></Customer>';
+                }
+            }
 
-                        if ( $child > 0){
-                            for($ch = 0; $ch < $child; $ch ++){
-                                $request .= '<Customer type="CH"></Customer>';
-                            }
-                        }
+            if ( $child > 0){
+                for($ch = 0; $ch < $child; $ch ++){
+                    $request .= '<Customer type="CH"><Age>'.$child_age[$ch].'</Age></Customer>';
+                }
+            }
 
         $request .='</GuestList>
             </Occupancy>
@@ -950,16 +970,16 @@ class Ean extends MX_Controller {
 
         if ( $adult > 0){
 
-            for($ad=0; $ad<$adult;$ad++){
-                $request .= '<Customer type="AD"></Customer>';
+                for($ad=0; $ad < $adult; $ad++){
+                    $request .= '<Customer type="AD"><Age>'.$guest_age[$ad].'</Age></Customer>';
+                }
             }
-        }
 
-        if ( $child > 0){
-            for($ch = 0; $ch < $child; $ch ++){
-                $request .= '<Customer type="CH"></Customer>';
+            if ( $child > 0){
+                for($ch = 0; $ch < $child; $ch ++){
+                    $request .= '<Customer type="CH"><Age>'.$child_age[$ch].'</Age></Customer>';
+                }
             }
-        }
 
             $request .='</GuestList>
                 </Occupancy>
@@ -1059,7 +1079,7 @@ class Ean extends MX_Controller {
 
       $pickup_time_hour = $this->input->get("pickup_time_hour");
       $pickup_time_min = $this->input->get("pickup_time_min");
-      $pickup_country = $this->input->get("pickup_country");
+      
       $pickup_terminal = $this->input->get("pickup_terminal");
 
       $drop_terminal = $this->input->get("drop_terminal");
@@ -1069,10 +1089,6 @@ class Ean extends MX_Controller {
       $drp_time_hour = $this->input->get("drp_time_hour");
       $drp_time_min = $this->input->get("drp_time_min");
 
-      $drop_country = $this->input->get("drop_country");
-      $drop_dest = $this->input->get("drop_dest");
-      $drop_zone = $this->input->get("drop_zone");
-      $drop_acco = $this->input->get("drop_acco");
 
       $child = $this->input->get("child");
       $adult = $this->input->get("adult");
@@ -1088,10 +1104,31 @@ class Ean extends MX_Controller {
 
       $fulladdress = explode(',', $this->input->get("fulladdress"));
 
+      $guest_name = $this->input->get("guest_name");
+      $guest_age = $this->input->get("guest_age");
+
+      $child_name = $this->input->get("child_name");
+      $child_age = $this->input->get("child_age");    
+
+      
       if ( count($fulladdress) == 4 ){
         //print_r($allcountries);
         $countrycode = $fulladdress[3];
         $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
+
+        for($i = 0; $i<count($allcountries);$i++) {
+            //echo $allcountries[$i]->short_name.'<br>';
+                if ($allcountries[$i]->short_name == trim($countrycode)) {
+                    
+                    $ccode = $allcountries[$i]->iso2;
+                    break;
+                }
+          }
+
+      } else if ( count($fulladdress) == 5 ){
+        //print_r($allcountries);
+        $countrycode = $fulladdress[4];
+        $zipcode = filter_var($fulladdress[3], FILTER_SANITIZE_NUMBER_INT);
 
         for($i = 0; $i<count($allcountries);$i++) {
             //echo $allcountries[$i]->short_name.'<br>';
@@ -1107,6 +1144,7 @@ class Ean extends MX_Controller {
         $ccode = trim($loc[1]);
         $zipcode = filter_var($loc[0], FILTER_SANITIZE_NUMBER_INT);
       }
+      
 
       $username = "TESTCHAINS";
       $password = "TESTCHAINS";
@@ -1150,18 +1188,18 @@ class Ean extends MX_Controller {
                         <GuestList>';
 
         
-        if ( $adult > 0){
+                            if ( $adult > 0){
 
-            for($ad=0; $ad<$adult;$ad++){
-                $request .= '<Customer type="AD"></Customer>';
-            }
-        }
+                                for($ad=0; $ad < $adult; $ad++){
+                                    $request .= '<Customer type="AD"><Age>'.$guest_age[$ad].'</Age></Customer>';
+                                }
+                            }
 
-        if ( $child > 0){
-            for($ch = 0; $ch < $child; $ch ++){
-                $request .= '<Customer type="CH"></Customer>';
-            }
-        }
+                            if ( $child > 0){
+                                for($ch = 0; $ch < $child; $ch ++){
+                                    $request .= '<Customer type="CH"><Age>'.$child_age[$ch].'</Age></Customer>';
+                                }
+                            }
 
             $request .='</GuestList>
                 </Paxes>
@@ -1178,8 +1216,12 @@ class Ean extends MX_Controller {
                 </DestinationLocation>
             </Service>
         </ServiceAddRQ>';
+           
+      /* $my_file = 'request.txt';
 
-       
+              $handle = fopen($my_file, 'w+');
+              fwrite($handle, $request);
+              fclose($handle);*/
             $ch2=curl_init();
 
             $httpHeader2 = array(
@@ -1252,6 +1294,12 @@ class Ean extends MX_Controller {
 
       $hoteltitle = $this->input->get("hoteltitle");
       $hoteltitle = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%-]/s', '', $hoteltitle);
+
+      $guest_name = $this->input->get("guest_name");
+      $guest_age = $this->input->get("guest_age");
+
+      $child_name = $this->input->get("child_name");
+      $child_age = $this->input->get("child_age");    
 
       $fulladdress = explode(',', $this->input->get("fulladdress"));
 
@@ -1333,14 +1381,14 @@ class Ean extends MX_Controller {
         
                         if ( $adult > 0){
 
-                            for($ad=0; $ad<$adult;$ad++){
-                                $request .= '<Customer type="AD"></Customer>';
+                            for($ad=0; $ad < $adult; $ad++){
+                                $request .= '<Customer type="AD"><Age>'.$guest_age[$ad].'</Age></Customer>';
                             }
                         }
 
                         if ( $child > 0){
                             for($ch = 0; $ch < $child; $ch ++){
-                                $request .= '<Customer type="CH"></Customer>';
+                                $request .= '<Customer type="CH"><Age>'.$child_age[$ch].'</Age></Customer>';
                             }
                         }
 
@@ -1484,8 +1532,25 @@ class Ean extends MX_Controller {
       $supi1 = $this->input->get("supi1");
       $supi2 = $this->input->get("supi2");
 
+      $guest_name = $this->input->get("guest_name");
+      $guest_age = $this->input->get("guest_age");
+
+      $child_name = $this->input->get("child_name");
+      $child_age = $this->input->get("child_age");    
+      
+      $first = explode(' ', $guest_name[0]);
+
+      if ( count($first) == 2) {
+            $fname = $first[0];
+            $last = $first[1];
+      } else {
+            $fname = $guest_name[0];
+            $last = "XXX";
+      } 
+
         if (!empty ($pickup_date)) {
 
+            $master = 0;
 
             $request = '<PurchaseConfirmRQ
                 xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
@@ -1498,21 +1563,61 @@ class Ean extends MX_Controller {
                 <ConfirmationData purchaseToken="'.$purchasenewtoken.'">
                     <Holder type="AD">
                         <CustomerId>1</CustomerId>
-                        <Age>30</Age>
-                        <Name>Mayru</Name>
-                        <LastName>Solanki</LastName>
+                        <Age>'.$guest_age[0].'</Age>
+                        <Name>'.$fname.'</Name>
+                        <LastName>'.$last.'</LastName>
                     </Holder>
                     <AgencyReference>7733</AgencyReference>
                     <ConfirmationServiceDataList>
                         <ServiceData SPUI="'.$supi1.'" xsi:type="ConfirmationServiceDataTransfer">
-                            <CustomerList>
-                                <Customer type="AD">
-                                   <CustomerId>1</CustomerId>
-                                    <Age>30</Age>
-                                    <Name>Mayru</Name>
-                                    <LastName>Solanki</LastName>
-                                </Customer>
-                            </CustomerList>
+                            <CustomerList>';
+                            $n = 0;
+                            $c = 0;
+                            $cust_list = '';
+                            foreach($guest_name as $val) {
+
+                                $first = explode(' ', $val);
+
+                                if ( count($first) == 2) {
+                                    $fname = $first[0];
+                                    $last = $first[1];
+                                } else {
+                                    $fname = $val;
+                                    $last = "XXX";
+                                } 
+                            $master = $n + 1;
+
+                            $request .= '<Customer type="AD"><CustomerId>'. $master .'</CustomerId>
+                                    <Age>'. $guest_age[$n] .'</Age>
+                                    <Name>'. $fname .'</Name>
+                                    <LastName>'. $last .'</LastName>
+                                </Customer>';
+
+                                $n ++;
+                            }
+
+                            foreach($child_name as $val) {
+
+                                $first = explode(' ', $val);
+
+                                if ( count($first) == 2) {
+                                    $fname = $first[0];
+                                    $last = $first[1];
+                                } else {
+                                    $fname = $val;
+                                    $last = "XXX";
+                                } 
+                            $master++;
+                            $request .= '<Customer type="CH"><CustomerId>'. $master .'</CustomerId>
+                                    <Age>'. $child_age[$c] .'</Age>
+                                    <Name>'. $fname .'</Name>
+                                    <LastName>'. $last .'</LastName>
+                                </Customer>';
+
+                                $c ++;
+                            }
+
+                            $request .= '</CustomerList>
                             <ArrivalTravelInfo>
                                 <ArrivalInfo xsi:type="ProductTransferTerminal">
                                     <Code>'.$pickup_terminal.'</Code>
@@ -1523,14 +1628,54 @@ class Ean extends MX_Controller {
                             <DestinationLocationDescription>'.$hoteltitle.'</DestinationLocationDescription>
                         </ServiceData>
                         <ServiceData SPUI="'.$supi2.'" xsi:type="ConfirmationServiceDataTransfer">
-                            <CustomerList>
-                                <Customer type="AD">
-                                    <CustomerId>2</CustomerId>
-                                    <Age>30</Age>
-                                    <Name>Name</Name>
-                                    <LastName>Lastname</LastName>
-                                </Customer>
-                            </CustomerList>
+                            <CustomerList>';
+                                
+                                $n = 0;
+                            $c = 0;
+
+                            foreach($guest_name as $val) {
+
+                                $first = explode(' ', $val);
+
+                                if ( count($first) == 2) {
+                                    $fname = $first[0];
+                                    $last = $first[1];
+                                } else {
+                                    $fname = $val;
+                                    $last = "XXX";
+                                } 
+                            $master++;
+                            $request .= '<Customer type="AD"><CustomerId>'. $master .'</CustomerId>
+                                    <Age>'. $guest_age[$n] .'</Age>
+                                    <Name>'. $fname .'</Name>
+                                    <LastName>'. $last .'</LastName>
+                                </Customer>';
+
+                                $n ++;
+                            }
+
+                            foreach($child_name as $val) {
+
+                                $first = explode(' ', $val);
+
+                                if ( count($first) == 2) {
+                                    $fname = $first[0];
+                                    $last = $first[1];
+                                } else {
+                                    $fname = $val;
+                                    $last = "XXX";
+                                } 
+                            $master++;
+                            $request .= '<Customer type="CH"><CustomerId>'. $master .'</CustomerId>
+                                    <Age>'. $child_age[$c] .'</Age>
+                                    <Name>'. $fname .'</Name>
+                                    <LastName>'. $last .'</LastName>
+                                </Customer>';
+
+                                $c ++;
+                            }
+
+                            $request .= '</CustomerList>
                             <PickupLocationDescription>'.$hoteltitle.'</PickupLocationDescription>
                             <DepartureTravelInfo>
                                 <DepartInfo xsi:type="ProductTransferTerminal">
@@ -1578,7 +1723,226 @@ class Ean extends MX_Controller {
 
         }
 
-        echo str_replace('@', '', json_encode($final_data));
+       $rep_ary = array('@',"'");
+        echo str_replace($rep_ary, '', json_encode($final_data));
+
+    }
+
+    function ajax_call_car_oneway_save(){
+       
+      $allcountries = $this->countries_model->get_all_countries();
+
+      $BookType = $this->input->get("BookType");
+
+      $pickup_date  = date('Ymd',strtotime($this->input->get("pickup_date")));
+
+   
+
+      $pickup_time_hour = $this->input->get("pickup_time_hour");
+      $pickup_time_min = $this->input->get("pickup_time_min");
+      
+      $pickup_terminal = $this->input->get("pickup_terminal");
+
+      $drop_terminal = $this->input->get("drop_terminal");
+     
+      $dropoff_date = date('Ymd',strtotime($this->input->get("dropoff_date")));
+      
+      $drp_time_hour = $this->input->get("drp_time_hour");
+      $drp_time_min = $this->input->get("drp_time_min");
+
+
+      $child = $this->input->get("child");
+      $adult = $this->input->get("adult");
+      $location_latitude = $this->input->get("location_latitude");
+      $location_longitude = $this->input->get("location_longitude");
+
+      $address = $this->input->get("fulladdress");
+      $hotellocaion = $this->input->get("hotellocaion");
+
+
+      $hoteltitle = $this->input->get("hoteltitle");
+
+      $pickup_flight_code = $this->input->get("pickup_flight_code");
+      $drp_flight_code = $this->input->get("drp_flight_code");
+
+      $hoteltitle = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%-]/s', '', $hoteltitle);
+
+      $fulladdress = explode(',', $this->input->get("fulladdress"));
+
+      if ( count($fulladdress) == 4 ){
+        //print_r($allcountries);
+        $countrycode = $fulladdress[3];
+        $zipcode = filter_var($fulladdress[2], FILTER_SANITIZE_NUMBER_INT);
+
+        for($i = 0; $i<count($allcountries);$i++) {
+            //echo $allcountries[$i]->short_name.'<br>';
+                if ($allcountries[$i]->short_name == trim($countrycode)) {
+                    
+                    $ccode = $allcountries[$i]->iso2;
+                    break;
+                }
+          }
+
+      } else {
+        $loc = explode(' - ', $fulladdress[1]);
+        $ccode = trim($loc[1]);
+        $zipcode = filter_var($loc[0], FILTER_SANITIZE_NUMBER_INT);
+      }
+      $username = "TESTCHAINS";
+      $password = "TESTCHAINS";
+
+
+      $contract = $this->input->get("contract");
+      $contractcode = $this->input->get("contractcode");
+      $availtotken = $this->input->get("availtotken");
+      
+      $tranCode = $this->input->get("tranCode");
+      $tranType = $this->input->get("tranType");
+      $tranVehicleType = $this->input->get("tranVehicleType");
+   
+
+      $purchasenewtoken = $this->input->get("purchasenewtoken");
+      $psui = $this->input->get("psui");
+      
+      $guest_name = $this->input->get("guest_name");
+      $guest_age = $this->input->get("guest_age");
+
+      $child_name = $this->input->get("child_name");
+      $child_age = $this->input->get("child_age");    
+      
+      $first = explode(' ', $guest_name[0]);
+
+      if ( count($first) == 2) {
+            $fname = $first[0];
+            $last = $first[1];
+      } else {
+            $fname = $guest_name[0];
+            $last = "XXX";
+      } 
+      
+
+        if (!empty ($pickup_date)) {
+
+
+            $request = '<PurchaseConfirmRQ echoToken="DummyEchoToken"
+                            xmlns="http://www.hotelbeds.com/schemas/2005/06/messages"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xsi:schemaLocation="http://www.hotelbeds.com/schemas/2005/06/messages PurchaseConfirmRQ.xsd"
+                            version="2013/12">
+                            <Language>ENG</Language>
+                            <Credentials>
+                                <User>'.$username.'</User>
+                                <Password>'.$password.'</Password>
+                            </Credentials>
+                            <ConfirmationData purchaseToken="'.$purchasenewtoken.'">
+                                <Holder type="AD">
+                                    <CustomerId>1</CustomerId>
+                                    <Age>'.$guest_age[0].'</Age>
+                                    <Name>'.$fname.'</Name>
+                                    <LastName>'.$last.'</LastName>
+                                </Holder>
+                                <AgencyReference>8799</AgencyReference>
+                                <ConfirmationServiceDataList>
+                                    <ServiceData SPUI="'.$psui.'" xsi:type="ConfirmationServiceDataTransfer">
+                                        <CustomerList>';
+                            $n = 0;
+                            $c = 0;
+                            $cust_list = '';
+                            foreach($guest_name as $val) {
+
+                                $first = explode(' ', $val);
+
+                                if ( count($first) == 2) {
+                                    $fname = $first[0];
+                                    $last = $first[1];
+                                } else {
+                                    $fname = $val;
+                                    $last = "XXX";
+                                } 
+                            $master = $n + 1;
+
+                            $request .= '<Customer type="AD"><CustomerId>'. $master .'</CustomerId>
+                                    <Age>'. $guest_age[$n] .'</Age>
+                                    <Name>'. $fname .'</Name>
+                                    <LastName>'. $last .'</LastName>
+                                </Customer>';
+
+                                $n ++;
+                            }
+
+                            foreach($child_name as $val) {
+
+                                $first = explode(' ', $val);
+
+                                if ( count($first) == 2) {
+                                    $fname = $first[0];
+                                    $last = $first[1];
+                                } else {
+                                    $fname = $val;
+                                    $last = "XXX";
+                                } 
+                            $master++;
+                            $request .= '<Customer type="CH"><CustomerId>'. $master .'</CustomerId>
+                                    <Age>'. $child_age[$c] .'</Age>
+                                    <Name>'. $fname .'</Name>
+                                    <LastName>'. $last .'</LastName>
+                                </Customer>';
+
+                                $c ++;
+                            }
+
+                            $request .= '</CustomerList>
+                                        <ArrivalTravelInfo>
+                                            <ArrivalInfo xsi:type="ProductTransferTerminal">
+                                                <Code>'.$pickup_terminal.'</Code>
+                                                <DateTime date="'.$pickup_date.'" time="'.$pickup_time_hour.$pickup_time_min.'" />
+                                            </ArrivalInfo>
+                                            <TravelNumber>'.$pickup_flight_code.'</TravelNumber>
+                                        </ArrivalTravelInfo >
+                                        <DestinationLocationDescription>'.$hoteltitle.'</DestinationLocationDescription>
+                                    </ServiceData>
+                                </ConfirmationServiceDataList>
+                            </ConfirmationData>
+                        </PurchaseConfirmRQ>';
+
+
+
+            $ch2=curl_init();
+
+            $httpHeader2 = array(
+                                "Content-Type: text/xml; charset=UTF-8",
+                                "Content-Encoding: UTF-8",
+                                "Accept-Encoding: gzip,deflate"
+                                );
+
+            //echo $request;
+            $post_url='http://testapi.interface-xml.com/appservices/http/FrontendService';
+
+            curl_setopt($ch2, CURLOPT_URL, $post_url);
+            curl_setopt($ch2, CURLOPT_HEADER, 0);
+            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch2, CURLOPT_POST, 1);
+            curl_setopt($ch2, CURLOPT_POSTFIELDS, "$request");
+
+
+            curl_setopt($ch2, CURLOPT_HTTPHEADER, $httpHeader2);
+            curl_setopt ($ch2, CURLOPT_ENCODING, "gzip,deflate");
+            // Execute request, store response and HTTP response code
+            $contents = curl_exec($ch2);
+
+            if ($contents === FALSE) {
+                //die('Curl failed: ' . curl_error($ch2));
+                $_SESSION['cart_Data'] = 'invalid3';
+            }else{
+
+                $final_data = simplexml_load_string($contents);
+            }
+        curl_close($ch2);
+
+        }
+
+        $rep_ary = array('@',"'");
+        echo str_replace($rep_ary, '', json_encode($final_data));
 
     }
 
@@ -3308,7 +3672,8 @@ class Ean extends MX_Controller {
                                     $ne_facilities[$i]->name = $main_fac->description->content;
                             }
                             $hb_data['stars'] = $Hotel_details->hotel->category->description->content;
-                            //echo json_encode($ne_facilities);
+                            /*echo json_encode($ne_facilities);
+                            exit();*/
                     }
                     $result = $this->hb_lib->HotelImage_list($arrayInfo);
                     /*echo json_encode($result);

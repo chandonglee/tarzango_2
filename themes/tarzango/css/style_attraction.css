@@ -188,12 +188,12 @@
 .rating-detail p {
 	color: #f1f1f8;
 	font-weight: normal;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 14px;
 	letter-spacing: 1px;
 }
 .listing-back a {
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 16px;
 	color: #7c7ea2;
 }
@@ -376,7 +376,7 @@
 	padding: 90px 0px;
 }
 .last-section-2 h1 {
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 32px;
 	color: #fff;
 	text-align: left;
@@ -476,7 +476,7 @@
 }
 .city-index-search-body .image-gallery h1.title {
 	color: #2c3748;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 34px;
 	margin: 0px 0px 60px 0px;
 }
@@ -590,18 +590,18 @@
 .attraction-listing-body .list .list-item .box-1 .col-sm-8 h6 {
 	font-size: 16px;
 	color: #1cc0fb;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 }
 .attraction-listing-body .list .list-item .box-1 .col-sm-8 p {
 	font-size: 15px;
 	color: #8d8d8d;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	margin: 0px;
 }
 .attraction-listing-body .list .list-item .box-1 .col-sm-8 p a {
 	font-size: 15px;
 	color: #1cc0fb;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	margin-left: 5px;
 }
 .attraction-listing-body .list .list-item .box-1 .col-sm-4 {
@@ -655,7 +655,7 @@
 }
 .attraction-listing-body .list .list-item .box-2 .col-sm-4 .col-sm-6 h1 {
 	font-size: 40px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	color: #ff73b3;
 	margin: 0px;
 	text-align: right;
@@ -720,7 +720,7 @@
 .attraction-details-body .banner p {
 	color: #1cc0fb;
 	font-size: 16px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	margin: 10px 0px;
 }
 .attraction-details-body .banner a {
@@ -790,7 +790,7 @@
 	margin: 30px 0px 15px 0px;
 }
 .attraction-details-body .inner .left-section .content p {
-	/*font-family: apercu_light;*/
+	/*font-family: 'Apercu-Light';*/
 	font-size: 15px;
 	color: #969696;
 	margin: 0;
@@ -827,7 +827,7 @@
 	margin: 10px 0px 10px 0px;
 }
 .attraction-details-body .inner .left-section .ratings .item .col-sm-10 p {
-	/*font-family: apercu_light;*/
+	/*font-family: 'Apercu-Light';*/
 	font-size: 15px;
 	color: #969696;
 	margin: 0;
@@ -924,14 +924,14 @@
 	text-align: right;
 	margin: 0px;
 	font-size: 40px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	color: #ff73b3;
 }
 .attraction-details-body .inner .right-section .col-sm-12 .total p {
 	text-align: right;
 	margin: 0px;
 	font-size: 14px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	color: #a3a3a3;
 }
 .attraction-details-body .inner .right-section .col-sm-12 .total button {
@@ -977,7 +977,7 @@
 }
 .attraction-details-body .inner .right-section form .sidebar-modal .info h5 {
 	font-size: 16px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	color: #1d2c68;
 	margin: 0px 0px;
 }
@@ -1165,7 +1165,7 @@
 }
 .attraction-body .section1 p {
 	color: #2c3748;
-	/*font-family: apercu_light;*/
+	/*font-family: 'Apercu-Light';*/
 	font-size: 16px;
 	margin: 20px 0px;
 }
@@ -1200,13 +1200,13 @@
 }
 .attraction-body .section2 .tab-content .tab-pane h1 {
 	font-size: 36px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	color: #2c3748;
 	margin: 0px 0px 40px 0px;
 }
 .attraction-body .section2 .tab-content .tab-pane p {
 	font-size: 20px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	color: #82868e;
 	margin: 0;
 	line-height: 35px;
@@ -1258,7 +1258,7 @@
 }
 .attraction-body .section4 h1.title {
 	color: #2c3748;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 34px;
 	margin: 20px 0px 40px 0px;
 	text-align: center;
@@ -1291,7 +1291,7 @@
 }
 .attraction-body .section5 h1.title {
 	color: #fff;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 34px;
 	margin: 20px 0px 60px 0px;
 	text-align: center;
@@ -1346,7 +1346,7 @@
 .attraction-body .section5 .col-sm-4 .box h3 {
 	float: left;
 	font-size: 34px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	color: #3bb4f8;
 	margin: 10px 0px;
 	line-height: 33px;
@@ -1373,7 +1373,7 @@
 }
 .attraction-body .section6 h1.title {
 	color: #2c3748;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 34px;
 	margin: 20px 0px 40px 0px;
 	text-align: center;
@@ -1493,12 +1493,12 @@
 	margin: 30px 0px 0px 0px;
 }
 .paynow_body .col-sm-10 .section1 .col-sm-6 h5 {
-	font-family: apercu_bold;
-	font-size: 24px;
 	color: #373b71;
+	font-family: "Apercu-Light";
+	font-size: 24px;
 }
 .paynow_body .col-sm-10 .section1 .col-sm-6 h6 {
-	font-family: apercu_light;
+	font-family: "Apercu-Light";
 	font-size: 17px;
 	color: #373b71;
 }
@@ -1520,7 +1520,7 @@
 	float: left;
 	width: 100%;
 	background-color: #edeaf2;
-	padding: 50px;
+	padding-top: 50px;
 	text-align: center;
 }
 .paynow_body .col-sm-10 .section2 h1 {
@@ -1529,7 +1529,7 @@
 	color: #0c134f;
 }
 .paynow_body .col-sm-10 .section2 p {
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 14px;
 	color: #0c134f;
 	float: left;
@@ -1538,7 +1538,7 @@
 }
 .paynow_body .col-sm-10 .section2 p.left {
 	text-align: center;
-	width: 100%;
+	width: 96%;
 }
 .paynow_body .col-sm-10 .section2 p.right {
 	width: 37%;
@@ -1550,7 +1550,7 @@
 	float: left;
 	width: 100%;
 	background-color: #fff;
-	padding: 40px 60px;
+	padding: 40px;
 }
 .paynow_body .col-sm-10 .section3 .details {
 	float: left;
@@ -1816,14 +1816,14 @@
 }
 .paynow-voucher-body .content-box .col-sm-9 .address h5 {
 	font-size: 13px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	color: #0c134f;
 	float: left;
 	margin: 0px 10px 15px 0px;
 }
 .paynow-voucher-body .content-box .col-sm-9 h5 {
 	font-size: 13px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	color: #0c134f;
 	float: left;
 	margin: 0px 10px 15px 0px;
@@ -1909,7 +1909,7 @@
 	color: #342d6c;
 }
 .room-info p {
-	/*font-family: apercu_light;*/
+	/*font-family: 'Apercu-Light';*/
 	font-size: 15px;
 	color: #6b6969;
 	line-height: 28px;
@@ -2096,7 +2096,7 @@ footer {
 	padding: 5% 0% 6% 0%;
 }
 .footer-contact a {
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 16px;
 	letter-spacing: 1px;
 	color: #1ec1fb;
@@ -2119,7 +2119,7 @@ footer {
 .footer-above .social-address .address p {
 	font-size: 14px;
 	color: #fff;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	letter-spacing: 1px;
 }
 .footer-above .footer-contact p {
@@ -2131,7 +2131,7 @@ footer {
 	font-size: 14px;
 	color: #fff;
 	margin-bottom: 35px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	letter-spacing: 1px;
 }
 .footer-above .footer-menu-1 ul {
@@ -2144,14 +2144,14 @@ footer {
 .footer-above .footer-menu-1 ul li a {
 	font-size: 14px;
 	color: #fff;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	letter-spacing: 1px;
 }
 .footer-above .footer-menu-2 p {
 	font-size: 14px;
 	color: #fff;
 	margin-bottom: 35px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	letter-spacing: 1px;
 }
 .footer-above .footer-menu-2 ul {
@@ -2160,13 +2160,13 @@ footer {
 .footer-above .footer-menu-2 ul li {
 	list-style-type: none;
 	margin-bottom: 5px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	letter-spacing: 1px;
 }
 .footer-above .footer-menu-2 ul li a {
 	font-size: 14px;
 	color: #fff;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	letter-spacing: 1px;
 }
 .footer-bottom {
@@ -2180,7 +2180,7 @@ footer {
 	font-size: 14px;
 	padding-right: 10px;
 	line-height: 42px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	letter-spacing: 1px;
 }
 .footer-bottom .col-sm-6 p {
@@ -2188,7 +2188,7 @@ footer {
 	font-size: 14px;
 	line-height: 42px;
 	margin-bottom: 0px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	letter-spacing: 1px;
 }
 .footer-bottom .col-sm-3 p {
@@ -2196,7 +2196,7 @@ footer {
 	color: #fff;
 	line-height: 42px;
 	margin-bottom: 0px;
-	font-family: apercu_light;/*letter-spacing: 1px;*/
+	font-family: 'Apercu-Light';/*letter-spacing: 1px;*/
 }
 .footer-bottom .col-sm-3 p img {
 	padding: 0px 3px 0px 3px;
@@ -2264,7 +2264,7 @@ footer {
 	border: 1px solid #d3d4e0;
 	width: 100%;
 	float: left;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	margin-top: 27px;
 }
 .vipmemberboxhead {
@@ -2286,7 +2286,7 @@ footer {
 	color: #352068;
 	margin: 0;
 	padding: 0;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 29px;
 }
 .vipmemberbenift {
@@ -2374,7 +2374,7 @@ footer {
 	float: left;
 	line-height: 30px;
 	margin: 10px;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 18px;
 }
 .signupperkrow img {
@@ -2714,6 +2714,50 @@ header.attraction-listing.header .attraction-listing-body .view-options p {
 }
 
 @media (max-width: 767px) {
+	.hotel-detail-header-info .hd-info h2{ font-size:34px;}
+.paynow_body .col-sm-10 .section2 h1 {
+	font-size: 22px;
+	padding: 0 15px;
+}
+.paynow_body .col-sm-10 .section1 .left, .paynow_body .col-sm-10 .section1 .right {
+	margin: 20px 0 0;
+	text-align: center;
+}
+.paynow_body .col-sm-10 .section2 {
+	padding: 30px;
+}
+.details.details01 {
+	float: none !important;
+margin-bottom: 20px !important;
+padding: 20px 10px !important;
+text-align: center !important;
+width: 100% !important;
+}
+.paynow_body .col-sm-10 .section3 .boxes{
+margin-left:0px !important;
+width: 100% !important;
+	}
+	
+	.paynow_body .col-sm-10 .section3 .user_details .col-sm-12 a.button {
+  margin-right: 0;
+  width: 100%;
+}
+.paynow_body .col-sm-10 .section3 .details .col-sm-9 h6, .paynow_body .col-sm-10 .section3 .details .col-sm-9 h5, .paynow_body .col-sm-10 .section3 .details .col-sm-3 h6, .paynow_body .col-sm-10 .section3 .details .col-sm-3 h5	 {
+ 
+  text-align: center;
+}
+.paynow_body .col-sm-10 .section1 {
+	padding: 30px 15px;
+	text-align: center;
+}
+.paynow_body .col-sm-10 .section1 .right, .paynow_body .col-sm-10 .section1 .left {
+	text-align: center;
+}
+.paynow_body .col-sm-10 .section1 .col-sm-6 p, .paynow_body .col-sm-10 .section1 .col-sm-6.right p {
+	float: none;
+	text-align: center;
+	margin-right: 0px;
+}
 .mtoprto {
 	margin-top: 15px !important;
 }
@@ -2741,6 +2785,11 @@ header.attraction-listing.header .attraction-listing-body .view-options p {
 }
 .VIPBTNbox {
 	padding: 30px 15px;
+}
+.VIPBTNbox .vipmemberbtn {
+
+  letter-spacing: 0.5px;
+
 }
 .attraction-details-body .inner .left-section {
 	padding: 0px;
@@ -3193,7 +3242,7 @@ header.header-navigation-section .col-sm-8 h1 {
 	margin: 20px 0px;
 }
 header.header-navigation-section .col-sm-8 p {
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	color: #e369a8;
 	font-size: 14px;
 	line-height: 20px;
@@ -3222,14 +3271,14 @@ header.header-navigation-section .links a.col-sm-10 {
 	padding-left: 19%;
 	text-decoration: underline;
 	color: #8d8ea8;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 16px;
 }
 header.header-navigation-section .links a.col-sm-2 {
 	text-align: center;
 	text-decoration: underline;
 	color: #8d8ea8;
-	font-family: apercu_light;
+	font-family: 'Apercu-Light';
 	font-size: 16px;
 }
 header.header-navigation-section .fields .submit-button input {
